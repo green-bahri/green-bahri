@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>دليل الأشجار | جرين بحري</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+  <script src="data.js" defer></script>
+  <script src="trees.js" defer></script>
+</head>
+<body>
+  <div id="site-header"></div>
+  <main>
+    <header class="page-head">
+      <div class="container">
+        <span class="eyebrow">دليل الأشجار</span>
+        <h1>أشجار جامعة بحري</h1>
+        <p>كل شجرة مسجلة بمكانها وكليتها وتاريخ زراعتها.</p>
+      </div>
+    </header>
+    <section class="section">
+      <div class="container">
+        <div class="filters">
+          <input id="f-q" type="search" placeholder="ابحث باسم الشجرة أو رقمها" aria-label="بحث">
+          <select id="f-area" aria-label="المنطقة"><option value="">كل المناطق</option></select>
+          <select id="f-college" aria-label="الكلية"><option value="">كل الكليات</option></select>
+          <select id="f-status" aria-label="الحالة">
+            <option value="">كل الحالات</option>
+            <option value="planted">مزروعة</option>
+            <option value="documented">موثقة</option>
+          </select>
+        </div>
+        <p id="tree-count" class="tree-count"></p>
+        <div id="tree-grid" class="tree-grid"></div>
+        <p id="tree-empty" class="tree-empty" hidden>لا توجد أشجار تطابق البحث.</p>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>
