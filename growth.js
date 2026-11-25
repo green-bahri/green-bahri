@@ -1,9 +1,17 @@
 /* =========================================================
    growth.js — شجرة ضخمة في خلفية الصفحة تكبر مع التمرير (بذرة ← شجرة مكتملة)
+<<<<<<< HEAD
    - الشجرة تتولّد برمجياً (أغصان تتفرّع + أوراق)، نفس الشكل في كل مرة.
    - طبقة ثابتة خلف كل الأقسام، لا تحتاج أي HTML إضافي.
    - الحجم والمكان والشفافية من الكلاس .grow-bg في style.css.
    - لتغيير شكل الشجرة: عدّل TREE (الزوايا، الطول، عدد الفروع) أو SEED.
+=======
+   - تُضاف كطبقة ثابتة خلف كل الأقسام، لا تحتاج أي HTML إضافي.
+   - الحجم والمكان والشفافية من الكلاس .grow-bg في style.css.
+   - للاستخدام في أي صفحة: <script src="growth.js" defer></script>
+   - للتعديل: غيّر STAGES (أسماء المراحل) أو الأرقام داخل WINDOWS
+     (كل زوج [من, إلى] هو جزء من التمرير 0..1 تظهر فيه العناصر).
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
    ========================================================= */
 (function () {
   /* ---------- الإعدادات (عدّل هنا) ---------- */
@@ -86,6 +94,7 @@
 
   /* ---------- بناء الودجت ---------- */
   const html = `
+<<<<<<< HEAD
     <svg viewBox="-40 0 280 280" role="presentation" focusable="false">
       <g id="g-tree">
         ${branches.map((b) => `<path data-branch d="${b.d}" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="${b.color}" stroke-width="${b.w}" stroke-linecap="round"/>`).join("")}
@@ -93,6 +102,17 @@
       </g>
       <path d="M66 266 C78 252 90 247 100 247 C110 247 122 252 134 266Z" fill="#8a6a45" opacity=".55"/>
       <ellipse id="g-seed" cx="100" cy="244" rx="9" ry="6" fill="#5a3a1c"/>
+=======
+    <svg viewBox="0 0 200 280" role="presentation" focusable="false">
+      <path id="g-trunk" d="${TRUNK_D}" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="#7a5230" stroke-linecap="round"/>
+      ${BRANCHES.map((b, i) => `<path data-branch="${i}" d="${b.d}" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="#7a5230" stroke-width="5" stroke-linecap="round"/>`).join("")}
+      ${TRUNK_LEAVES.map(leafSVG).join("")}
+      ${BRANCHES.map((b, i) => b.leaves.map((p, j) => leafSVG({ x: p[0], y: p[1], rot: p[2] }, i + j)).join("")).join("")}
+      <g id="g-crown">${CROWN.map((c, i) => `<g transform="translate(${c[0]} ${c[1]})"><circle data-crown r="${Math.round(c[2] * 1.2)}" fill="${COLORS.crown[i % 4]}" transform="scale(0)"/></g>`).join("")}</g>
+      ${FRUITS.map((f) => `<g transform="translate(${f[0]} ${f[1]})"><circle data-fruit r="4" fill="#f97316" transform="scale(0)"/></g>`).join("")}
+      <path d="M62 266 C76 250 88 245 100 245 C112 245 124 250 138 266Z" fill="#8a6a45" opacity=".55"/>
+      <ellipse id="g-seed" cx="100" cy="236" rx="9" ry="6" fill="#5a3a1c"/>
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
     </svg>`;
   const meterHTML = `<span class="grow-pct">٠٪</span><span class="grow-stage">بذرة</span>`;
 
@@ -108,6 +128,23 @@
     meter.setAttribute("aria-hidden", "true");
     meter.innerHTML = meterHTML;
     document.body.appendChild(meter);
+<<<<<<< HEAD
+=======
+
+    const $ = (s) => box.querySelector(s);
+    const trunk = $("#g-trunk"), seed = $("#g-seed"), crownG = $("#g-crown");
+    const branches = [...box.querySelectorAll("[data-branch]")];
+    const leaves = [...box.querySelectorAll("[data-leaf]")];
+    const crowns = [...box.querySelectorAll("[data-crown]")];
+    const fruits = [...box.querySelectorAll("[data-fruit]")];
+    const pctEl = meter.querySelector(".grow-pct"), stageEl = meter.querySelector(".grow-stage");
+
+    /* نافذة كل ورقة بنفس ترتيب بنائها */
+    const leafWindows = [
+      ...TRUNK_LEAVES.map((l) => ({ t: l.t, k: l.k })),
+      ...BRANCHES.flatMap((b) => b.leaves.map(() => ({ t: [b.t[1], b.t[1] + 0.08], k: 0.9 }))),
+    ];
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
 
     const seed = box.querySelector("#g-seed"), treeG = box.querySelector("#g-tree");
     const bEls = [...box.querySelectorAll("[data-branch]")];
@@ -116,11 +153,26 @@
     let lastStage = -1, lastPct = -1;
 
     function render(p) {
+<<<<<<< HEAD
       seed.style.opacity = 1 - seg(p, 0.06, 0.14);
       branches.forEach((b, i) => {
         const s = easeOut(seg(p, b.t[0], b.t[1]));
         bEls[i].setAttribute("stroke-dashoffset", (1 - s).toFixed(3));
         bEls[i].style.opacity = s > 0 ? 1 : 0;
+=======
+      /* الساق */
+      const tt = easeOut(seg(p, ...WINDOWS.trunk));
+      trunk.setAttribute("stroke-dashoffset", 1 - tt);
+      trunk.setAttribute("stroke-width", 5 + 11 * seg(p, WINDOWS.trunk[0], 1));
+      trunk.style.opacity = p > WINDOWS.trunk[0] ? 1 : 0;
+      /* البذرة */
+      seed.style.opacity = 1 - seg(p, ...WINDOWS.seedFade);
+      /* الأغصان */
+      BRANCHES.forEach((b, i) => {
+        const s = easeOut(seg(p, ...b.t));
+        branches[i].setAttribute("stroke-dashoffset", 1 - s);
+        branches[i].style.opacity = s > 0 ? 1 : 0;
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
       });
       leaves.forEach((l, i) => {
         lEls[i].setAttribute("transform", `scale(${(pop(seg(p, l.t[0], l.t[1])) * l.k).toFixed(3)})`);
@@ -129,7 +181,11 @@
       const pct = Math.round(p * 100);
       if (pct !== lastPct) { pctEl.textContent = arabic(pct) + "٪"; lastPct = pct; }
       const si = STAGES.findIndex((s) => p < s.until);
+<<<<<<< HEAD
       if (si !== lastStage) { stageEl.textContent = STAGES[si].name; lastStage = si; }
+=======
+      if (si !== lastStage) { stageEl.textContent = STAGES[si].name; lastStage = si; box.dataset.stage = si; }
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
     }
 
     /* تمرير ناعم: نقترب من القيمة الهدف تدريجياً لتفادي الاهتزاز */

@@ -98,12 +98,17 @@ function buildHeader() {
         <ul class="nav-links">${links.map((l) => `<li>${l}</li>`).join("")}</ul>
         <div class="nav-actions">
           <a class="nav-cta" href="index.html#join">شارك في المبادرة</a>
+<<<<<<< HEAD
           <button class="theme-switch" id="theme-toggle" type="button" role="switch"
                   aria-checked="${document.documentElement.dataset.theme !== "dark"}" aria-label="تبديل الوضع الليلي">
             <span class="ts-knob">
               <span class="ts-icon ts-moon">${ICONS.moon}</span>
               <span class="ts-icon ts-sun">${ICONS.sun}</span>
             </span>
+=======
+          <button class="icon-btn" id="theme-toggle" type="button" aria-label="تبديل الوضع الداكن">
+            ${ICONS.moon}${ICONS.sun}
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
           </button>
           <button class="icon-btn nav-burger" id="menu-toggle" type="button"
                   aria-expanded="false" aria-controls="mobile-menu" aria-label="فتح القائمة">
