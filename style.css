@@ -43,8 +43,13 @@
   --green-700: #15803d;
   --green-800: #166534;
   --green-950: #052e16;
+<<<<<<< HEAD
   --lime: #16a34a;
   --lime-hover: #15803d;
+=======
+  --lime: #d4f82a;
+  --lime-hover: #e3ff55;
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
 
   --bg: #fafafa;
   --surface: #ffffff;
@@ -257,15 +262,24 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   padding: 0.6rem 1.2rem;
   border-radius: 0.45rem;
   background: var(--lime);
+<<<<<<< HEAD
   color: #fff;
+=======
+  color: #14290a;
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
   font-weight: 800;
   font-size: 0.95rem;
   transition: background-color 0.15s, transform 0.15s var(--ease);
 }
 .nav-cta:hover { background: var(--lime-hover); }
 .nav-cta:active { transform: translateY(1px); }
+<<<<<<< HEAD
 .mobile-menu .nav-cta-m { display: block; margin-top: 0.4rem; text-align: center; color: #fff; }
 .mobile-menu .nav-cta-m:hover { color: #fff; background: var(--lime-hover); }
+=======
+.mobile-menu .nav-cta-m { display: block; margin-top: 0.4rem; text-align: center; color: #14290a; }
+.mobile-menu .nav-cta-m:hover { color: #14290a; background: var(--lime-hover); }
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
 
 /* فوق الهيرو: زجاج شفاف ونص أبيض */
 .has-hero .nav-wrap:not(.is-scrolled) {
@@ -276,8 +290,13 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   --nav-hover: rgba(255, 255, 255, 0.16);
 }
 .has-hero .nav-wrap:not(.is-scrolled) .brand-text strong { color: #fff; }
+<<<<<<< HEAD
 .has-hero .nav-wrap:not(.is-scrolled) .brand-text small { color: #86efac; }
 .has-hero .nav-wrap:not(.is-scrolled) .brand-mark { background: var(--lime); color: #fff; }
+=======
+.has-hero .nav-wrap:not(.is-scrolled) .brand-text small { color: var(--lime); }
+.has-hero .nav-wrap:not(.is-scrolled) .brand-mark { background: var(--lime); color: #14290a; }
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
 
 .icon-btn {
   display: grid;
@@ -425,11 +444,27 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   font-weight: 800;
   line-height: 0.95;
   letter-spacing: 0;
+<<<<<<< HEAD
   /* زجاج أبيض شفاف يخفت من تحت (مثل كلمة AGRICULTURE) */
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.1) 90%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+=======
+<<<<<<< HEAD
+  /* زجاج أخضر شفاف يخفت من تحت (مثل كلمة AGRICULTURE) */
+  background: linear-gradient(to bottom, rgba(220, 252, 231, 0.8), rgba(74, 222, 128, 0.32) 55%, rgba(34, 197, 94, 0.04) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(220, 252, 231, 0.35);
+=======
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.1) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
+>>>>>>> b0fa41e6606dd05c7579bd38dc6ba1cc9b34dc43
   pointer-events: none;
   user-select: none;
 }
@@ -552,10 +587,15 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 
 .vision {
   position: relative; color: #fff;
+<<<<<<< HEAD
   /* صورة الغابة الخضراء + تعتيم خفيف عشان النص يقرأ */
   background:
     linear-gradient(rgba(3,30,14,.6), rgba(3,30,14,.72)),
     url("assets/forest.webp") center / cover no-repeat, #14532d;
+=======
+  /* شبه شفاف عشان شجرة الخلفية تظهر من وراه */
+  background: linear-gradient(160deg, rgba(5,46,22,.88), rgba(20,83,45,.8) 60%, rgba(22,101,52,.78));
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
 }
 .vision .section-head p, .vision .eyebrow { color: var(--green-400); }
 .vision .section-head p { color: #d4d4d8; }
@@ -635,7 +675,11 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .hero-seed { margin-top: 1.5rem; color: #e4e4e7; }
 .hero-seed strong { color: var(--green-400); font-size: 1.6rem; font-weight: 800; }
 .hero-seed small { display: block; opacity: .75; }
+<<<<<<< HEAD
 .hero-actions .btn-white { background: var(--lime); color: #fff; }
+=======
+.hero-actions .btn-white { background: var(--lime); color: #14290a; }
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
 .hero-actions .btn-white:hover { background: var(--lime-hover); }
 
 .muted { color: var(--text-soft); }
@@ -700,11 +744,19 @@ main, #site-footer { position: relative; z-index: 1; }
 }
 .grow-bg svg {
   position: absolute; bottom: -7vh; left: 50%; transform: translateX(-50%);
+<<<<<<< HEAD
   height: 100vh; width: auto; max-width: none; overflow: visible; opacity: .6;
 }
 [data-theme="dark"] .grow-bg svg { opacity: .5; }
 @media (min-width: 900px) {
   .grow-bg svg { left: -2vw; transform: none; opacity: .75; }
+=======
+  height: 118vh; width: auto; max-width: none; overflow: visible; opacity: .5;
+}
+[data-theme="dark"] .grow-bg svg { opacity: .5; }
+@media (min-width: 900px) {
+  .grow-bg svg { left: 4vw; transform: none; opacity: .7; }
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
   [data-theme="dark"] .grow-bg svg { opacity: .6; }
 }
 .grow-meter {
@@ -716,12 +768,18 @@ main, #site-footer { position: relative; z-index: 1; }
 [data-theme="dark"] .grow-pct { color: var(--green-400); }
 .grow-stage { font-size: .8rem; font-weight: 700; color: var(--text-soft); }
 @keyframes sway { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
+<<<<<<< HEAD
 #g-tree.is-full { animation: sway 6s ease-in-out infinite; transform-origin: 100px 250px; }
 @media (prefers-reduced-motion: reduce) { #g-tree.is-full { animation: none; } }
+=======
+#g-crown.is-full { animation: sway 5s ease-in-out infinite; transform-origin: 100px 250px; }
+@media (prefers-reduced-motion: reduce) { #g-crown.is-full { animation: none; } }
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
 
 /* =========================================================
    بطاقة «تبنَّ شجرة» (صورة الأوراق + الشجرة)
    ========================================================= */
+<<<<<<< HEAD
 .btn-lime { background: var(--lime); color: #fff; }
 .btn-lime:hover { background: var(--lime-hover); }
 .cta-leaves {
@@ -733,3 +791,34 @@ main, #site-footer { position: relative; z-index: 1; }
 .cta-leaves h2 { font-size: clamp(2rem, 5vw, 3.2rem); }
 .cta-leaves p { color: #e4e4e7; }
 
+<<<<<<< HEAD
+=======
+/* صورة الشجرة بالزهور في قسم «رؤيتنا» */
+.vision-top { display: grid; gap: 1rem; align-items: center; justify-items: center; margin-bottom: 3rem; }
+.vision-top .section-head { margin: 0; }
+.vision-tree { height: 13rem; width: auto; filter: drop-shadow(0 18px 24px rgba(0,0,0,.4)); }
+@media (min-width: 900px) {
+  .vision-top { grid-template-columns: 1fr auto; justify-items: stretch; gap: 3rem; }
+  .vision-top .section-head { text-align: start; max-width: none; }
+  .vision-tree { height: 19rem; margin-block: -1rem; }
+=======
+.btn-lime { background: var(--lime); color: #14290a; }
+.btn-lime:hover { background: var(--lime-hover); }
+.cta-leaves {
+  position: relative; display: grid; align-items: center; text-align: start; gap: 1rem;
+  padding: 3rem 1.5rem 0; overflow: visible;
+  background:
+    linear-gradient(to left, rgba(16,16,16,.92) 8%, rgba(16,16,16,.35) 70%, rgba(16,16,16,0)),
+    url("assets/leaves-dark.webp") left center / cover no-repeat, #101010;
+}
+.cta-leaves .cta-text { padding-bottom: 2.5rem; }
+.cta-leaves h2 { font-size: clamp(2rem, 5vw, 3.2rem); }
+.cta-leaves p { margin: 0 0 1.8rem; color: #d4d4d8; }
+.cta-tree { justify-self: center; height: 17rem; width: auto; margin-top: -4.5rem; filter: drop-shadow(0 18px 24px rgba(0,0,0,.45)); }
+@media (min-width: 900px) {
+  .cta-leaves { grid-template-columns: 1.1fr .9fr; padding: 3.5rem 3.5rem 0; min-height: 22rem; }
+  .cta-leaves .cta-text { padding-bottom: 3.5rem; grid-column: 1; grid-row: 1; }
+  .cta-tree { grid-column: 2; grid-row: 1; align-self: end; height: 30rem; margin-top: -8rem; margin-bottom: 0; }
+>>>>>>> ec54581e2756c600ca630d1212ead043c5676018
+}
+>>>>>>> b0fa41e6606dd05c7579bd38dc6ba1cc9b34dc43
