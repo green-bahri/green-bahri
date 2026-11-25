@@ -8,9 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="map.css">
   <script src="main.js" defer></script>
   <script src="data.js" defer></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
   <script src="map.js" defer></script>
 </head>
 <body>
@@ -20,17 +23,26 @@
       <div class="container">
         <span class="eyebrow">خريطة الجامعة</span>
         <h1>خريطة تشجير الجامعة</h1>
-        <p>مواقع الأشجار في أركان جامعة بحري. اختر منطقة لترى أشجارها.</p>
+        <p>مواقع الأشجار في أركان جامعة بحري على صورة جوية حقيقية. اختر منطقة لترى أشجارها.</p>
       </div>
     </header>
     <section class="section">
       <div class="container map-layout">
         <div>
           <div id="area-chips" class="area-chips" role="tablist" aria-label="مناطق الجامعة"></div>
-          <figure class="map-fig">
-            <svg id="campus-map" viewBox="0 0 640 440" role="img" aria-label="مخطط تقريبي لمناطق التشجير في الجامعة"></svg>
-            <figcaption>مخطط تقريبي توضيحي، يُستبدل بخريطة الجامعة الفعلية.</figcaption>
-          </figure>
+          <div class="map-box">
+            <div id="campus-map" class="leaflet-map" role="region" aria-label="خريطة جامعة بحري"></div>
+            <button id="fit-all" class="btn btn-outline map-fit" type="button">عرض كل الجامعة</button>
+          </div>
+          <p class="map-note">
+            يمكنك التبديل بين الصورة الجوية والخريطة العادية من أعلى الخريطة. على الموبايل حرّك الخريطة بإصبعين.
+          </p>
+          <div id="edit-box" class="edit-box card" hidden>
+            <h3>وضع ضبط المواقع</h3>
+            <p>اسحب كل دبوس إلى مكانه على الصورة الجوية، ثم انسخ النص بالأسفل والصقه في <b>data.js</b> مكان قائمة <b>areas</b>.</p>
+            <textarea id="edit-out" rows="8" dir="ltr" readonly></textarea>
+            <button id="edit-copy" class="btn btn-primary" type="button">نسخ الإحداثيات</button>
+          </div>
         </div>
         <aside class="map-panel card">
           <h2 id="panel-title">اختر منطقة</h2>
@@ -39,6 +51,7 @@
         </aside>
       </div>
     </section>
+    <noscript><p class="container map-note">الخريطة تحتاج تفعيل JavaScript.</p></noscript>
   </main>
   <div id="site-footer"></div>
 </body>

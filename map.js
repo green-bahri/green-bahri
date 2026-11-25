@@ -1,67 +1,141 @@
-/* خريطة تشجير الجامعة: مخطط تقريبي يُرسم من data.js
-   لتعديل أماكن العلامات غيّر POS (x و y داخل مساحة 640×440). */
+/* خريطة تشجير الجامعة (Leaflet + صورة جوية من Esri + خريطة OpenStreetMap)
+   - مواقع المناطق (lat, lng) تُقرأ من data.js
+   - لضبط المواقع بالسحب: افتح map.html?edit=1 */
 (function () {
   const { areas, trees, colleges } = window.GB;
-  const POS = {
-    "library": [170, 120], "eng-labs": [470, 105], "zaqqum": [320, 230],
-    "g10": [110, 310], "hurriya": [510, 300], "central-lib": [320, 370],
-  };
-  const NS = "http://www.w3.org/2000/svg";
   const n = (v) => v.toLocaleString("ar-EG");
-  const svg = document.getElementById("campus-map");
-  const chips = document.getElementById("area-chips");
   const STATUS = { planted: "مزروعة", documented: "موثقة" };
-  const el = (name, attrs = {}, parent = svg) => {
-    const e = document.createElementNS(NS, name);
-    Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v));
-    parent.appendChild(e); return e;
-  };
+  const edit = /[?&]edit(=|&|$)/.test(location.search);
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const mapEl = document.getElementById("campus-map");
+  const chips = document.getElementById("area-chips");
   const count = (id) => trees.filter((t) => t.area === id).length;
+  const nameOf = (list, id) => (list.find((x) => x.id === id) || {}).name || "";
+  const hasPos = (a) => Number.isFinite(a.lat) && Number.isFinite(a.lng);
 
-  /* الأرضية والممرات والمباني (شكل توضيحي) */
-  el("rect", { x: 8, y: 8, width: 624, height: 424, rx: 28, class: "m-ground" });
-  [["M40 120 H600"], ["M40 230 H600"], ["M40 340 H600"], ["M170 30 V410"], ["M320 30 V410"], ["M470 30 V410"]]
-    .forEach(([d]) => el("path", { d, class: "m-road" }));
-  [[60, 40], [220, 40], [380, 40], [540, 40], [60, 150], [220, 150], [380, 150], [540, 150], [60, 260], [220, 260], [380, 260], [540, 260]]
-    .forEach(([x, y]) => el("rect", { x, y, width: 40, height: 28, rx: 6, class: "m-bld" }));
+  let map = null;
+  const markers = {};
 
-  const pins = {};
-  const sel = { id: null };
+  /* ---------- الخريطة ---------- */
+  if (window.L) {
+    const bounds = L.latLngBounds(areas.filter(hasPos).map((a) => [a.lat, a.lng]));
+    map = L.map(mapEl, {
+      center: [15.753, 32.5952],
+      zoom: 17,
+      minZoom: 15,
+      maxZoom: 19,
+      maxBounds: [[15.72, 32.56], [15.79, 32.63]], /* يبقي المستخدم قرب الجامعة */
+      maxBoundsViscosity: 0.8,
+      zoomControl: false,
+      scrollWheelZoom: false,        /* حتى لا تعلق عجلة الفأرة أثناء تمرير الصفحة */
+      dragging: !L.Browser.mobile,   /* على الموبايل: إصبعان للتحريك، وإصبع واحد يمرر الصفحة */
+    });
+    L.control.zoom({ position: "topleft" }).addTo(map);
+    map.on("click", () => map.scrollWheelZoom.enable());
+    map.on("mouseout", () => map.scrollWheelZoom.disable());
+
+    const sat = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      { maxNativeZoom: 18, maxZoom: 19, attribution: "صور جوية © Esri، Maxar، Earthstar Geographics" }
+    );
+    const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxNativeZoom: 19, maxZoom: 19,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">مساهمو OpenStreetMap</a>',
+    });
+    sat.addTo(map);
+    L.control.layers({ "صورة جوية": sat, "خريطة عادية": osm }, null, { position: "topright", collapsed: false }).addTo(map);
+
+    areas.filter(hasPos).forEach((a) => {
+      const icon = L.divIcon({
+        className: "gb-pin-wrap",
+        html: `<span class="gb-pin"><b>${n(count(a.id))}</b></span>`,
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+      });
+      const m = L.marker([a.lat, a.lng], {
+        icon, riseOnHover: true, draggable: edit,
+        title: a.name + " — " + count(a.id) + " شجرة", alt: a.name,
+      }).addTo(map);
+      const tip = document.createElement("span");
+      tip.textContent = a.name;
+      m.bindTooltip(tip, { permanent: true, direction: "bottom", offset: [0, 24], className: "gb-tip" });
+      m.on("click", () => select(a.id, true));
+      if (edit) m.on("drag dragend", writeEditBox);
+      markers[a.id] = m;
+    });
+
+    const fit = () => map.fitBounds(bounds, { padding: [80, 80], maxZoom: 18, animate: !reduceMotion });
+    if (bounds.isValid()) fit();
+    document.getElementById("fit-all").addEventListener("click", fit);
+  } else {
+    mapEl.innerHTML = '<p class="map-error">تعذّر تحميل الخريطة. تأكد من الاتصال بالإنترنت ثم أعد تحميل الصفحة.</p>';
+    document.getElementById("fit-all").hidden = true;
+  }
+
+  /* ---------- الأزرار واللوحة الجانبية ---------- */
   areas.forEach((a) => {
-    const [x, y] = POS[a.id] || [320, 220];
-    const g = el("g", { class: "m-pin", tabindex: 0, role: "button", "aria-label": a.name + " — " + count(a.id) + " شجرة", transform: `translate(${x} ${y})` });
-    el("circle", { r: 26, class: "m-halo" }, g);
-    el("circle", { r: 17, class: "m-dot" }, g);
-    const t = el("text", { class: "m-num", y: 6, "text-anchor": "middle" }, g); t.textContent = n(count(a.id));
-    const l = el("text", { class: "m-label", y: 46, "text-anchor": "middle" }, g); l.textContent = a.name;
-    g.addEventListener("click", () => select(a.id));
-    g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(a.id); } });
-    pins[a.id] = g;
-
     const c = document.createElement("button");
     c.type = "button"; c.className = "chip"; c.dataset.id = a.id;
-    c.innerHTML = `<span></span><b>${n(count(a.id))}</b>`; c.firstChild.textContent = a.name;
-    c.addEventListener("click", () => select(a.id));
+    c.innerHTML = `<span></span><b>${n(count(a.id))}</b>`;
+    c.firstChild.textContent = a.name;
+    c.addEventListener("click", () => select(a.id, true));
     chips.appendChild(c);
   });
 
-  const nameOf = (list, id) => (list.find((x) => x.id === id) || {}).name || "";
-  function select(id) {
-    sel.id = id;
-    Object.entries(pins).forEach(([k, g]) => g.classList.toggle("is-on", k === id));
+  function select(id, fly) {
+    Object.entries(markers).forEach(([k, m]) => {
+      const e = m.getElement();
+      if (e) e.classList.toggle("is-on", k === id);
+    });
     chips.querySelectorAll(".chip").forEach((c) => c.classList.toggle("is-on", c.dataset.id === id));
+
+    if (fly && map && markers[id]) {
+      const to = markers[id].getLatLng();
+      const z = Math.max(map.getZoom(), 18);
+      if (reduceMotion) map.setView(to, z);
+      else map.flyTo(to, z, { duration: 0.8 });
+    }
+
     const list = trees.filter((t) => t.area === id);
     document.getElementById("panel-title").textContent = nameOf(areas, id);
     document.getElementById("panel-sub").textContent = n(list.length) + " شجرة في هذه المنطقة";
     const ul = document.getElementById("panel-list");
     ul.replaceChildren(...list.map((t) => {
       const li = document.createElement("li");
-      li.innerHTML = `<strong></strong><span></span><em class="badge badge-${t.status}">${STATUS[t.status]}</em>`;
+      li.innerHTML = `<strong></strong><span></span><em class="badge badge-${t.status}"></em>`;
       li.querySelector("strong").textContent = t.name;
       li.querySelector("span").textContent = nameOf(colleges, t.college) + " · " + t.id;
+      li.querySelector("em").textContent = STATUS[t.status] || "";
       return li;
     }));
     if (!list.length) ul.innerHTML = "<li class='panel-empty'>لا توجد أشجار مسجلة هنا بعد.</li>";
   }
-  select((areas.find((a) => count(a.id)) || areas[0]).id);
+  select((areas.find((a) => count(a.id)) || areas[0]).id, false);
+
+  /* ---------- وضع ضبط المواقع (?edit=1) ---------- */
+  function writeEditBox() {
+    const out = document.getElementById("edit-out");
+    if (!out) return;
+    const lines = areas.map((a) => {
+      const m = markers[a.id];
+      const p = m ? m.getLatLng() : { lat: a.lat, lng: a.lng };
+      const pos = Number.isFinite(p.lat) ? `, lat: ${p.lat.toFixed(5)}, lng: ${p.lng.toFixed(5)}` : "";
+      return `    { id: "${a.id}", name: "${a.name}"${pos} },`;
+    });
+    out.value = "  areas: [\n" + lines.join("\n") + "\n  ],";
+  }
+
+  if (edit) {
+    document.getElementById("edit-box").hidden = false;
+    writeEditBox();
+    const copy = document.getElementById("edit-copy");
+    copy.addEventListener("click", async () => {
+      const out = document.getElementById("edit-out");
+      try { await navigator.clipboard.writeText(out.value); }
+      catch (e) { out.select(); document.execCommand("copy"); }
+      copy.textContent = "تم النسخ";
+      setTimeout(() => (copy.textContent = "نسخ الإحداثيات"), 1800);
+    });
+  }
 })();
