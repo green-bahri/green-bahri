@@ -16,8 +16,8 @@ const PAGES = [
 
 const ICONS = {
   leaf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>',
-  sun: '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>',
-  moon: '<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>',
+  sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>',
   menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>',
   close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
 };
@@ -30,10 +30,36 @@ const ICONS = {
   document.documentElement.dataset.theme = saved || (prefersDark ? "dark" : "light");
 })();
 
+/* زر الوضع الليلي: مقبض ينزلق + توهّج + أيقونة تتفتت لمربعات صغيرة (مثل فيديو التصميم) */
 function toggleTheme() {
-  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-  document.documentElement.dataset.theme = next;
+  const root = document.documentElement;
+  const next = root.dataset.theme === "dark" ? "light" : "dark";
+  const btn = document.getElementById("theme-toggle");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce) {
+    root.classList.add("theme-anim"); // انتقال ناعم للألوان
+    setTimeout(() => root.classList.remove("theme-anim"), 700);
+    if (btn) burst(btn.querySelector(".ts-knob"), next);
+  }
+  root.dataset.theme = next;
+  if (btn) btn.setAttribute("aria-checked", String(next === "light"));
   try { localStorage.setItem("gb-theme", next); } catch (e) {}
+}
+
+/* مربعات صغيرة تتطاير من المقبض عند التبديل */
+function burst(knob, theme) {
+  if (!knob) return;
+  const color = theme === "dark" ? "#c7d2fe" : "#f59e0b";
+  for (let i = 0; i < 16; i++) {
+    const p = document.createElement("i");
+    p.className = "ts-px";
+    const a = Math.random() * Math.PI * 2, d = 14 + Math.random() * 22;
+    p.style.setProperty("--dx", Math.cos(a) * d + "px");
+    p.style.setProperty("--dy", Math.sin(a) * d + "px");
+    p.style.background = color;
+    knob.appendChild(p);
+    setTimeout(() => p.remove(), 700);
+  }
 }
 
 /* ---------- بناء الشريط والفوتر ---------- */
@@ -72,8 +98,12 @@ function buildHeader() {
         <ul class="nav-links">${links.map((l) => `<li>${l}</li>`).join("")}</ul>
         <div class="nav-actions">
           <a class="nav-cta" href="index.html#join">شارك في المبادرة</a>
-          <button class="icon-btn" id="theme-toggle" type="button" aria-label="تبديل الوضع الداكن">
-            ${ICONS.moon}${ICONS.sun}
+          <button class="theme-switch" id="theme-toggle" type="button" role="switch"
+                  aria-checked="${document.documentElement.dataset.theme !== "dark"}" aria-label="تبديل الوضع الليلي">
+            <span class="ts-knob">
+              <span class="ts-icon ts-moon">${ICONS.moon}</span>
+              <span class="ts-icon ts-sun">${ICONS.sun}</span>
+            </span>
           </button>
           <button class="icon-btn nav-burger" id="menu-toggle" type="button"
                   aria-expanded="false" aria-controls="mobile-menu" aria-label="فتح القائمة">

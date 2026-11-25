@@ -43,8 +43,8 @@
   --green-700: #15803d;
   --green-800: #166534;
   --green-950: #052e16;
-  --lime: #22c55e;
-  --lime-hover: #4ade80;
+  --lime: #16a34a;
+  --lime-hover: #15803d;
 
   --bg: #fafafa;
   --surface: #ffffff;
@@ -257,15 +257,15 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   padding: 0.6rem 1.2rem;
   border-radius: 0.45rem;
   background: var(--lime);
-  color: #052e16;
+  color: #fff;
   font-weight: 800;
   font-size: 0.95rem;
   transition: background-color 0.15s, transform 0.15s var(--ease);
 }
 .nav-cta:hover { background: var(--lime-hover); }
 .nav-cta:active { transform: translateY(1px); }
-.mobile-menu .nav-cta-m { display: block; margin-top: 0.4rem; text-align: center; color: #052e16; }
-.mobile-menu .nav-cta-m:hover { color: #052e16; background: var(--lime-hover); }
+.mobile-menu .nav-cta-m { display: block; margin-top: 0.4rem; text-align: center; color: #fff; }
+.mobile-menu .nav-cta-m:hover { color: #fff; background: var(--lime-hover); }
 
 /* فوق الهيرو: زجاج شفاف ونص أبيض */
 .has-hero .nav-wrap:not(.is-scrolled) {
@@ -276,8 +276,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   --nav-hover: rgba(255, 255, 255, 0.16);
 }
 .has-hero .nav-wrap:not(.is-scrolled) .brand-text strong { color: #fff; }
-.has-hero .nav-wrap:not(.is-scrolled) .brand-text small { color: #bbf7d0; }
-.has-hero .nav-wrap:not(.is-scrolled) .brand-mark { background: var(--lime); color: #052e16; }
+.has-hero .nav-wrap:not(.is-scrolled) .brand-text small { color: #86efac; }
+.has-hero .nav-wrap:not(.is-scrolled) .brand-mark { background: var(--lime); color: #fff; }
 
 .icon-btn {
   display: grid;
@@ -292,9 +292,47 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .icon-btn svg { width: 1.3rem; height: 1.3rem; }
 
 /* أيقونة الشمس/القمر حسب الوضع */
-.icon-sun { display: none; }
-[data-theme="dark"] .icon-sun { display: block; }
-[data-theme="dark"] .icon-moon { display: none; }
+/* زر الوضع الليلي (مقبض ينزلق مع توهّج) */
+.theme-switch {
+  direction: ltr; /* القمر يسار والشمس يمين مهما كان اتجاه الصفحة */
+  position: relative; flex-shrink: 0;
+  width: 4.1rem; height: 2.3rem; padding: 0; border-radius: 999px;
+  background: rgba(0, 0, 0, 0.07);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.18), inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: background-color 0.4s;
+}
+.ts-knob {
+  position: absolute; top: 0.2rem; left: 0.2rem; width: 2.5rem; height: 1.8rem; border-radius: 0.6rem;
+  display: grid; place-items: center;
+  background: linear-gradient(#fff, #f1f1f3);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.55), 0 3px 6px rgba(0, 0, 0, 0.18), inset 0 -2px 0 #f59e0b;
+  transform: translateX(1.2rem);
+  transition: transform 0.55s var(--ease), background 0.4s, box-shadow 0.4s;
+}
+.ts-icon { position: absolute; display: grid; place-items: center; transition: opacity 0.35s, transform 0.5s var(--ease), filter 0.35s; }
+.ts-icon svg { width: 1.1rem; height: 1.1rem; }
+.ts-sun { color: #b45309; }
+.ts-moon { color: #e0e7ff; opacity: 0; transform: scale(0.5) rotate(-40deg); filter: blur(3px); }
+[data-theme="dark"] .ts-knob {
+  transform: translateX(0);
+  background: linear-gradient(#3b3b45, #1f1f27);
+  box-shadow: 0 0 16px rgba(129, 140, 248, 0.7), 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 -2px 0 #a5b4fc;
+}
+[data-theme="dark"] .theme-switch { background: rgba(0, 0, 0, 0.45); border-color: rgba(255, 255, 255, 0.08); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6); }
+[data-theme="dark"] .ts-moon { opacity: 1; transform: none; filter: none; }
+[data-theme="dark"] .ts-sun { opacity: 0; transform: scale(0.5) rotate(40deg); filter: blur(3px); }
+.has-hero .nav-wrap:not(.is-scrolled) .theme-switch { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.3); }
+.theme-switch:focus-visible { outline-offset: 2px; border-radius: 999px; }
+/* مربعات التفتّت */
+.ts-px {
+  position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px; pointer-events: none;
+  animation: ts-px 0.65s steps(7) forwards;
+}
+@keyframes ts-px { to { transform: translate(var(--dx), var(--dy)) scale(0.4); opacity: 0; } }
+/* انتقال ناعم للألوان وقت التبديل */
+.theme-anim *, .theme-anim *::before, .theme-anim *::after { transition: background-color 0.55s, color 0.55s, border-color 0.55s, fill 0.55s !important; }
+@media (prefers-reduced-motion: reduce) { .ts-knob, .ts-icon { transition-duration: 0.01ms; } .ts-px { display: none; } }
 
 /* قائمة الموبايل */
 .mobile-menu {
@@ -515,8 +553,10 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 
 .vision {
   position: relative; color: #fff;
-  /* شبه شفاف عشان شجرة الخلفية تظهر من وراه */
-  background: linear-gradient(160deg, rgba(5,46,22,.88), rgba(20,83,45,.8) 60%, rgba(22,101,52,.78));
+  /* صورة الغابة الخضراء + تعتيم خفيف عشان النص يقرأ */
+  background:
+    linear-gradient(rgba(3,30,14,.6), rgba(3,30,14,.72)),
+    url("assets/forest.webp") center / cover no-repeat, #14532d;
 }
 .vision .section-head p, .vision .eyebrow { color: var(--green-400); }
 .vision .section-head p { color: #d4d4d8; }
@@ -596,7 +636,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .hero-seed { margin-top: 1.5rem; color: #e4e4e7; }
 .hero-seed strong { color: var(--green-400); font-size: 1.6rem; font-weight: 800; }
 .hero-seed small { display: block; opacity: .75; }
-.hero-actions .btn-white { background: var(--lime); color: #052e16; }
+.hero-actions .btn-white { background: var(--lime); color: #fff; }
 .hero-actions .btn-white:hover { background: var(--lime-hover); }
 
 .muted { color: var(--text-soft); }
@@ -683,7 +723,7 @@ main, #site-footer { position: relative; z-index: 1; }
 /* =========================================================
    بطاقة «تبنَّ شجرة» (صورة الأوراق + الشجرة)
    ========================================================= */
-.btn-lime { background: var(--lime); color: #052e16; }
+.btn-lime { background: var(--lime); color: #fff; }
 .btn-lime:hover { background: var(--lime-hover); }
 .cta-leaves {
   padding: 4rem 1.5rem;
