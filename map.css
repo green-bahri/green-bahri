@@ -2,6 +2,7 @@
 
 .map-box { position: relative; }
 
+#campus-map.leaflet-map,
 .leaflet-map {
   position: relative;
   z-index: 0;
@@ -85,4 +86,19 @@
   color: var(--text);
   font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace;
   resize: vertical;
+}
+
+/* رسالة حالة تظهر فوق الخريطة (مثلاً عند تعذّر تحميل الصور) */
+.map-status {
+  position: absolute;
+  z-index: 2;
+  top: .8rem;
+  inset-inline: 4rem;
+  padding: .5rem .9rem;
+  border-radius: .75rem;
+  background: rgba(15, 42, 32, .92);
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 700;
+  text-align: center;
 }

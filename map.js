@@ -1,14 +1,16 @@
 /* خريطة تشجير الجامعة (Leaflet + صورة جوية من Esri + خريطة OpenStreetMap)
    - مواقع المناطق (lat, lng) تُقرأ من data.js
    - لضبط المواقع بالسحب: افتح map.html?edit=1
-   - الملف يحمّل Leaflet بنفسه من مصدر بديل لو المصدر الأول ما اشتغل. */
+   - Leaflet يُحمَّل من: lib/leaflet/ (لو وضعته)، ثم unpkg، ثم cdnjs. كل مصدر له مهلة 8 ثوانٍ.
+   - لو فشلت صور طبقة (جوية أو عادية) يتحول تلقائياً للطبقة الأخرى. */
 (function () {
   const { areas, trees, colleges } = window.GB;
   const n = (v) => v.toLocaleString("ar-EG");
   const STATUS = { planted: "مزروعة", documented: "موثقة" };
   const edit = /[?&]edit(=|&|$)/.test(location.search);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const CDNS = [
+  const BASES = [
+    "lib/leaflet/",
     "https://unpkg.com/leaflet@1.9.4/dist/",
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/",
   ];
@@ -18,9 +20,9 @@
   const nameOf = (list, id) => (list.find((x) => x.id === id) || {}).name || "";
   const hasPos = (a) => Number.isFinite(a.lat) && Number.isFinite(a.lng);
 
-  /* ---------- حاوية الخريطة (تُصلح الصفحة القديمة لو لم تُستبدل) ---------- */
+  /* ---------- حاوية الخريطة ---------- */
   let mapEl = document.getElementById("campus-map");
-  if (mapEl && mapEl.tagName.toLowerCase() === "svg") {
+  if (mapEl && mapEl.tagName.toLowerCase() === "svg") { /* صفحة قديمة */
     const d = document.createElement("div");
     d.id = "campus-map";
     d.className = "leaflet-map";
@@ -38,36 +40,69 @@
   let currentId = null;
   const markers = {};
 
+  function say(text) {
+    if (!mapEl) return;
+    let el = document.getElementById("map-status");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "map-status";
+      el.className = "map-status";
+      el.setAttribute("role", "status");
+      mapEl.parentNode.appendChild(el);
+    }
+    el.textContent = text;
+  }
+
   /* ---------- تحميل Leaflet ---------- */
-  function loadScript(src) {
+  function loadScript(src, ms) {
     return new Promise((ok, fail) => {
       const s = document.createElement("script");
+      const t = setTimeout(() => { s.remove(); fail(); }, ms);
       s.src = src;
-      s.onload = ok;
-      s.onerror = () => { s.remove(); fail(); };
+      s.onload = () => { clearTimeout(t); ok(); };
+      s.onerror = () => { clearTimeout(t); s.remove(); fail(); };
       document.head.appendChild(s);
     });
   }
-  function addCss(href) {
-    const l = document.createElement("link");
-    l.rel = "stylesheet";
-    l.href = href;
-    document.head.appendChild(l);
+  function loadCss(href) {
+    return new Promise((ok) => {
+      const l = document.createElement("link");
+      const t = setTimeout(ok, 5000);
+      l.rel = "stylesheet";
+      l.href = href;
+      l.onload = l.onerror = () => { clearTimeout(t); ok(); };
+      document.head.appendChild(l);
+    });
   }
   async function ensureLeaflet() {
     if (window.L) return true;
-    for (const base of CDNS) {
+    for (const base of BASES) {
       try {
-        await loadScript(base + "leaflet.js");
-        if (window.L) { addCss(base + "leaflet.css"); return true; }
+        await loadScript(base + "leaflet.js", 8000);
+        if (window.L) { await loadCss(base + "leaflet.css"); return true; }
       } catch (e) { /* نجرب المصدر التالي */ }
     }
     return false;
   }
 
+  /* لو فشل تحميل صور طبقة قبل أن يظهر أي مربع منها، نحوّل للطبقة الأخرى */
+  function watchTiles(layer, other, name, otherName) {
+    let ok = 0, bad = 0, switched = false;
+    layer.on("tileload", () => { ok++; });
+    layer.on("tileerror", () => {
+      bad++;
+      if (switched || ok > 0 || bad < 3 || !map.hasLayer(layer)) return;
+      switched = true;
+      map.removeLayer(layer);
+      other.addTo(map);
+      say("تعذّر تحميل " + name + "، تم التحويل إلى " + otherName + ".");
+    });
+  }
+
   /* ---------- بناء الخريطة ---------- */
   function buildMap() {
     const L = window.L;
+    mapEl.replaceChildren();
     const placed = areas.filter(hasPos);
     const bounds = L.latLngBounds(placed.map((a) => [a.lat, a.lng]));
 
@@ -94,6 +129,8 @@
       maxNativeZoom: 19, maxZoom: 19,
       attribution: '© <a href="https://www.openstreetmap.org/copyright">مساهمو OpenStreetMap</a>',
     });
+    watchTiles(sat, osm, "الصورة الجوية", "الخريطة العادية");
+    watchTiles(osm, sat, "الخريطة العادية", "الصورة الجوية");
     sat.addTo(map);
     L.control.layers({ "صورة جوية": sat, "خريطة عادية": osm }, null, { position: "topright", collapsed: false }).addTo(map);
 
@@ -208,6 +245,7 @@
   select((areas.find((a) => count(a.id)) || areas[0]).id, false);
 
   if (mapEl) {
+    mapEl.innerHTML = '<p class="map-error" style="padding:2rem;text-align:center">جاري تحميل الخريطة...</p>';
     ensureLeaflet().then((ok) => {
       if (!ok) return showError();
       buildMap();
