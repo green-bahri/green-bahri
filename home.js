@@ -12,6 +12,10 @@
   };
   document.querySelectorAll("[data-icon]").forEach((el) => { el.innerHTML = ICONS[el.dataset.icon] || ""; });
 
+  /* فيديو بطاقة السقاية: يتوقف لو الجهاز مفعّل «تقليل الحركة» */
+  const jv = document.querySelector(".jv-bg");
+  if (jv && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { jv.removeAttribute("autoplay"); jv.pause(); }
+
   /* العنوان الضخم: نضبط حجم الخط ليملأ عرض الهيرو */
   const giant = document.querySelector(".hero-giant");
   if (giant) {

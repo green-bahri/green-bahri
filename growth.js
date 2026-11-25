@@ -140,6 +140,7 @@
       const foot = document.getElementById("site-footer");
       const max = document.documentElement.scrollHeight - window.innerHeight - (foot ? foot.offsetHeight * 0.8 : 0);
       target = max > 0 ? clamp(window.scrollY / max) : 0;
+      meter.style.opacity = foot && foot.getBoundingClientRect().top < window.innerHeight - 20 ? 0 : 1;
     };
     function loop() {
       cur += (target - cur) * 0.14;

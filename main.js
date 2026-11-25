@@ -70,7 +70,7 @@ function currentPage() {
 function brandHTML() {
   return `
     <a class="brand" href="index.html">
-      <span class="brand-mark">${ICONS.leaf}</span>
+      <span class="brand-mark"><img src="assets/logo.png" alt="" width="30" height="30"></span>
       <span class="brand-text">
         <strong>جرين بحري</strong>
         <small>Green Bahri</small>
@@ -156,6 +156,10 @@ function buildFooter() {
             <ul class="footer-links">
               ${PAGES.map((p) => `<li><a href="${p.href}">${p.label}</a></li>`).join("")}
             </ul>
+          </div>
+          <div class="footer-college">
+            <img src="assets/college-logo.webp" alt="شعار كلية علوم الحاسوب والرياضيات — جامعة بحري" width="96" height="98" loading="lazy">
+            <p>تنفيذ طلاب<br><strong>كلية علوم الحاسوب والرياضيات</strong><br>جامعة بحري</p>
           </div>
         </div>
         <p class="footer-bottom">© ${year} جرين بحري — جامعة بحري</p>
