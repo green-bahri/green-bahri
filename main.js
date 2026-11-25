@@ -9,10 +9,9 @@
 const PAGES = [
   { href: "index.html", label: "الرئيسية" },
   { href: "trees.html", label: "دليل الأشجار" },
-  { href: "map.html", label: "خريطة الجامعة" },
   { href: "colleges.html", label: "مساهمات الكليات" },
   { href: "gallery.html", label: "معرض المبادرة" },
-  { href: "adopt.html", label: "تبنَّ شجرة" },
+  { href: "admin.html", label: "الإدارة" },
 ];
 
 const ICONS = {
@@ -72,6 +71,7 @@ function buildHeader() {
         ${brandHTML()}
         <ul class="nav-links">${links.map((l) => `<li>${l}</li>`).join("")}</ul>
         <div class="nav-actions">
+          <a class="nav-cta" href="index.html#join">شارك في المبادرة</a>
           <button class="icon-btn" id="theme-toggle" type="button" aria-label="تبديل الوضع الداكن">
             ${ICONS.moon}${ICONS.sun}
           </button>
@@ -81,7 +81,7 @@ function buildHeader() {
           </button>
         </div>
       </nav>
-      <div class="mobile-menu" id="mobile-menu" hidden>${links.join("")}</div>
+      <div class="mobile-menu" id="mobile-menu" hidden>${links.join("")}<a class="nav-cta nav-cta-m" href="index.html#join">شارك في المبادرة</a></div>
     </header>`;
 
   const wrap = document.getElementById("nav-wrap");

@@ -10,25 +10,25 @@
    تأكد من رخصة الخط قبل استخدامه في الموقع المنشور. */
 @font-face {
   font-family: "Thmanyah";
-  src: url("../assets/fonts/thmanyahsans-Regular.woff2") format("woff2");
+  src: url("assets/fonts/thmanyahsans-Regular.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Thmanyah";
-  src: url("../assets/fonts/thmanyahsans-Medium.woff2") format("woff2");
+  src: url("assets/fonts/thmanyahsans-Medium.woff2") format("woff2");
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
   font-family: "Thmanyah";
-  src: url("../assets/fonts/thmanyahsans-Bold.woff2") format("woff2");
+  src: url("assets/fonts/thmanyahsans-Bold.woff2") format("woff2");
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: "Thmanyah";
-  src: url("../assets/fonts/thmanyahsans-Black.woff2") format("woff2");
+  src: url("assets/fonts/thmanyahsans-Black.woff2") format("woff2");
   font-weight: 900;
   font-display: swap;
 }
@@ -43,6 +43,8 @@
   --green-700: #15803d;
   --green-800: #166534;
   --green-950: #052e16;
+  --lime: #d4f82a;
+  --lime-hover: #e3ff55;
 
   --bg: #fafafa;
   --surface: #ffffff;
@@ -181,8 +183,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.6rem 1.1rem;
-  border-radius: var(--radius);
+  padding: 0.55rem 0.7rem 0.55rem 0.55rem;
+  border-radius: 0.7rem;
   border: 1px solid var(--glass-line);
   background: var(--glass-bg);
   backdrop-filter: blur(24px);
@@ -227,7 +229,12 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   display: none;
   align-items: center;
   gap: 0.25rem;
+  position: absolute; /* وسط الشريط تماماً */
+  inset-inline: 0;
+  margin-inline: auto;
+  width: fit-content;
 }
+.nav { position: relative; }
 .nav-links a {
   display: block;
   padding: 0.5rem 0.95rem;
@@ -242,7 +249,35 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   background: var(--nav-hover);
 }
 
-.nav-actions { display: flex; align-items: center; gap: 0.35rem; }
+.nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+/* زر الدعوة الليموني (مثل نافبار الطاحونة) */
+.nav-cta {
+  display: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.45rem;
+  background: var(--lime);
+  color: #14290a;
+  font-weight: 800;
+  font-size: 0.95rem;
+  transition: background-color 0.15s, transform 0.15s var(--ease);
+}
+.nav-cta:hover { background: var(--lime-hover); }
+.nav-cta:active { transform: translateY(1px); }
+.mobile-menu .nav-cta-m { display: block; margin-top: 0.4rem; text-align: center; color: #14290a; }
+.mobile-menu .nav-cta-m:hover { color: #14290a; background: var(--lime-hover); }
+
+/* فوق الهيرو: زجاج شفاف ونص أبيض */
+.has-hero .nav-wrap:not(.is-scrolled) {
+  --glass-bg: rgba(255, 255, 255, 0.12);
+  --glass-line: rgba(255, 255, 255, 0.32);
+  --nav-link: #fff;
+  --nav-link-hover: #fff;
+  --nav-hover: rgba(255, 255, 255, 0.16);
+}
+.has-hero .nav-wrap:not(.is-scrolled) .brand-text strong { color: #fff; }
+.has-hero .nav-wrap:not(.is-scrolled) .brand-text small { color: var(--lime); }
+.has-hero .nav-wrap:not(.is-scrolled) .brand-mark { background: var(--lime); color: #14290a; }
 
 .icon-btn {
   display: grid;
@@ -289,6 +324,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 
 @media (min-width: 900px) {
   .nav-links { display: flex; }
+  .nav-cta { display: inline-block; }
   .nav-burger { display: none; }
   .mobile-menu { display: none !important; }
 }
@@ -333,8 +369,30 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   z-index: 1;
   width: 100%;
   max-width: 52rem;
-  padding: 7rem 1.25rem 4rem;
+  padding: 7rem 1.25rem clamp(4.5rem, 11vw, 10rem);
   text-align: center;
+}
+
+/* العنوان الضخم الشفاف أسفل الهيرو (مثل كلمة AGRICULTURE) */
+.hero-giant {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.1em;
+  z-index: 1;
+  text-align: center;
+  white-space: nowrap;
+  /* الحجم يُضبط بالجافاسكربت (home.js) ليملأ العرض، وهذا بديل */
+  font-size: 14.5vw;
+  font-family: "Poppins", var(--font);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.1) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
 }
 
 .hero h1 {
@@ -416,7 +474,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
    أقسام الصفحة الرئيسية
    ========================================================= */
 .section { padding: 6rem 0; }
-.section-alt { background: var(--surface); }
+.section-alt { background: color-mix(in srgb, var(--surface) 45%, transparent); }
 .section-head { text-align: center; max-width: 42rem; margin: 0 auto 3.5rem; }
 .eyebrow { color: var(--green-500); font-size: .9rem; font-weight: 700; letter-spacing: .1em; }
 .section-head h2 { font-size: clamp(2rem, 5vw, 3rem); margin: .8rem 0 1.2rem; }
@@ -440,7 +498,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .cards { display: grid; gap: 1.5rem; }
 @media (min-width: 900px) { .cards-3 { grid-template-columns: repeat(3, 1fr); } }
 .card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 1.5rem; padding: 2rem;
+  background: color-mix(in srgb, var(--surface) 70%, transparent); border: 1px solid var(--line); border-radius: 1.5rem; padding: 2rem;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   transition: box-shadow .2s, transform .2s var(--ease);
 }
 .card:hover { box-shadow: 0 20px 25px -5px rgba(0,0,0,.1); transform: translateY(-3px); }
@@ -452,13 +511,10 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .card h3 { font-size: 1.4rem; margin-bottom: .7rem; }
 .card p { color: var(--text-soft); }
 
-/* ضع الصورة في assets/vision.jpg — لو غير موجودة تظهر الخلفية الخضراء */
 .vision {
   position: relative; color: #fff;
-  background:
-    linear-gradient(rgba(9,9,11,.72), rgba(9,9,11,.72)),
-    url("assets/vision.jpg") center / cover fixed no-repeat,
-    linear-gradient(160deg, var(--green-950), #14532d 60%, var(--green-800));
+  /* شبه شفاف عشان شجرة الخلفية تظهر من وراه */
+  background: linear-gradient(160deg, rgba(5,46,22,.88), rgba(20,83,45,.8) 60%, rgba(22,101,52,.78));
 }
 .vision .section-head p, .vision .eyebrow { color: var(--green-400); }
 .vision .section-head p { color: #d4d4d8; }
@@ -538,7 +594,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .hero-seed { margin-top: 1.5rem; color: #e4e4e7; }
 .hero-seed strong { color: var(--green-400); font-size: 1.6rem; font-weight: 800; }
 .hero-seed small { display: block; opacity: .75; }
-.hero-actions .btn-white { background: #fff; color: var(--green-700); }
+.hero-actions .btn-white { background: var(--lime); color: #14290a; }
+.hero-actions .btn-white:hover { background: var(--lime-hover); }
 
 .muted { color: var(--text-soft); }
 .badge-demo { background: var(--line); color: var(--text-soft); }
@@ -546,7 +603,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .overview { display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); }
 @media (min-width: 900px) { .overview { grid-template-columns: repeat(3, 1fr); gap: 1.3rem; } }
 .h-card {
-  display: block; padding: 1.4rem; border-radius: 1.3rem; background: var(--surface); border: 1px solid var(--line);
+  display: block; padding: 1.4rem; border-radius: 1.3rem; background: color-mix(in srgb, var(--surface) 70%, transparent); border: 1px solid var(--line);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   transition: box-shadow .2s, transform .2s var(--ease), opacity .7s var(--ease);
 }
 .h-card:hover { box-shadow: 0 20px 25px -5px rgba(0,0,0,.1); transform: translateY(-3px); }
@@ -591,24 +649,53 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .toast[hidden] { display: none; }
 
 /* =========================================================
-   شجرة النمو مع التمرير (growth.js)
+   شجرة النمو في الخلفية (growth.js)
+   - طبقة ثابتة خلف الأقسام (الأقسام شفافة فتظهر منها)
+   - الحجم: height. المكان: left. الشفافية: opacity.
    ========================================================= */
-.grow {
-  position: fixed; left: 1rem; bottom: 1rem; z-index: 40; width: 8rem; padding: .5rem .6rem .7rem;
-  border-radius: 1.2rem; text-align: center; pointer-events: none;
-  background: var(--glass-bg); border: 1px solid var(--glass-line);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 10px 30px -12px rgba(0,0,0,.25);
+main, #site-footer { position: relative; z-index: 1; }
+.grow-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
 }
-@media (min-width: 900px) { .grow { left: 1.5rem; bottom: 1.5rem; width: 10.5rem; padding: .7rem .8rem .9rem; } }
-.grow svg { width: 100%; height: auto; overflow: visible; }
-.grow-pct { font-weight: 800; font-size: 1.15rem; line-height: 1.2; color: var(--green-700); }
+.grow-bg svg {
+  position: absolute; bottom: -7vh; left: 50%; transform: translateX(-50%);
+  height: 118vh; width: auto; max-width: none; overflow: visible; opacity: .5;
+}
+[data-theme="dark"] .grow-bg svg { opacity: .5; }
+@media (min-width: 900px) {
+  .grow-bg svg { left: 4vw; transform: none; opacity: .7; }
+  [data-theme="dark"] .grow-bg svg { opacity: .6; }
+}
+.grow-meter {
+  position: fixed; left: 1rem; bottom: 1rem; z-index: 40; pointer-events: none;
+  display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25;
+  text-shadow: 0 0 10px var(--bg), 0 0 4px var(--bg);
+}
+.grow-pct { font-weight: 900; font-size: 1.6rem; color: var(--green-700); }
 [data-theme="dark"] .grow-pct { color: var(--green-400); }
-.grow-stage { font-size: .8rem; color: var(--text-soft); min-height: 1.3em; }
-.grow-bar { height: 4px; margin-top: .4rem; border-radius: 99px; background: var(--line); overflow: hidden; }
-.grow-bar i { display: block; height: 100%; background: var(--green-500); transform-origin: right; transform: scaleX(0); }
-.grow-hint { font-size: .72rem; color: var(--text-soft); margin-top: .4rem; transition: opacity .4s; }
+.grow-stage { font-size: .8rem; font-weight: 700; color: var(--text-soft); }
 @keyframes sway { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
 #g-crown.is-full { animation: sway 5s ease-in-out infinite; transform-origin: 100px 250px; }
 @media (prefers-reduced-motion: reduce) { #g-crown.is-full { animation: none; } }
-@media (max-width: 899px) { .footer { padding-bottom: 9rem; } }
+
+/* =========================================================
+   بطاقة «تبنَّ شجرة» (صورة الأوراق + الشجرة)
+   ========================================================= */
+.btn-lime { background: var(--lime); color: #14290a; }
+.btn-lime:hover { background: var(--lime-hover); }
+.cta-leaves {
+  position: relative; display: grid; align-items: center; text-align: start; gap: 1rem;
+  padding: 3rem 1.5rem 0; overflow: visible;
+  background:
+    linear-gradient(to left, rgba(16,16,16,.92) 8%, rgba(16,16,16,.35) 70%, rgba(16,16,16,0)),
+    url("assets/leaves-dark.webp") left center / cover no-repeat, #101010;
+}
+.cta-leaves .cta-text { padding-bottom: 2.5rem; }
+.cta-leaves h2 { font-size: clamp(2rem, 5vw, 3.2rem); }
+.cta-leaves p { margin: 0 0 1.8rem; color: #d4d4d8; }
+.cta-tree { justify-self: center; height: 17rem; width: auto; margin-top: -4.5rem; filter: drop-shadow(0 18px 24px rgba(0,0,0,.45)); }
+@media (min-width: 900px) {
+  .cta-leaves { grid-template-columns: 1.1fr .9fr; padding: 3.5rem 3.5rem 0; min-height: 22rem; }
+  .cta-leaves .cta-text { padding-bottom: 3.5rem; grid-column: 1; grid-row: 1; }
+  .cta-tree { grid-column: 2; grid-row: 1; align-self: end; height: 30rem; margin-top: -8rem; margin-bottom: 0; }
+}
