@@ -1,6 +1,7 @@
 /* =========================================================
-   growth.js — شجرة تكبر مع التمرير (بذرة ← شجرة مكتملة)
-   - يضيف ودجت ثابتة في زاوية الصفحة، لا يحتاج أي HTML إضافي.
+   growth.js — شجرة ضخمة في خلفية الصفحة تكبر مع التمرير (بذرة ← شجرة مكتملة)
+   - تُضاف كطبقة ثابتة خلف كل الأقسام، لا تحتاج أي HTML إضافي.
+   - الحجم والمكان والشفافية من الكلاس .grow-bg في style.css.
    - للاستخدام في أي صفحة: <script src="growth.js" defer></script>
    - للتعديل: غيّر STAGES (أسماء المراحل) أو الأرقام داخل WINDOWS
      (كل زوج [من, إلى] هو جزء من التمرير 0..1 تظهر فيه العناصر).
@@ -60,26 +61,28 @@
   const html = `
     <svg viewBox="0 0 200 280" role="presentation" focusable="false">
       <path id="g-trunk" d="${TRUNK_D}" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="#7a5230" stroke-linecap="round"/>
-      ${BRANCHES.map((b, i) => `<path data-branch="${i}" d="${b.d}" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="#7a5230" stroke-width="3.5" stroke-linecap="round"/>`).join("")}
+      ${BRANCHES.map((b, i) => `<path data-branch="${i}" d="${b.d}" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="#7a5230" stroke-width="5" stroke-linecap="round"/>`).join("")}
       ${TRUNK_LEAVES.map(leafSVG).join("")}
       ${BRANCHES.map((b, i) => b.leaves.map((p, j) => leafSVG({ x: p[0], y: p[1], rot: p[2] }, i + j)).join("")).join("")}
       <g id="g-crown">${CROWN.map((c, i) => `<g transform="translate(${c[0]} ${c[1]})"><circle data-crown r="${Math.round(c[2] * 1.2)}" fill="${COLORS.crown[i % 4]}" transform="scale(0)"/></g>`).join("")}</g>
       ${FRUITS.map((f) => `<g transform="translate(${f[0]} ${f[1]})"><circle data-fruit r="4" fill="#f97316" transform="scale(0)"/></g>`).join("")}
-      <path d="M26 264 C48 244 78 240 100 240 C122 240 152 244 174 264Z" fill="#8a6a45"/>
-      <path d="M10 264 H190" stroke="#a98458" stroke-width="3" stroke-linecap="round"/>
+      <path d="M62 266 C76 250 88 245 100 245 C112 245 124 250 138 266Z" fill="#8a6a45" opacity=".55"/>
       <ellipse id="g-seed" cx="100" cy="236" rx="9" ry="6" fill="#5a3a1c"/>
-    </svg>
-    <div class="grow-pct">٠٪</div>
-    <div class="grow-stage">بذرة</div>
-    <div class="grow-bar"><i></i></div>
-    <div class="grow-hint">مرّر للأسفل لتنمو الشجرة</div>`;
+    </svg>`;
+  const meterHTML = `<span class="grow-pct">٠٪</span><span class="grow-stage">بذرة</span>`;
 
   function init() {
     const box = document.createElement("aside");
-    box.className = "grow";
+    box.className = "grow-bg";
     box.setAttribute("aria-hidden", "true");
     box.innerHTML = html;
-    document.body.appendChild(box);
+    document.body.prepend(box);
+    /* مؤشر النسبة: نص صغير بدون بطاقة */
+    const meter = document.createElement("div");
+    meter.className = "grow-meter";
+    meter.setAttribute("aria-hidden", "true");
+    meter.innerHTML = meterHTML;
+    document.body.appendChild(meter);
 
     const $ = (s) => box.querySelector(s);
     const trunk = $("#g-trunk"), seed = $("#g-seed"), crownG = $("#g-crown");
@@ -87,7 +90,7 @@
     const leaves = [...box.querySelectorAll("[data-leaf]")];
     const crowns = [...box.querySelectorAll("[data-crown]")];
     const fruits = [...box.querySelectorAll("[data-fruit]")];
-    const pctEl = $(".grow-pct"), stageEl = $(".grow-stage"), barEl = $(".grow-bar i"), hintEl = $(".grow-hint");
+    const pctEl = meter.querySelector(".grow-pct"), stageEl = meter.querySelector(".grow-stage");
 
     /* نافذة كل ورقة بنفس ترتيب بنائها */
     const leafWindows = [
@@ -101,7 +104,7 @@
       /* الساق */
       const tt = easeOut(seg(p, ...WINDOWS.trunk));
       trunk.setAttribute("stroke-dashoffset", 1 - tt);
-      trunk.setAttribute("stroke-width", 4 + 6 * seg(p, WINDOWS.trunk[0], 1));
+      trunk.setAttribute("stroke-width", 5 + 11 * seg(p, WINDOWS.trunk[0], 1));
       trunk.style.opacity = p > WINDOWS.trunk[0] ? 1 : 0;
       /* البذرة */
       seed.style.opacity = 1 - seg(p, ...WINDOWS.seedFade);
@@ -128,17 +131,17 @@
       /* المؤشر */
       const pct = Math.round(p * 100);
       if (pct !== lastPct) { pctEl.textContent = arabic(pct) + "٪"; lastPct = pct; }
-      barEl.style.transform = `scaleX(${p})`;
       const si = STAGES.findIndex((s) => p < s.until);
       if (si !== lastStage) { stageEl.textContent = STAGES[si].name; lastStage = si; box.dataset.stage = si; }
-      hintEl.style.opacity = p < 0.02 ? 1 : 0;
     }
 
     /* تمرير ناعم: نقترب من القيمة الهدف تدريجياً لتفادي الاهتزاز */
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let cur = 0, target = 0, raf = 0;
     const readTarget = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
+      /* الشجرة تكتمل لما يبدأ الفوتر يظهر، عشان تتشاف كاملة خلف قسم المشاركة */
+      const foot = document.getElementById("site-footer");
+      const max = document.documentElement.scrollHeight - window.innerHeight - (foot ? foot.offsetHeight * 0.8 : 0);
       target = max > 0 ? clamp(window.scrollY / max) : 0;
     };
     function loop() {

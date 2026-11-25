@@ -12,6 +12,20 @@
   };
   document.querySelectorAll("[data-icon]").forEach((el) => { el.innerHTML = ICONS[el.dataset.icon] || ""; });
 
+  /* العنوان الضخم: نضبط حجم الخط ليملأ عرض الهيرو */
+  const giant = document.querySelector(".hero-giant");
+  if (giant) {
+    const span = giant.firstElementChild, hero = giant.parentElement;
+    const fit = () => {
+      giant.style.fontSize = "100px";
+      const w = span.getBoundingClientRect().width;
+      if (w) giant.style.fontSize = (100 * hero.clientWidth * 0.94) / w + "px";
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  }
+
   const dlg = document.getElementById("join-dialog");
   const kind = document.getElementById("join-kind");
   const toast = document.getElementById("toast");
