@@ -242,15 +242,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 }
 [data-theme="dark"] .brand-text small { color: var(--green-400); }
 
-.nav-links {
-  display: none;
-  align-items: center;
-  gap: 0.25rem;
-  position: absolute; /* وسط الشريط تماماً */
-  inset-inline: 0;
-  margin-inline: auto;
-  width: fit-content;
-}
 .nav { position: relative; }
 .nav-links a {
   display: block;
@@ -270,7 +261,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 
 /* زر الدعوة الليموني (مثل نافبار الطاحونة) */
 .nav-cta {
-  display: none;
   padding: 0.6rem 1.2rem;
   border-radius: 999px;
   background: var(--lime);
@@ -281,8 +271,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 }
 .nav-cta:hover { background: var(--lime-hover); }
 .nav-cta:active { transform: translateY(1px); }
-.mobile-menu .nav-cta-m { display: block; margin-top: 0.4rem; text-align: center; color: #fff; }
-.mobile-menu .nav-cta-m:hover { color: #fff; background: var(--lime-hover); }
 
 /* فوق الهيرو: زجاج شفاف ونص أبيض */
 .has-hero .nav-wrap:not(.is-scrolled) {
@@ -351,37 +339,47 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .theme-anim *, .theme-anim *::before, .theme-anim *::after { transition: background-color 0.55s, color 0.55s, border-color 0.55s, fill 0.55s !important; }
 @media (prefers-reduced-motion: reduce) { .ts-knob, .ts-icon { transition-duration: 0.01ms; } .ts-px { display: none; } }
 
-/* قائمة الموبايل */
-.mobile-menu {
-  pointer-events: auto;
-  max-width: var(--container);
-  margin: 0.5rem auto 0;
-  padding: 0.6rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--glass-line);
-  background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.18);
+/* النافبار في الموبايل: صف الشعار + الأزرار، وتحتو صف الروابط جنب بعض (زي الكمبيوتر) */
+.nav { flex-wrap: wrap; row-gap: 0.35rem; column-gap: 0.4rem; padding: 0.5rem; }
+.nav .brand { gap: 0.5rem; }
+.nav .brand-mark { width: 2.2rem; height: 2.2rem; }
+.nav .brand-mark img { width: 1.6rem; height: 1.6rem; }
+.nav .brand-text strong { font-size: 0.92rem; }
+.nav .brand-text small { font-size: 0.7rem; }
+.nav-actions { gap: 0.35rem; }
+.theme-switch { width: 3.5rem; height: 2rem; }
+.theme-switch .ts-knob { width: 2.1rem; height: 1.55rem; top: 0.2rem; left: 0.2rem; transform: translateX(0.95rem); }
+[data-theme="dark"] .theme-switch .ts-knob { transform: translateX(0); }
+.nav-cta { display: inline-block; padding: 0.45rem 0.75rem; font-size: 0.8rem; }
+.nav-links {
+  display: flex; position: static; width: 100%; margin: 0; order: 3;
+  justify-content: space-between; gap: 0;
+  overflow-x: auto; scrollbar-width: none;
+  border-top: 1px solid var(--glass-line); padding-top: 0.35rem;
 }
-.mobile-menu[hidden] { display: none; }
-.mobile-menu a {
-  display: block;
-  padding: 0.85rem 1rem;
-  border-radius: 0.75rem;
-  color: var(--nav-link);
-}
-.mobile-menu a:hover,
-.mobile-menu a[aria-current="page"] {
-  color: var(--nav-link-hover);
-  background: var(--nav-hover);
-}
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-links li { flex: 1 0 auto; }
+.nav-links a { padding: 0.4rem 0.2rem; font-size: 0.72rem; text-align: center; white-space: nowrap; }
+@media (max-width: 380px) { .nav-links a { font-size: 0.66rem; padding: 0.4rem 0.12rem; } }
 
 @media (min-width: 900px) {
-  .nav-links { display: flex; }
-  .nav-cta { display: inline-block; }
-  .nav-burger { display: none; }
-  .mobile-menu { display: none !important; }
+  .nav { flex-wrap: nowrap; padding: 0.55rem 0.7rem 0.55rem 0.55rem; column-gap: 1rem; }
+  .nav .brand { gap: 0.7rem; }
+  .nav .brand-mark { width: 2.6rem; height: 2.6rem; }
+  .nav .brand-mark img { width: 1.9rem; height: 1.9rem; }
+  .nav .brand-text strong { font-size: 1rem; }
+  .nav .brand-text small { font-size: 0.78rem; }
+  .nav-actions { gap: 0.5rem; }
+  .theme-switch { width: 4.1rem; height: 2.3rem; }
+  .theme-switch .ts-knob { width: 2.5rem; height: 1.8rem; transform: translateX(1.2rem); }
+  [data-theme="dark"] .theme-switch .ts-knob { transform: translateX(0); }
+  .nav-cta { padding: 0.6rem 1.2rem; font-size: 0.95rem; }
+  .nav-links {
+    position: absolute; inset-inline: 0; margin-inline: auto; width: fit-content; order: 0;
+    overflow: visible; border-top: 0; padding-top: 0; justify-content: flex-start;
+  }
+  .nav-links li { flex: none; }
+  .nav-links a { padding: 0.5rem 0.95rem; font-size: 0.98rem; }
 }
 
 /* =========================================================
@@ -424,7 +422,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   z-index: 1;
   width: 100%;
   max-width: 56rem;
-  padding: 7rem 1.25rem clamp(4.5rem, 11vw, 10rem);
+  padding: 8rem 1.25rem clamp(4.5rem, 11vw, 10rem);
   text-align: center;
 }
 
@@ -785,3 +783,77 @@ main, #site-footer { position: relative; z-index: 1; }
 }
 .h-card-dark::before { background: #fff; opacity: .35; }
 .grow-meter { transition: opacity .3s; }
+
+/* =========================================================
+   مساهمة الكليات
+   ========================================================= */
+.sum-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.sum { text-align: center; padding: 1.1rem .5rem; border-radius: 1.2rem; background: var(--color-bg-green); color: var(--color-primary); }
+[data-theme="dark"] .sum { background: color-mix(in srgb, var(--color-primary) 35%, var(--surface)); color: #fff; }
+.sum strong { display: block; font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 900; line-height: 1.2; }
+.sum span { font-size: .85rem; font-weight: 700; opacity: .85; }
+.college-grid { grid-template-columns: 1fr; }
+@media (min-width: 640px) { .college-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .college-grid { grid-template-columns: repeat(3, 1fr); } }
+.college { padding: 1.6rem; }
+.college-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem; }
+.rank { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--color-primary); color: #fff; font-weight: 800; }
+.college h3 { font-size: 1.3rem; margin-bottom: .6rem; }
+.college-num { font-size: 2.4rem; font-weight: 900; line-height: 1; color: var(--color-primary); margin-inline-end: .4rem; }
+[data-theme="dark"] .college-num { color: var(--color-natural); }
+.college-lbl { color: var(--text-soft); font-weight: 700; }
+.bar { height: .55rem; border-radius: 999px; background: var(--color-bg-green); margin: 1rem 0 .6rem; overflow: hidden; }
+[data-theme="dark"] .bar { background: rgba(255,255,255,.1); }
+.bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--color-primary), var(--color-natural)); }
+.college small { color: var(--text-soft); }
+
+/* =========================================================
+   معرض المبادرة
+   ========================================================= */
+.gallery-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 900px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 1.2rem; } }
+.shot { position: relative; padding: 0; border-radius: 1.3rem; overflow: hidden; aspect-ratio: 4 / 3; background: var(--color-bg-green); box-shadow: 0 8px 24px -14px rgba(0,0,0,.4); }
+.shot img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+.shot:hover img { transform: scale(1.05); }
+.shot .badge { position: absolute; top: .7rem; inset-inline-start: .7rem; }
+.lightbox { max-width: min(92vw, 70rem); max-height: 90vh; padding: 0; border: 0; border-radius: 1.2rem; background: transparent; overflow: visible; }
+.lightbox::backdrop { background: rgba(8, 20, 14, .8); backdrop-filter: blur(4px); }
+.lightbox img { max-width: 100%; max-height: 86vh; border-radius: 1.2rem; margin: auto; }
+.lb-close { position: absolute; top: -.6rem; inset-inline-end: -.6rem; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: #fff; color: #111; font-weight: 800; z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,.4); }
+
+/* =========================================================
+   خريطة الجامعة
+   ========================================================= */
+.map-layout { display: grid; gap: 1.5rem; }
+@media (min-width: 900px) { .map-layout { grid-template-columns: 1.7fr 1fr; align-items: start; } }
+.area-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.chip { display: inline-flex; align-items: center; gap: .5rem; padding: .45rem .9rem; border-radius: 999px; font-size: .9rem; font-weight: 700; background: var(--color-bg-green); color: var(--color-primary); border: 1.5px solid transparent; transition: background-color .15s, color .15s; }
+.chip b { display: grid; place-items: center; min-width: 1.4rem; height: 1.4rem; border-radius: 999px; background: var(--color-primary); color: #fff; font-size: .75rem; padding: 0 .3rem; }
+.chip.is-on { background: var(--color-primary); color: #fff; }
+.chip.is-on b { background: #fff; color: var(--color-primary); }
+[data-theme="dark"] .chip { background: color-mix(in srgb, var(--color-primary) 30%, var(--surface)); color: #fff; }
+.map-fig { margin: 0; }
+#campus-map { width: 100%; height: auto; border-radius: 1.5rem; border: 1px solid var(--line); background: var(--surface); }
+.map-fig figcaption { margin-top: .6rem; font-size: .85rem; color: var(--text-soft); text-align: center; }
+.m-ground { fill: var(--color-bg-green); stroke: var(--color-natural); stroke-width: 2; }
+[data-theme="dark"] .m-ground { fill: color-mix(in srgb, var(--color-primary) 22%, var(--surface)); }
+.m-road { stroke: #fff; stroke-width: 12; stroke-linecap: round; fill: none; opacity: .75; }
+[data-theme="dark"] .m-road { stroke: rgba(255,255,255,.08); }
+.m-bld { fill: var(--color-natural); opacity: .45; }
+.m-pin { cursor: pointer; outline: none; }
+.m-halo { fill: var(--color-primary); opacity: .15; transition: r .25s var(--ease), opacity .25s; }
+.m-dot { fill: var(--color-primary); stroke: #fff; stroke-width: 3; transition: fill .2s; }
+.m-num { fill: #fff; font-size: 16px; font-weight: 800; pointer-events: none; }
+.m-label { fill: var(--text); font-size: 13px; font-weight: 800; paint-order: stroke; stroke: var(--surface); stroke-width: 4px; pointer-events: none; }
+.m-pin:hover .m-halo, .m-pin:focus-visible .m-halo, .m-pin.is-on .m-halo { r: 34; opacity: .28; }
+.m-pin.is-on .m-dot { fill: var(--color-brown); }
+.map-panel { padding: 1.5rem; position: relative; }
+.map-panel h2 { font-size: 1.4rem; }
+.panel-sub { color: var(--text-soft); margin: .3rem 0 1rem; }
+.panel-list { display: grid; gap: .6rem; }
+.panel-list li { display: grid; grid-template-columns: 1fr auto; gap: 0 .6rem; align-items: center; padding: .7rem .9rem; border-radius: .9rem; background: color-mix(in srgb, var(--color-bg-green) 70%, transparent); }
+[data-theme="dark"] .panel-list li { background: rgba(255,255,255,.05); }
+.panel-list li span { grid-column: 1; color: var(--text-soft); font-size: .85rem; }
+.panel-list li em { grid-row: 1 / span 2; grid-column: 2; font-style: normal; }
+.panel-empty { color: var(--text-soft); display: block !important; }
+@media (min-width: 900px) { .hero-content { padding-top: 7rem; } }

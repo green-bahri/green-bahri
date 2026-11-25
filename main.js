@@ -1,17 +1,17 @@
 /* =========================================================
    جرين بحري — main.js (المرحلة 1)
    - يبني شريط التنقل والفوتر في كل الصفحات من مكان واحد
-   - الوضع الداكن، قائمة الموبايل
+   - الوضع الداكن (الروابط تظهر جنب بعض في الموبايل زي الكمبيوتر، بدون قائمة منسدلة)
    لتعديل روابط القائمة: غيّر مصفوفة PAGES تحت فقط.
    ========================================================= */
 
 /* الصفحات المتبقية في الموقع (ملفات المراحل الجاية) */
 const PAGES = [
   { href: "index.html", label: "الرئيسية" },
-  { href: "trees.html", label: "دليل الأشجار" },
-  { href: "colleges.html", label: "مساهمات الكليات" },
+  { href: "colleges.html", label: "مساهمة الكليات" },
   { href: "gallery.html", label: "معرض المبادرة" },
-  { href: "admin.html", label: "الإدارة" },
+  { href: "map.html", label: "خريطة الجامعة" },
+  { href: "trees.html", label: "ازرع أثر" },
 ];
 
 const ICONS = {
@@ -105,30 +105,12 @@ function buildHeader() {
               <span class="ts-icon ts-sun">${ICONS.sun}</span>
             </span>
           </button>
-          <button class="icon-btn nav-burger" id="menu-toggle" type="button"
-                  aria-expanded="false" aria-controls="mobile-menu" aria-label="فتح القائمة">
-            ${ICONS.menu}
-          </button>
         </div>
       </nav>
-      <div class="mobile-menu" id="mobile-menu" hidden>${links.join("")}<a class="nav-cta nav-cta-m" href="index.html#join">شارك في المبادرة</a></div>
     </header>`;
 
   const wrap = document.getElementById("nav-wrap");
-  const menu = document.getElementById("mobile-menu");
-  const burger = document.getElementById("menu-toggle");
-
   document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
-
-  function setMenu(open) {
-    menu.hidden = !open;
-    burger.setAttribute("aria-expanded", String(open));
-    burger.setAttribute("aria-label", open ? "إغلاق القائمة" : "فتح القائمة");
-    burger.innerHTML = open ? ICONS.close : ICONS.menu;
-  }
-  burger.addEventListener("click", () => setMenu(menu.hidden));
-  menu.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
 
   /* يزيد وضوح الشريط عند النزول */
   const onScroll = () => wrap.classList.toggle("is-scrolled", window.scrollY > 24);
