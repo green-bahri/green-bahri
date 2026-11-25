@@ -43,8 +43,8 @@
   --green-700: #15803d;
   --green-800: #166534;
   --green-950: #052e16;
-  --lime: #22c55e;
-  --lime-hover: #4ade80;
+  --lime: #16a34a;
+  --lime-hover: #15803d;
 
   --bg: #fafafa;
   --surface: #ffffff;
@@ -257,15 +257,15 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   padding: 0.6rem 1.2rem;
   border-radius: 0.45rem;
   background: var(--lime);
-  color: #052e16;
+  color: #fff;
   font-weight: 800;
   font-size: 0.95rem;
   transition: background-color 0.15s, transform 0.15s var(--ease);
 }
 .nav-cta:hover { background: var(--lime-hover); }
 .nav-cta:active { transform: translateY(1px); }
-.mobile-menu .nav-cta-m { display: block; margin-top: 0.4rem; text-align: center; color: #052e16; }
-.mobile-menu .nav-cta-m:hover { color: #052e16; background: var(--lime-hover); }
+.mobile-menu .nav-cta-m { display: block; margin-top: 0.4rem; text-align: center; color: #fff; }
+.mobile-menu .nav-cta-m:hover { color: #fff; background: var(--lime-hover); }
 
 /* فوق الهيرو: زجاج شفاف ونص أبيض */
 .has-hero .nav-wrap:not(.is-scrolled) {
@@ -276,8 +276,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   --nav-hover: rgba(255, 255, 255, 0.16);
 }
 .has-hero .nav-wrap:not(.is-scrolled) .brand-text strong { color: #fff; }
-.has-hero .nav-wrap:not(.is-scrolled) .brand-text small { color: #bbf7d0; }
-.has-hero .nav-wrap:not(.is-scrolled) .brand-mark { background: var(--lime); color: #052e16; }
+.has-hero .nav-wrap:not(.is-scrolled) .brand-text small { color: #86efac; }
+.has-hero .nav-wrap:not(.is-scrolled) .brand-mark { background: var(--lime); color: #fff; }
 
 .icon-btn {
   display: grid;
@@ -596,7 +596,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .hero-seed { margin-top: 1.5rem; color: #e4e4e7; }
 .hero-seed strong { color: var(--green-400); font-size: 1.6rem; font-weight: 800; }
 .hero-seed small { display: block; opacity: .75; }
-.hero-actions .btn-white { background: var(--lime); color: #052e16; }
+.hero-actions .btn-white { background: var(--lime); color: #fff; }
 .hero-actions .btn-white:hover { background: var(--lime-hover); }
 
 .muted { color: var(--text-soft); }
@@ -683,7 +683,7 @@ main, #site-footer { position: relative; z-index: 1; }
 /* =========================================================
    بطاقة «تبنَّ شجرة» (صورة الأوراق + الشجرة)
    ========================================================= */
-.btn-lime { background: var(--lime); color: #052e16; }
+.btn-lime { background: var(--lime); color: #fff; }
 .btn-lime:hover { background: var(--lime-hover); }
 .cta-leaves {
   padding: 4rem 1.5rem;
