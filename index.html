@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>جرين بحري | Green Bahri</title>
   <meta name="description" content="منصّة رقمية تدعم مبادرة زراعة الأشجار في جامعة بحري">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="main.js" defer></script>
   <script src="home.js" defer></script>
   <script src="growth.js" defer></script>
 </head>
-<body>
+<body class="has-hero">
   <div id="site-header"></div>
   <main>
     <section id="home" class="hero">
@@ -30,6 +33,7 @@
           <div class="hero-seed"><strong>150</strong> شتلة متاحة للزراعة <small>(ليست أشجاراً مزروعة بعد)</small></div>
         </div>
       </div>
+      <div class="hero-giant" dir="ltr" lang="en" aria-hidden="true"><span>GREEN BAHRI</span></div>
     </section>
 
     <section id="overview" class="section">
@@ -40,7 +44,7 @@
           <p>الأرقام ذات شارة «تجريبي» للعرض فقط، وتُستبدل بالأرقام الفعلية.</p>
         </div>
         <div class="overview">
-          <a class="h-card h-card-dark reveal" href="map.html">
+          <a class="h-card h-card-dark reveal" href="trees.html">
             <div class="h-card-top"><span class="h-icon" data-icon="leaf"></span></div>
             <strong data-count="150">0</strong>
             <span class="h-label">الشتلات المتاحة</span><small>تقريباً — من بيانات المبادرة</small>
@@ -60,7 +64,7 @@
             <strong data-count="6">0</strong>
             <span class="h-label">كليات مشاركة</span><small>رقم تجريبي</small>
           </a>
-          <a class="h-card  reveal" href="adopt.html">
+          <a class="h-card  reveal" href="#join">
             <div class="h-card-top"><span class="h-icon" data-icon="users"></span><span class="badge badge-demo">تجريبي</span></div>
             <strong data-count="40">0</strong>
             <span class="h-label">طلاب مشاركون</span><small>رقم تجريبي</small>
@@ -137,10 +141,13 @@
           <button class="card join-opt reveal" data-join="water"><span class="card-icon" data-icon="water"></span><h3>المساعدة في السقاية</h3><p>شارك في جولات السقاية الأسبوعية.</p></button>
           <button class="card join-opt reveal" data-join="doc"><span class="card-icon" data-icon="camera"></span><h3>التصوير والتوثيق</h3><p>ساهم في توثيق الأشجار وأنشطة المبادرة.</p></button>
         </div>
-        <div class="cta reveal" style="margin-top:2.5rem">
-          <h2>تبنَّ شجرة</h2>
-          <p>أحضرها للمشتل وتُسجَّل باسمك في الموقع، وكل شجرة تصنع فرقاً.</p>
-          <a class="btn btn-white" href="adopt.html">تبنَّ شجرة</a>
+        <div class="cta cta-leaves reveal" style="margin-top:4.5rem">
+          <img class="cta-tree" src="assets/tree-flower.webp" alt="" loading="lazy">
+          <div class="cta-text">
+            <h2>تبنَّ شجرة</h2>
+            <p>أحضرها للمشتل وتُسجَّل باسمك في الموقع، وكل شجرة تصنع فرقاً.</p>
+            <button type="button" class="btn btn-lime" data-join="care">تبنَّ شجرة</button>
+          </div>
         </div>
       </div>
     </section>
