@@ -97,7 +97,6 @@ function buildHeader() {
         ${brandHTML()}
         <ul class="nav-links">${links.map((l) => `<li>${l}</li>`).join("")}</ul>
         <div class="nav-actions">
-          <a class="nav-cta" href="index.html#join">شارك في المبادرة</a>
           <button class="theme-switch" id="theme-toggle" type="button" role="switch"
                   aria-checked="${document.documentElement.dataset.theme !== "dark"}" aria-label="تبديل الوضع الليلي">
             <span class="ts-knob">
