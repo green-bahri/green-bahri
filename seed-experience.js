@@ -13,6 +13,11 @@
   const q = new URLSearchParams(location.search);
   const fixedP = q.has("p") ? Math.min(1, Math.max(0, parseFloat(q.get("p")) || 0)) : null;
 
+  /* زر «كن جزءاً من التغيير»: يفتح نافذة المشاركة لو وُجدت (home.js)، وإلا ينتقل لقسم المشاركة */
+  root.querySelectorAll("[data-join]").forEach((b) => b.addEventListener("click", () => {
+    if (!document.getElementById("join-dialog")) location.href = "index.html#join";
+  }));
+
   /* ---------- أدوات ---------- */
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const seg = (p, a, b) => clamp((p - a) / (b - a));
@@ -49,7 +54,7 @@
   renderer.toneMappingExposure = 1.08;
 
   const scene = new T.Scene();
-  const DARK = new T.Color("#06120c"), SKY = new T.Color("#4a8a63"), bg = new T.Color();
+  const DARK = new T.Color("#06120c"), SKY = new T.Color("#6aa586"), bg = new T.Color();
   scene.background = bg;
   scene.fog = new T.FogExp2("#06120c", 0.05);
   const camera = new T.PerspectiveCamera(35, 1, 0.1, 90);
@@ -105,6 +110,15 @@
     for (let i = 1; i < 7; i++) { const y = s * (.9 - i * .11); g.beginPath(); g.moveTo(s / 2, y); g.lineTo(s * .18, y - s * .1); g.moveTo(s / 2, y); g.lineTo(s * .82, y - s * .1); g.stroke(); }
   });
 
+  const barkTex = canvasTex(256, (g, s) => {
+    g.fillStyle = "#cdbfa8"; g.fillRect(0, 0, s, s);
+    for (let i = 0; i < 90; i++) { /* شقوق طولية */
+      const x = R() * s; g.strokeStyle = `rgba(${40 + R() * 30 | 0},${28 + R() * 20 | 0},${16 + R() * 14 | 0},${0.25 + R() * 0.4})`; g.lineWidth = 0.8 + R() * 2.2;
+      g.beginPath(); g.moveTo(x, 0); for (let y = 0; y <= s; y += 32) g.lineTo(x + (R() - .5) * 10, y); g.stroke();
+    }
+    dots(g, s, 700, 1, 4, (r) => `rgba(255,255,255,${0.04 + r * 0.08})`);
+  }, { repeat: [2, 5] });
+
   const glowTex = canvasTex(64, (g, s) => {
     const gr = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
     gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(.35, "rgba(255,255,255,.35)"); gr.addColorStop(1, "rgba(255,255,255,0)");
@@ -120,10 +134,12 @@
 
   /* ---------- التربة (مقطع عرضي: الوجه الأمامي عند z = 0) ---------- */
   const soilSide = new T.MeshStandardMaterial({ color: "#2a1c11", roughness: 1 });
+  const topMat = new T.MeshStandardMaterial({ map: topTex, color: "#b8a999", roughness: 1 });
+  const TOP_A = new T.Color("#b8a999"), TOP_B = new T.Color("#7da35a");
   const soil = new T.Mesh(
     new T.BoxGeometry(16, 9, 6),
     [soilSide, soilSide,
-      new T.MeshStandardMaterial({ map: topTex, color: "#b8a999", roughness: 1 }),
+      topMat,
       soilSide,
       new T.MeshStandardMaterial({ map: soilTex, roughness: 1 }),
       soilSide]
@@ -155,13 +171,13 @@
 
   /* ---------- أنبوب ينمو تدريجياً (للجذور والساق) ---------- */
   function growMaterial(color, params = {}) {
-    const uniforms = { uGrow: { value: 0 } };
+    const uniforms = { uGrow: { value: 0 }, uThick: { value: 1 } };
     const m = new T.MeshStandardMaterial({ color, roughness: 0.8, ...params });
     m.onBeforeCompile = (sh) => {
-      sh.uniforms.uGrow = uniforms.uGrow;
+      sh.uniforms.uGrow = uniforms.uGrow; sh.uniforms.uThick = uniforms.uThick;
       sh.vertexShader = sh.vertexShader
-        .replace("#include <common>", "#include <common>\nattribute float aT;\nattribute vec3 aC;\nuniform float uGrow;")
-        .replace("#include <begin_vertex>", "vec3 transformed = aC + (position - aC) * clamp((uGrow - aT) / 0.05, 0.0, 1.0);");
+        .replace("#include <common>", "#include <common>\nattribute float aT;\nattribute vec3 aC;\nuniform float uGrow;\nuniform float uThick;")
+        .replace("#include <begin_vertex>", "vec3 transformed = aC + (position - aC) * clamp((uGrow - aT) / 0.05, 0.0, 1.0) * uThick;");
     };
     m.userData.uniforms = uniforms;
     return m;
@@ -193,7 +209,7 @@
     geo.setIndex(idx);
     const mesh = new T.Mesh(geo, material);
     mesh.frustumCulled = false; /* الرؤوس تتحرك في الشيدر، فلا نعتمد على الصندوق الأصلي */
-    return { mesh, curve, mat: material, set(g) { material.userData.uniforms.uGrow.value = g * 1.05; } };
+    return { mesh, curve, mat: material, set(g, th = 1) { const u = material.userData.uniforms; u.uGrow.value = g * 1.05; u.uThick.value = th; } };
   }
 
   /* ---------- الجذور ---------- */
@@ -225,26 +241,103 @@
   }
   roots.forEach((r) => scene.add(r.mesh));
 
-  /* ---------- الساق والأوراق (برعم مؤقت) ---------- */
+  /* ---------- الجذع (يبدأ ساقاً أخضر رفيعاً ثم يسمك ويتخشّب) ---------- */
+  const GREEN_STEM = new T.Color("#79bd58"), BARK = new T.Color("#8a6a48"), _c = new T.Color();
+  const trunkMat = growMaterial("#79bd58", { map: barkTex, roughness: 0.82 });
   const stem = makeTube(
-    [new T.Vector3(0, 0.3, 0.12), new T.Vector3(0.03, 0.9, 0.13), new T.Vector3(-0.05, 1.6, 0.12), new T.Vector3(0.06, 2.3, 0.12), new T.Vector3(0, 3.0, 0.12), new T.Vector3(0.12, 3.5, 0.12)],
-    0.055, 0.02, growMaterial("#79bd58", { roughness: 0.7 }), { radial: 10, segs: 70 }
+    [new T.Vector3(0, -0.12, 0.12), new T.Vector3(0.01, 0.5, 0.12), new T.Vector3(0.07, 1.2, 0.13), new T.Vector3(-0.04, 2.0, 0.12), new T.Vector3(0.06, 2.8, 0.12), new T.Vector3(0.0, 3.6, 0.12)],
+    0.055, 0.016, trunkMat, { radial: 12, segs: 90 }
   );
-  const STEM = { t0: 0.6, t1: 0.9 };
+  const STEM = { t0: 0.58, t1: 0.8 };
   scene.add(stem.mesh);
 
+  /* ---------- الأوراق الأولى على البرعم (مفردة) ---------- */
   const leafGeo = new T.PlaneGeometry(0.5, 0.8, 1, 8);
   leafGeo.translate(0, 0.4, 0);
   { const p = leafGeo.attributes.position; for (let i = 0; i < p.count; i++) { const y = p.getY(i) / 0.8; p.setZ(i, -0.2 * y * y); } leafGeo.computeVertexNormals(); }
   const leafMat = new T.MeshStandardMaterial({ map: leafTex, alphaTest: 0.45, side: T.DoubleSide, roughness: 0.65 });
   const leaves = [];
-  [0.3, 0.46, 0.6, 0.74, 0.88].forEach((t, i) => {
+  [0.2, 0.34, 0.48, 0.6].forEach((t, i) => {
     const grp = new T.Group(), mesh = new T.Mesh(leafGeo, leafMat);
     grp.position.copy(stem.curve.getPointAt(t));
     grp.rotation.y = i * 2.4 + 0.5;
     grp.add(mesh); grp.scale.setScalar(0.0001); scene.add(grp);
-    leaves.push({ grp, mesh, t0: STEM.t0 + (STEM.t1 - STEM.t0) * t, size: 0.85 + (t * 0.5), i });
+    leaves.push({ grp, mesh, t0: STEM.t0 + (STEM.t1 - STEM.t0) * t, size: 0.8 + t * 0.5, i });
   });
+
+  /* ---------- الأغصان والتاج (أغصان تنمو بالتدريج + أوراق مُجسَّمة InstancedMesh) ---------- */
+  const TR = rng(77), LDEN = isMobile ? 0.55 : 1, LSIZE = isMobile ? 1.25 : 1;
+  const limbs = [], LEAF = [];
+  const Y_AXIS = new T.Vector3(0, 1, 0);
+  const barkMat = () => growMaterial("#7b5a3c", { map: barkTex, roughness: 0.88 });
+
+  function branchPts(start, ang, len, rise) {
+    const ox = Math.cos(ang), oz = Math.sin(ang), pts = [start.clone()];
+    for (let i = 1; i <= 4; i++) {
+      const f = i / 4;
+      pts.push(new T.Vector3(
+        start.x + ox * len * f * 0.9 + (TR() - 0.5) * 0.12,
+        start.y + len * (rise * f + 0.24 * f * f) + (TR() - 0.5) * 0.08,
+        start.z + oz * len * f * 0.9 + (TR() - 0.5) * 0.12));
+    }
+    return pts;
+  }
+  /* يضيف أوراقاً بامتداد منحنى؛ كل ورقة تظهر حين يصلها نمو الغصن */
+  function scatterLeaves(curve, n, a, b, t0, t1, spread, size) {
+    const tan = new T.Vector3();
+    for (let k = 0; k < Math.round(n * LDEN); k++) {
+      const t = a + (b - a) * (k + TR() * 0.8) / Math.max(1, Math.round(n * LDEN));
+      const P = curve.getPointAt(Math.min(1, t)); curve.getTangentAt(Math.min(1, t), tan);
+      const dir = new T.Vector3(tan.x + (TR() - 0.5) * 1.6, tan.y * 0.5 + 0.25 + TR() * 0.5, tan.z + (TR() - 0.5) * 1.6).normalize();
+      const q = new T.Quaternion().setFromUnitVectors(Y_AXIS, dir).multiply(new T.Quaternion().setFromAxisAngle(Y_AXIS, TR() * 6.283));
+      LEAF.push({
+        pos: new T.Vector3(P.x + (TR() - 0.5) * spread, P.y + (TR() - 0.2) * spread * 0.7, P.z + (TR() - 0.5) * spread),
+        q, tilt: 0.45 + TR() * 0.7, size: (0.5 + TR() * 0.38) * size * LSIZE,
+        p0: t0 + (t1 - t0) * Math.min(1, t) + 0.005, ph: TR() * 6.283, tone: TR()
+      });
+    }
+  }
+
+  const MAIN = 9;
+  for (let k = 0; k < MAIN; k++) {
+    const tb = 0.4 + (k / (MAIN - 1)) * 0.5;                          /* ارتفاع الخروج من الجذع */
+    const ang = k * 2.4 + 0.4;                                          /* زاوية ذهبية: توزيع طبيعي حول الجذع */
+    const len = 1.9 - tb * 1.05 + TR() * 0.3;                           /* الأغصان العليا أقصر */
+    const t0 = 0.74 + k * 0.014, t1 = Math.min(0.9, t0 + 0.075);
+    const start = stem.curve.getPointAt(tb);
+    const tube = makeTube(branchPts(start, ang, len, 0.36 + TR() * 0.16), 0.045 * (1.15 - tb * 0.5), 0.008, barkMat(), { radial: 7, segs: 34 });
+    scene.add(tube.mesh); limbs.push({ ...tube, t0, t1, th0: 0.6, th1: 1.7 });
+    scatterLeaves(tube.curve, 20, 0.35, 1, t0, t1, 0.16, 1);
+    for (const [tt, off] of [[0.45, 0.9], [0.72, -0.9]]) {
+      const sp = tube.curve.getPointAt(tt), a0 = lerp(t0, t1, tt), a1 = Math.min(0.93, a0 + 0.05);
+      const sub = makeTube(branchPts(sp, ang + off + (TR() - 0.5) * 0.5, len * (0.42 + TR() * 0.14), 0.3 + TR() * 0.2), 0.022, 0.005, barkMat(), { radial: 5, segs: 20 });
+      scene.add(sub.mesh); limbs.push({ ...sub, t0: a0, t1: a1, th0: 0.6, th1: 1.5 });
+      scatterLeaves(sub.curve, 12, 0.25, 1, a0, a1, 0.13, 0.95);
+    }
+  }
+  scatterLeaves(stem.curve, 46, 0.84, 1, STEM.t0, STEM.t1, 0.34, 1.0);   /* قمة الجذع */
+
+  const crown = new T.InstancedMesh(leafGeo, leafMat, LEAF.length);
+  crown.frustumCulled = false; crown.count = LEAF.length;
+  { const c = new T.Color(); LEAF.forEach((d, i) => { c.setRGB(0.9 + d.tone * 0.45, 1.0 + d.tone * 0.3, 0.75 + d.tone * 0.2); crown.setColorAt(i, c); }); }
+  const _m = new T.Matrix4(), _q = new T.Quaternion(), _qa = new T.Quaternion(), _qw = new T.Quaternion(), _s = new T.Vector3();
+  const X_AXIS = new T.Vector3(1, 0, 0), Z_AXIS = new T.Vector3(0, 0, 1);
+  let crownHidden = false;
+  scene.add(crown);
+  function updateCrown(p, time) {
+    if (p < 0.72) { if (!crownHidden) { _s.setScalar(0.0001); LEAF.forEach((d, i) => { _m.compose(d.pos, d.q, _s); crown.setMatrixAt(i, _m); }); crown.instanceMatrix.needsUpdate = true; crownHidden = true; } return; }
+    crownHidden = false;
+    const wind = 0.35 + 0.65 * smooth(p, 0.8, 0.97);
+    for (let i = 0; i < LEAF.length; i++) {
+      const d = LEAF[i], u = seg(p, d.p0, d.p0 + 0.07), e = u > 0 ? easeOutBack(u) : 0;
+      _qa.setFromAxisAngle(X_AXIS, lerp(-0.25, d.tilt, e));
+      _qw.setFromAxisAngle(Z_AXIS, Math.sin(time * 1.6 + d.ph + d.pos.x * 0.8) * 0.1 * wind * e);
+      _q.copy(d.q).multiply(_qa).multiply(_qw);
+      _s.setScalar(Math.max(0.0001, e * d.size));
+      _m.compose(d.pos, _q, _s); crown.setMatrixAt(i, _m);
+    }
+    crown.instanceMatrix.needsUpdate = true;
+  }
 
   /* ---------- غبار معلّق في الهواء ---------- */
   const N_DUST = isMobile ? 70 : 150, dpos = new Float32Array(N_DUST * 3), DR = rng(21);
@@ -252,6 +345,17 @@
   const dustGeo = new T.BufferGeometry(); dustGeo.setAttribute("position", new T.BufferAttribute(dpos, 3));
   const dust = new T.Points(dustGeo, new T.PointsMaterial({ map: glowTex, size: 0.09, transparent: true, opacity: 0.6, depthWrite: false, blending: T.AdditiveBlending, color: "#c8ecd2" }));
   scene.add(dust);
+
+  /* ---------- قطرات الماء (نقاط متوهجة تسقط ثم تتسرب في التربة) ---------- */
+  const N_DROP = isMobile ? 26 : 56, drop = new Float32Array(N_DROP * 3), dSpd = new Float32Array(N_DROP), DD = rng(33);
+  for (let i = 0; i < N_DROP; i++) { drop[i * 3] = (DD() - 0.5) * 2.4; drop[i * 3 + 1] = DD() * 7 - 3.5; drop[i * 3 + 2] = 0.25 + DD() * 0.7; dSpd[i] = 0.5 + DD() * 0.7; }
+  const dropGeo = new T.BufferGeometry(); dropGeo.setAttribute("position", new T.BufferAttribute(drop, 3));
+  const dropMat = new T.PointsMaterial({ map: glowTex, size: 0.11, transparent: true, opacity: 0, depthWrite: false, blending: T.AdditiveBlending, color: "#b9e6ff" });
+  const drops = new T.Points(dropGeo, dropMat); drops.frustumCulled = false; scene.add(drops);
+
+  /* ---------- وهج الشمس الدافئ (يظهر في المرحلة الأخيرة) ---------- */
+  const sun = new T.Sprite(new T.SpriteMaterial({ map: glowTex, color: "#ffe2a0", transparent: true, opacity: 0, depthWrite: false, blending: T.AdditiveBlending, fog: false }));
+  sun.position.set(4.6, 6.2, -6); sun.scale.set(9, 9, 1); scene.add(sun);
 
   /* ---------- مسار الكاميرا (مفاتيح + منحنى ناعم) ---------- */
   const KEYS = [
@@ -261,8 +365,8 @@
     { p: 0.40, pos: [0.0, -1.4, 3.8], look: [0, -1.5, 0.1], fov: 38 },
     { p: 0.56, pos: [0.0, -2.3, 5.4], look: [0, -2.2, 0.1], fov: 40 },
     { p: 0.68, pos: [1.2, 0.4, 5.2], look: [0, 0.9, 0.1], fov: 40 },
-    { p: 0.84, pos: [1.5, 1.7, 6.2], look: [0, 1.7, 0.1], fov: 40 },
-    { p: 1.00, pos: [0.6, 2.0, 7.4], look: [0, 1.5, 0.1], fov: 42 },
+    { p: 0.82, pos: [1.7, 1.5, 8.4], look: [0, 1.8, 0.1], fov: 40 },
+    { p: 1.00, pos: [0.4, 2.3, 14.6], look: [0, 1.3, 0.1], fov: 40 },
   ];
   const posCurve = new T.CatmullRomCurve3(KEYS.map((k) => new T.Vector3(...k.pos)), false, "centripetal");
   const lookCurve = new T.CatmullRomCurve3(KEYS.map((k) => new T.Vector3(...k.look)), false, "centripetal");
@@ -273,6 +377,7 @@
     let i = 0; while (i < KEYS.length - 2 && p > KEYS[i + 1].p) i++;
     const loc = seg(p, KEYS[i].p, KEYS[i + 1].p), u = (i + loc) / (KEYS.length - 1);
     posCurve.getPoint(u, _pos); lookCurve.getPoint(u, _look);
+    if (camera.aspect < 1.2) _pos.sub(_look).multiplyScalar(1 + (1.2 - camera.aspect) * 0.75 * smooth(p, 0.55, 0.95)).add(_look); /* شاشات الطول: ابتعاد أكبر ليتسع التاج */
     _pos.x += Math.sin(time * 0.35) * 0.03; _pos.y += Math.cos(time * 0.27) * 0.02; /* تنفّس خفيف */
     camera.position.copy(_pos); camera.lookAt(_look);
     const fov = lerp(KEYS[i].fov, KEYS[i + 1].fov, loc);
@@ -283,7 +388,7 @@
   const stepEls = [...root.querySelectorAll(".seed-step")];
   const barEl = root.querySelector(".seed-progress i");
   const STAGES = [0.15, 0.35, 0.58, 0.8, 1.01];
-  let lastStage = -1;
+  let lastStage = -1, lastT = 0;
 
   function apply(p, time) {
     /* لون السماء والضباب */
@@ -302,13 +407,32 @@
 
     /* الجذور والساق */
     roots.forEach((r) => r.set(smooth(p, r.t0, r.t1)));
-    stem.set(smooth(p, STEM.t0, STEM.t1));
+    const grown = smooth(p, STEM.t0, STEM.t1), mature = smooth(p, 0.64, 1.0);
+    stem.set(grown, lerp(1, 4.2, mature));
+    trunkMat.color.copy(GREEN_STEM).lerp(BARK, smooth(p, 0.7, 0.92));
+    limbs.forEach((l) => { const g = smooth(p, l.t0, l.t1); l.set(g, lerp(l.th0, l.th1, smooth(p, l.t0, 1))); });
     leaves.forEach((l) => {
       const u = seg(p, l.t0, l.t0 + 0.12), e = u > 0 ? easeOutBack(u) : 0;
-      l.grp.scale.setScalar(Math.max(0.0001, e * l.size));
+      l.grp.scale.setScalar(Math.max(0.0001, e * l.size * (1 - 0.55 * smooth(p, 0.86, 0.96))));
       l.mesh.rotation.z = -lerp(0.1, 1.15, smooth(u, 0, 1));
       l.mesh.rotation.x = Math.sin(time * 1.2 + l.i) * 0.04 * u;
     });
+    updateCrown(p, time);
+
+    /* التربة تميل للأخضر، والشمس تدفأ، والقطرات تظهر في مرحلة الرعاية */
+    topMat.color.copy(TOP_A).lerp(TOP_B, smooth(p, 0.75, 0.98));
+    sun.material.opacity = 0.5 * smooth(p, 0.72, 1.0); sun.position.x = 4.6 + Math.sin(time * 0.1) * 0.3;
+    key.color.setRGB(1, 0.88 - 0.06 * smooth(p, 0.7, 1), 0.69 - 0.2 * smooth(p, 0.7, 1));
+    dropMat.opacity = 0.85 * smooth(p, 0.06, 0.14) * (1 - smooth(p, 0.74, 0.86));
+    if (dropMat.opacity > 0.01) {
+      const dt = Math.min(0.05, time - lastT); const arr = dropGeo.attributes.position.array;
+      for (let i = 0; i < N_DROP; i++) {
+        const y = arr[i * 3 + 1] - dt * dSpd[i] * (arr[i * 3 + 1] > 0 ? 1.3 : 0.4); /* في التربة تبطؤ كأنها تتسرّب */
+        arr[i * 3 + 1] = y < -3.5 ? 3.8 : y;
+      }
+      dropGeo.attributes.position.needsUpdate = true;
+    }
+    lastT = time;
 
     /* الكاميرا + الغبار */
     applyCamera(p, time);
@@ -316,7 +440,7 @@
 
     /* النصوص والمؤشرات */
     const si = STAGES.findIndex((s) => p < s);
-    if (si !== lastStage) { stepEls.forEach((el, i) => el.classList.toggle("is-on", i === si)); lastStage = si; }
+    if (si !== lastStage) { stepEls.forEach((el, i) => el.classList.toggle("is-on", i === si)); root.classList.toggle("is-last", si === stepEls.length - 1); lastStage = si; }
     barEl.style.transform = `scaleY(${p.toFixed(3)})`;
   }
 
