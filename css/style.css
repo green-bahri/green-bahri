@@ -514,7 +514,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   line-height: 0.95;
   letter-spacing: 0;
   /* زجاج أبيض شفاف يخفت من تحت (مثل كلمة AGRICULTURE) */
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.1) 90%);
+  /* زجاج أخضر طبيعي شفاف يخفت من تحت (لون الديزاين سيستم #A4C3A2) */
+background: linear-gradient(to bottom, rgba(164, 195, 162, 0.9), rgba(248, 246, 240, 0.12) 90%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
