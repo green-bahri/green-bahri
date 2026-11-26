@@ -7,6 +7,43 @@
 /* ---------- الخطوط ----------
    الخط الأساسي Tajawal (يُحمَّل من Google Fonts في ملفات HTML). */
 
+/* ---------- خط ثمانية (Thmanyah) ----------
+   الملفات تُحمَّل من الصفحة الرسمية للخط وتوضع في assets/fonts/ بهذه الأسماء:
+   Thmanyah-Regular / Medium / Bold / Black  (امتداد .woff2 أو .otf)
+   لو الملف غير موجود يستخدم الموقع Tajawal تلقائياً. */
+@font-face {
+  font-family: "Thmanyah";
+  src: url("../assets/fonts/Thmanyah-Regular.woff2") format("woff2"),
+       url("../assets/fonts/Thmanyah-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah";
+  src: url("../assets/fonts/Thmanyah-Medium.woff2") format("woff2"),
+       url("../assets/fonts/Thmanyah-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah";
+  src: url("../assets/fonts/Thmanyah-Bold.woff2") format("woff2"),
+       url("../assets/fonts/Thmanyah-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah";
+  src: url("../assets/fonts/Thmanyah-Black.woff2") format("woff2"),
+       url("../assets/fonts/Thmanyah-Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ---------- المتغيرات ---------- */
 :root {
   /* ===== الديزاين سيستم (جرين بحري) ===== */
@@ -43,7 +80,7 @@
   --nav-link: #3a4a40;
   --nav-link-hover: var(--green-700);
 
-  --font: "Tajawal", system-ui, sans-serif;
+  --font: "Thmanyah", "Tajawal", system-ui, sans-serif; /* ثمانية أولاً، وتجاوال بديل لو الملفات غير موجودة */
   --container: 72rem;
   --radius: 1rem;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
