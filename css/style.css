@@ -354,7 +354,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   overflow: hidden;
   color: #fff;
   /* خلفية بديلة تظهر لو الفيديو غير موجود */
-  background: url("assets/hero.jpg") center 55% / cover no-repeat, linear-gradient(160deg, var(--green-950), #14532d 55%, var(--green-800));
+  background: url("../assets/hero.jpg") center 55% / cover no-repeat, linear-gradient(160deg, var(--green-950), #14532d 55%, var(--green-800));
 }
 
 .hero-video {
@@ -525,7 +525,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   /* صورة الغابة الخضراء + تعتيم خفيف عشان النص يقرأ */
   background:
     linear-gradient(rgba(3,30,14,.6), rgba(3,30,14,.72)),
-    url("assets/forest.webp") center / cover no-repeat, #14532d;
+    url("../assets/forest.webp") center / cover no-repeat, #14532d;
 }
 .vision .section-head p, .vision .eyebrow { color: var(--green-400); }
 .vision .section-head p { color: #d4d4d8; }
@@ -663,7 +663,7 @@ main, #site-footer { position: relative; z-index: 1; }
   padding: 4rem 1.5rem;
   background:
     radial-gradient(ellipse at center, rgba(16,16,16,.72) 15%, rgba(16,16,16,.2) 75%),
-    url("assets/leaves-dark.webp") center / cover no-repeat, #101010;
+    url("../assets/leaves-dark.webp") center / cover no-repeat, #101010;
 }
 .cta-leaves h2 { font-size: clamp(2rem, 5vw, 3.2rem); }
 .cta-leaves p { color: #e4e4e7; }
