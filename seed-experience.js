@@ -64,7 +64,7 @@
   const loadPhoto = (url) => new Promise((res) => texLoader.load(url, (t) => {
     t.colorSpace = T.SRGBColorSpace; t.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy()); res(t);
   }, undefined, () => res(null)));
-  const [tCluster, tLeaf, tBark] = await Promise.all([loadPhoto("assets/tree-cluster.webp"), loadPhoto("assets/tree-leaf.webp"), loadPhoto("assets/tree-bark.webp")]);
+  const [tCluster, tLeaf, tBark, tShell, tShellBump] = await Promise.all([loadPhoto("assets/tree-cluster.webp"), loadPhoto("assets/tree-leaf.webp"), loadPhoto("assets/tree-bark.webp"), loadPhoto("assets/seed-shell.webp"), loadPhoto("assets/seed-shell-bump.webp")]);
 
   /* ---------- نسيج برمجي ---------- */
   function canvasTex(size, draw, { color = true, repeat } = {}) {
@@ -123,6 +123,9 @@
     dots(g, s, 3200, 1, 4, (r) => `rgba(${r > .5 ? 255 : 0},${r > .5 ? 255 : 0},${r > .5 ? 255 : 0},.2)`);
     g.lineWidth = 1.6; for (let i = 0; i < 120; i++) { g.strokeStyle = R() > .5 ? "rgba(0,0,0,.45)" : "rgba(255,255,255,.3)"; wiggle(g, R() * s, R() * s, 40 + R() * 150, 12, 6); }
   }, { color: false });
+  /* خامة القشرة من صورة بذرة حقيقية (إن تحمّلت)؛ وإلا تبقى النسخة البرمجية */
+  if (tShell) { seedTex.image = tShell.image; seedTex.needsUpdate = true; }
+  if (tShellBump) { seedBump.image = tShellBump.image; seedBump.needsUpdate = true; }
   /* وجه القطع الداخلي: لب كريمي رطب بعروق دقيقة وحلقة قشرة رقيقة */
   const capTex = canvasTex(512, (g, s) => {
     g.fillStyle = "#4a2d16"; g.fillRect(0, 0, s, s);
@@ -191,7 +194,7 @@
   /* ---------- البذرة (نصفان قابلان للانفتاح) ---------- */
   const SEED_POS = new T.Vector3(0, 0.12, 0.12);
   const SX = 0.3, SY = 0.46, SZ = 0.3; /* أنصاف الأبعاد */
-  const seedMat = new T.MeshPhysicalMaterial({ map: seedTex, bumpMap: seedBump, bumpScale: 2.6, roughness: 1, roughnessMap: seedRough, clearcoat: 0.4, clearcoatRoughness: 0.4 });
+  const seedMat = new T.MeshPhysicalMaterial({ map: seedTex, bumpMap: seedBump, bumpScale: 1.1, roughness: 1, roughnessMap: seedRough, clearcoat: 0.4, clearcoatRoughness: 0.4 });
   const capMat = new T.MeshStandardMaterial({ map: capTex, roughness: 0.5, side: T.DoubleSide });
   const seed = new T.Group(); seed.position.copy(SEED_POS); scene.add(seed);
 
