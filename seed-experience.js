@@ -59,6 +59,13 @@
   scene.fog = new T.FogExp2("#10281c", 0.03);
   const camera = new T.PerspectiveCamera(35, 1, 0.1, 90);
 
+  /* ---------- خامات حقيقية (أوراق ولحاء) من assets؛ لو فشل التحميل نستخدم النسخ البرمجية ---------- */
+  const texLoader = new T.TextureLoader();
+  const loadPhoto = (url) => new Promise((res) => texLoader.load(url, (t) => {
+    t.colorSpace = T.SRGBColorSpace; t.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy()); res(t);
+  }, undefined, () => res(null)));
+  const [tCluster, tLeaf, tBark] = await Promise.all([loadPhoto("assets/tree-cluster.webp"), loadPhoto("assets/tree-leaf.webp"), loadPhoto("assets/tree-bark.webp")]);
+
   /* ---------- نسيج برمجي ---------- */
   function canvasTex(size, draw, { color = true, repeat } = {}) {
     const c = document.createElement("canvas");
@@ -131,7 +138,7 @@
     g.fillStyle = hl; g.fillRect(0, 0, s, s);
   });
 
-  const leafTex = canvasTex(256, (g, s) => {
+  const leafTex = tLeaf || canvasTex(256, (g, s) => {
     g.beginPath(); g.moveTo(s / 2, s * .98);
     g.bezierCurveTo(s * .02, s * .72, s * .08, s * .2, s / 2, s * .02);
     g.bezierCurveTo(s * .92, s * .2, s * .98, s * .72, s / 2, s * .98); g.closePath();
@@ -150,6 +157,8 @@
     }
     dots(g, s, 700, 1, 4, (r) => `rgba(255,255,255,${0.04 + r * 0.08})`);
   }, { repeat: [2, 5] });
+
+  if (tBark) { barkTex.image = tBark.image; barkTex.needsUpdate = true; }
 
   const glowTex = canvasTex(64, (g, s) => {
     const gr = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
@@ -297,20 +306,21 @@
   roots.forEach((r) => scene.add(r.mesh));
 
   /* ---------- الجذع (يبدأ ساقاً أخضر رفيعاً ثم يسمك ويتخشّب) ---------- */
-  const GREEN_STEM = new T.Color("#79bd58"), BARK = new T.Color("#8a6a48"), _c = new T.Color();
+  const GREEN_STEM = new T.Color("#79bd58"), BARK = new T.Color("#b69a78"), _c = new T.Color();
   const trunkMat = growMaterial("#79bd58", { map: barkTex, roughness: 0.82 });
   const stem = makeTube(
     [new T.Vector3(0, -0.12, 0.12), new T.Vector3(0.01, 0.5, 0.12), new T.Vector3(0.07, 1.2, 0.13), new T.Vector3(-0.04, 2.0, 0.12), new T.Vector3(0.06, 2.8, 0.12), new T.Vector3(0.0, 3.6, 0.12)],
     0.055, 0.016, trunkMat, { radial: 12, segs: 90 }
   );
   const STEM = { t0: 0.58, t1: 0.8 };
+  trunkMat.map = null; let barkOn = false;   /* الساق الطري أملس، واللحاء يظهر عند التخشّب */
   scene.add(stem.mesh);
 
   /* ---------- الأوراق الأولى على البرعم (مفردة) ---------- */
-  const leafGeo = new T.PlaneGeometry(0.5, 0.8, 1, 8);
+  const leafGeo = new T.PlaneGeometry(tLeaf ? 0.42 : 0.5, 0.8, 1, 8);
   leafGeo.translate(0, 0.4, 0);
   { const p = leafGeo.attributes.position; for (let i = 0; i < p.count; i++) { const y = p.getY(i) / 0.8; p.setZ(i, -0.2 * y * y); } leafGeo.computeVertexNormals(); }
-  const leafMat = new T.MeshStandardMaterial({ map: leafTex, alphaTest: 0.45, side: T.DoubleSide, roughness: 0.65 });
+  const leafMat = new T.MeshStandardMaterial({ map: leafTex, emissiveMap: tLeaf ? leafTex : null, emissive: tLeaf ? "#ffffff" : "#000000", emissiveIntensity: 0.3, alphaTest: 0.45, side: T.DoubleSide, roughness: 0.65 });
   const leaves = [];
   [0.2, 0.34, 0.48, 0.6].forEach((t, i) => {
     const grp = new T.Group(), mesh = new T.Mesh(leafGeo, leafMat);
@@ -321,7 +331,7 @@
   });
 
   /* ---------- الأغصان والتاج (أغصان تنمو بالتدريج + أوراق مُجسَّمة InstancedMesh) ---------- */
-  const TR = rng(77), LDEN = isMobile ? 0.55 : 1, LSIZE = isMobile ? 1.25 : 1;
+  const TR = rng(77), LDEN = tCluster ? (isMobile ? 0.3 : 0.5) : (isMobile ? 0.55 : 1), LSIZE = (isMobile ? 1.25 : 1) * (tCluster ? 0.85 : 1);
   const limbs = [], LEAF = [];
   const Y_AXIS = new T.Vector3(0, 1, 0);
   const barkMat = () => growMaterial("#7b5a3c", { map: barkTex, roughness: 0.88 });
@@ -372,9 +382,15 @@
   }
   scatterLeaves(stem.curve, 46, 0.84, 1, STEM.t0, STEM.t1, 0.34, 1.0);   /* قمة الجذع */
 
-  const crown = new T.InstancedMesh(leafGeo, leafMat, LEAF.length);
+  let crownGeo = leafGeo, crownMat = leafMat;
+  if (tCluster) {   /* فرع كامل بتسع أوراق حقيقية؛ قاعدته (الساق) عند نقطة الأصل */
+    crownGeo = new T.PlaneGeometry(1.1, 0.953, 1, 4); crownGeo.translate(0.01, 0.38, 0);
+    { const p = crownGeo.attributes.position; for (let i = 0; i < p.count; i++) { const y = (p.getY(i) - 0.38) / 0.95; p.setZ(i, -0.12 * y * y); } crownGeo.computeVertexNormals(); }
+    crownMat = new T.MeshStandardMaterial({ map: tCluster, emissiveMap: tCluster, emissive: "#ffffff", emissiveIntensity: 0.5, alphaTest: 0.5, side: T.DoubleSide, roughness: 0.7 });  /* التوهج الخفيف يحاكي نفاذ الضوء عبر الورقة فلا تسودّ الجهة المظللة */
+  }
+  const crown = new T.InstancedMesh(crownGeo, crownMat, LEAF.length);
   crown.frustumCulled = false; crown.count = LEAF.length;
-  { const c = new T.Color(); LEAF.forEach((d, i) => { c.setRGB(0.9 + d.tone * 0.45, 1.0 + d.tone * 0.3, 0.75 + d.tone * 0.2); crown.setColorAt(i, c); }); }
+  { const c = new T.Color(); LEAF.forEach((d, i) => { c.setRGB(tCluster ? 1.15 + d.tone * 0.5 : 0.9 + d.tone * 0.45, tCluster ? 1.3 + d.tone * 0.35 : 1.0 + d.tone * 0.3, tCluster ? 0.95 + d.tone * 0.25 : 0.75 + d.tone * 0.2); crown.setColorAt(i, c); }); }
   const _m = new T.Matrix4(), _q = new T.Quaternion(), _qa = new T.Quaternion(), _qw = new T.Quaternion(), _s = new T.Vector3();
   const X_AXIS = new T.Vector3(1, 0, 0), Z_AXIS = new T.Vector3(0, 0, 1);
   let crownHidden = false;
@@ -465,6 +481,7 @@
     const grown = smooth(p, STEM.t0, STEM.t1), mature = smooth(p, 0.64, 1.0);
     stem.set(grown, lerp(1, 4.2, mature));
     trunkMat.color.copy(GREEN_STEM).lerp(BARK, smooth(p, 0.7, 0.92));
+    { const want = p > 0.74; if (want !== barkOn) { trunkMat.map = want ? barkTex : null; trunkMat.needsUpdate = true; barkOn = want; } }
     limbs.forEach((l) => { const g = smooth(p, l.t0, l.t1); l.set(g, lerp(l.th0, l.th1, smooth(p, l.t0, 1))); });
     leaves.forEach((l) => {
       const u = seg(p, l.t0, l.t0 + 0.12), e = u > 0 ? easeOutBack(u) : 0;
