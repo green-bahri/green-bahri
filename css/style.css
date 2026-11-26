@@ -365,6 +365,22 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 @media (max-width: 380px) { .nav-links a { font-size: 0.72rem; padding: 0.4rem 0.1rem; } }
 @media (max-width: 335px) { .nav-links a { font-size: 0.66rem; } }
 
+.nav-links a {
+  display: block;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.85rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* الشاشات الصغيرة جداً */
+@media (max-width: 380px) {
+  .nav-links a {
+    font-size: 0.78rem;
+    padding: 0.45rem 0.65rem;
+  }
+}
+
 /* تنسيق اللابتوب والشاشات الكبيرة */
 @media (min-width: 900px) {
 
@@ -431,22 +447,17 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
     order: 0;
     overflow: visible;
     border-top: 0;
-    gap: 0.65rem;
-    padding: 0 0.3rem 0.2rem;
+    padding-top: 0;
     justify-content: flex-start;
   }
 
   .nav-links li {
     flex: none;
-    display: block;
   }
 
   .nav-links a {
-    display: block;
     padding: 0.5rem 0.95rem;
     font-size: 0.98rem;
-    line-height: inherit;
-    white-space: nowrap;
   }
 }
 
