@@ -355,25 +355,102 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 }
 @media (max-width: 380px) { .nav-links a { font-size: 0.66rem; padding: 0.4rem 0.12rem; } }
 
-@media (min-width: 900px) {
-  .nav { flex-wrap: nowrap; padding: 0.55rem 0.7rem 0.55rem 0.55rem; column-gap: 1rem; }
-  .nav .brand { gap: 0.7rem; }
-  .nav .brand-mark { width: 2.6rem; height: 2.6rem; }
-  .nav .brand-mark img { width: 1.9rem; height: 1.9rem; }
-  .nav .brand-text strong { font-size: 1rem; }
-  .nav .brand-text small { font-size: 0.78rem; }
-  .nav-actions { gap: 0.5rem; }
-  .theme-switch { width: 4.1rem; height: 2.3rem; }
-  .theme-switch .ts-knob { width: 2.5rem; height: 1.8rem; transform: translateX(1.2rem); }
-  [data-theme="dark"] .theme-switch .ts-knob { transform: translateX(0); }
-  .nav-cta { padding: 0.6rem 1.2rem; font-size: 0.95rem; }
-  .nav-links {
-    position: absolute; inset-inline: 0; margin-inline: auto; width: fit-content; order: 0;
-    overflow: visible; border-top: 0; padding-top: 0; justify-content: flex-start;
-  }
-  .nav-links li { flex: none; }
-  .nav-links a { padding: 0.5rem 0.95rem; font-size: 0.98rem; }
+.nav-links a {
+  display: block;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.85rem;
+  text-align: center;
+  white-space: nowrap;
 }
+
+/* الشاشات الصغيرة جداً */
+@media (max-width: 380px) {
+  .nav-links a {
+    font-size: 0.78rem;
+    padding: 0.45rem 0.65rem;
+  }
+}
+
+/* تنسيق اللابتوب والشاشات الكبيرة */
+@media (min-width: 900px) {
+
+  .nav {
+    flex-wrap: nowrap;
+    padding: 0.55rem 0.7rem 0.55rem 0.55rem;
+    column-gap: 1rem;
+  }
+
+  /* إعادة الشعار إلى اليمين في اللابتوب */
+  .nav .brand {
+    gap: 0.7rem;
+    margin-inline: 0;
+    justify-content: flex-start;
+  }
+
+  .nav .brand-mark {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .nav .brand-mark img {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  .nav .brand-text strong {
+    font-size: 1rem;
+  }
+
+  .nav .brand-text small {
+    font-size: 0.78rem;
+  }
+
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
+  .theme-switch {
+    width: 4.1rem;
+    height: 2.3rem;
+  }
+
+  .theme-switch .ts-knob {
+    width: 2.5rem;
+    height: 1.8rem;
+    transform: translateX(1.2rem);
+  }
+
+  [data-theme="dark"] .theme-switch .ts-knob {
+    transform: translateX(0);
+  }
+
+  .nav-cta {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .nav-links {
+    position: absolute;
+    inset-inline: 0;
+    margin-inline: auto;
+    width: fit-content;
+    order: 0;
+    overflow: visible;
+    border-top: 0;
+    padding-top: 0;
+    justify-content: flex-start;
+  }
+
+  .nav-links li {
+    flex: none;
+  }
+
+  .nav-links a {
+    padding: 0.5rem 0.95rem;
+    font-size: 0.98rem;
+  }
+}
+
 
 /* =========================================================
    الهيرو (الصفحة الرئيسية)
