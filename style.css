@@ -755,3 +755,12 @@ main, #site-footer { position: relative; z-index: 1; }
 .panel-list li em { grid-row: 1 / span 2; grid-column: 2; font-style: normal; }
 .panel-empty { color: var(--text-soft); display: block !important; }
 @media (min-width: 900px) { .hero-content { padding-top: 7rem; } }
+
+/* ثلاث خطوات */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+@media (min-width: 800px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+.steps .card { position: relative; padding: 1.6rem; }
+.steps h3 { margin: .8rem 0 .3rem; }
+.steps p { margin: 0; color: var(--text-soft); }
+.step-n { position: absolute; top: 1rem; inset-inline-end: 1.2rem; font-size: 2.6rem; font-weight: 900; color: var(--color-natural); opacity: .7; line-height: 1; }
+.steps-cta { text-align: center; margin-top: 1.6rem; }

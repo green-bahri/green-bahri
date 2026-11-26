@@ -20,7 +20,7 @@
     const el = document.createElement("article");
     el.className = "card college";
     el.innerHTML = `
-      <div class="college-top"><span class="rank">${n(i + 1)}</span><span class="badge badge-demo">تجريبي</span></div>
+      <div class="college-top"><span class="rank">${n(i + 1)}</span></div>
       <h3></h3>
       <strong class="college-num">${n(r.total)}</strong><span class="college-lbl">شجرة</span>
       <div class="bar" role="img" aria-label="نسبة المساهمة"><i style="width:${Math.round((r.total / max) * 100)}%"></i></div>

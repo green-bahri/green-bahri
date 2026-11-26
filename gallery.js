@@ -13,7 +13,7 @@
   SHOTS.forEach((s) => {
     const b = document.createElement("button");
     b.type = "button"; b.className = "shot";
-    b.innerHTML = `<img loading="lazy" alt=""><span class="badge badge-demo">تجريبي</span>`;
+    b.innerHTML = `<img loading="lazy" alt="">`;
     const img = b.querySelector("img"); img.src = s.src; img.alt = s.alt;
     b.addEventListener("click", () => { big.src = s.src; big.alt = s.alt; box.showModal(); });
     grid.appendChild(b);

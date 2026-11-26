@@ -38,7 +38,7 @@
   document.getElementById("join-cancel").addEventListener("click", () => dlg.close());
   dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
   document.getElementById("join-form").addEventListener("submit", () => {
-    toast.textContent = "تم تسجيل اهتمامك — شكراً لمشاركتك! (عرض تجريبي)";
+    toast.textContent = "تم تسجيل اهتمامك — شكراً لمشاركتك!";
     toast.hidden = false;
     setTimeout(() => (toast.hidden = true), 3500);
   });
