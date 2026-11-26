@@ -229,6 +229,17 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   background: var(--nav-hover);
 }
 
+/* الوضع الليلي: تمييز أخضر ناعم (من ألوان الديزاين سيستم) بدل الرمادي */
+[data-theme="dark"] .nav-links a:hover {
+  color: #e3f2e2;
+  background: rgba(164, 195, 162, 0.14);
+}
+[data-theme="dark"] .nav-links a[aria-current="page"] {
+  color: #eaf6e8;
+  background: linear-gradient(180deg, rgba(164, 195, 162, 0.3), rgba(36, 92, 69, 0.45));
+  box-shadow: inset 0 0 0 1px rgba(164, 195, 162, 0.42), 0 4px 14px -6px rgba(164, 195, 162, 0.55);
+}
+
 .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
 
 /* زر الدعوة الليموني (مثل نافبار الطاحونة) */
@@ -325,35 +336,34 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .theme-switch .ts-knob { width: 2.1rem; height: 1.55rem; top: 0.2rem; left: 0.2rem; transform: translateX(0.95rem); }
 [data-theme="dark"] .theme-switch .ts-knob { transform: translateX(0); }
 .nav-cta { display: inline-block; padding: 0.45rem 0.75rem; font-size: 0.8rem; }
+/* الروابط في الموبايل: صف واحد ثابت (بدون تمرير). الرئيسية على اليمين،
+   والكلمات المركّبة (مساهمة الكليات، معرض المبادرة) تنزل لسطرين داخل نفس الشريط. */
 .nav-links {
   display: flex;
   position: static;
   width: 100%;
   margin: 0;
   order: 3;
-  justify-content: flex-start;
-  gap: 0.65rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+  gap: 0.15rem;
   border-top: 1px solid var(--glass-line);
-  padding: 0.55rem 0.3rem 0.2rem;
+  padding: 0.45rem 0 0.1rem;
 }
 
-.nav-links::-webkit-scrollbar { display: none; }
-
-.nav-links li { flex: 0 0 auto; }
+.nav-links li { flex: 1 1 0; min-width: 0; display: flex; }
 
 .nav-links a {
-  display: block;
-  padding: 0.5rem 0.85rem;
-  font-size: 0.85rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.2rem;
+  font-size: 0.8rem;
+  line-height: 1.3;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
 }
-@media (max-width: 380px) { .nav-links a { font-size: 0.66rem; padding: 0.4rem 0.12rem; } }
+@media (max-width: 380px) { .nav-links a { font-size: 0.72rem; padding: 0.4rem 0.1rem; } }
+@media (max-width: 335px) { .nav-links a { font-size: 0.66rem; } }
 
 .nav-links a {
   display: block;
