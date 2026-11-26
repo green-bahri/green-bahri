@@ -51,12 +51,12 @@
   const renderer = new T.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
   renderer.outputColorSpace = T.SRGBColorSpace;
   renderer.toneMapping = T.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.08;
+  renderer.toneMappingExposure = 1.18;
 
   const scene = new T.Scene();
-  const DARK = new T.Color("#06120c"), SKY = new T.Color("#6aa586"), bg = new T.Color();
+  const DARK = new T.Color("#10281c"), SKY = new T.Color("#6aa586"), bg = new T.Color();
   scene.background = bg;
-  scene.fog = new T.FogExp2("#06120c", 0.05);
+  scene.fog = new T.FogExp2("#10281c", 0.03);
   const camera = new T.PerspectiveCamera(35, 1, 0.1, 90);
 
   /* ---------- نسيج برمجي ---------- */
@@ -85,19 +85,51 @@
       g.beginPath(); g.ellipse(x, y, rx, ry, R() * 3, 0, 6.283); g.fill();
       g.fillStyle = "rgba(255,255,255,.14)"; g.beginPath(); g.ellipse(x - rx * .25, y - ry * .3, rx * .45, ry * .35, 0, 0, 6.283); g.fill();
     }
-  }, { repeat: [4, 2.6] });
-  const topTex = soilTex.clone(); topTex.repeat.set(5, 3); topTex.needsUpdate = true;
+  }, { repeat: [11, 2.6] });
+  const topTex = soilTex.clone(); topTex.repeat.set(14, 15); topTex.needsUpdate = true;
 
-  const seedTex = canvasTex(512, (g, s) => {
-    g.fillStyle = "#7a5632"; g.fillRect(0, 0, s, s);
-    dots(g, s, 5000, 1, 9, (r) => `rgba(${70 + r * 70 | 0},${44 + r * 44 | 0},${22 + r * 26 | 0},.28)`);
-    g.strokeStyle = "rgba(40,24,10,.35)"; g.lineWidth = 1.4;
-    for (let i = 0; i < 70; i++) { g.beginPath(); const x = R() * s, y = R() * s; g.moveTo(x, y); g.quadraticCurveTo(x + (R() - .5) * 90, y + (R() - .5) * 90, x + (R() - .5) * 120, y + (R() - .5) * 120); g.stroke(); }
+  /* ---- نسيج البذرة: قشرة بنية متدرجة مع بقع ورقائق وتجاعيد وحواف أغمق عند خط الالتحام ---- */
+  const TS = isMobile ? 512 : 1024;
+  const wiggle = (g, x, y, len, amp, n) => { g.beginPath(); g.moveTo(x, y); for (let i = 1; i <= n; i++) g.lineTo(x + (R() - .5) * amp, y + (len * i) / n); g.stroke(); };
+  const seedTex = canvasTex(TS, (g, s) => {
+    const gr = g.createLinearGradient(0, 0, 0, s);
+    gr.addColorStop(0, "#5e3b20"); gr.addColorStop(.45, "#8c5c31"); gr.addColorStop(1, "#4f3019");
+    g.fillStyle = gr; g.fillRect(0, 0, s, s);
+    dots(g, s, 320, s * .02, s * .1, (r) => `rgba(${40 + r * 100 | 0},${22 + r * 56 | 0},${8 + r * 26 | 0},.11)`);   /* بقع كبيرة */
+    dots(g, s, 90, s * .015, s * .06, () => "rgba(196,150,96,.16)");                                                 /* رقائق قشرة فاتحة */
+    dots(g, s, 7000, .6, 2.6, (r) => `rgba(${30 + r * 90 | 0},${16 + r * 50 | 0},${6 + r * 24 | 0},.3)`);          /* حبيبات */
+    g.lineCap = "round";
+    for (let i = 0; i < 190; i++) { g.strokeStyle = `rgba(26,13,5,${.12 + R() * .22})`; g.lineWidth = .6 + R() * 1.6; wiggle(g, R() * s, R() * s, 40 + R() * s * .35, 14, 7); }
+    for (let i = 0; i < 90; i++) { g.strokeStyle = `rgba(214,168,112,${.06 + R() * .1})`; g.lineWidth = .6 + R() * 1.2; wiggle(g, R() * s, R() * s, 30 + R() * s * .25, 12, 6); }
+    const eg = g.createLinearGradient(0, 0, s, 0);                                                                    /* خط الالتحام */
+    eg.addColorStop(0, "rgba(18,9,3,.6)"); eg.addColorStop(.045, "rgba(18,9,3,0)"); eg.addColorStop(.955, "rgba(18,9,3,0)"); eg.addColorStop(1, "rgba(18,9,3,.6)");
+    g.fillStyle = eg; g.fillRect(0, 0, s, s);
   });
-  const seedBump = canvasTex(256, (g, s) => {
-    g.fillStyle = "#808080"; g.fillRect(0, 0, s, s);
-    dots(g, s, 2600, 1, 6, (r) => `rgba(${r > .5 ? 255 : 0},${r > .5 ? 255 : 0},${r > .5 ? 255 : 0},.25)`);
+  const seedRough = canvasTex(512, (g, s) => {
+    g.fillStyle = "#8c8c8c"; g.fillRect(0, 0, s, s);
+    dots(g, s, 160, 6, 34, (r) => `rgba(${r > .5 ? 235 : 40},${r > .5 ? 235 : 40},${r > .5 ? 235 : 40},.22)`);
+    g.strokeStyle = "rgba(30,30,30,.25)"; g.lineWidth = 1.4; for (let i = 0; i < 80; i++) wiggle(g, R() * s, R() * s, 30 + R() * 120, 10, 5);
   }, { color: false });
+  const seedBump = canvasTex(512, (g, s) => {
+    g.fillStyle = "#808080"; g.fillRect(0, 0, s, s);
+    dots(g, s, 260, 5, 26, (r) => `rgba(${r > .5 ? 255 : 0},${r > .5 ? 255 : 0},${r > .5 ? 255 : 0},.1)`);
+    dots(g, s, 3200, 1, 4, (r) => `rgba(${r > .5 ? 255 : 0},${r > .5 ? 255 : 0},${r > .5 ? 255 : 0},.2)`);
+    g.lineWidth = 1.6; for (let i = 0; i < 120; i++) { g.strokeStyle = R() > .5 ? "rgba(0,0,0,.45)" : "rgba(255,255,255,.3)"; wiggle(g, R() * s, R() * s, 40 + R() * 150, 12, 6); }
+  }, { color: false });
+  /* وجه القطع الداخلي: لب كريمي رطب بعروق دقيقة وحلقة قشرة رقيقة */
+  const capTex = canvasTex(512, (g, s) => {
+    g.fillStyle = "#4a2d16"; g.fillRect(0, 0, s, s);
+    const gr = g.createRadialGradient(s * .5, s * .52, s * .04, s * .5, s * .5, s * .49);
+    gr.addColorStop(0, "#f3e6b8"); gr.addColorStop(.6, "#e6d29a"); gr.addColorStop(.9, "#c7a46a"); gr.addColorStop(1, "#7a5229");
+    g.fillStyle = gr; g.beginPath(); g.arc(s / 2, s / 2, s * .495, 0, 6.283); g.fill();
+    dots(g, s, 1200, .5, 2, (r) => `rgba(${150 + r * 70 | 0},${112 + r * 56 | 0},${60 + r * 40 | 0},.22)`);
+    g.strokeStyle = "rgba(160,112,52,.3)"; g.lineWidth = 1.1;
+    for (let i = 0; i < 46; i++) { const a = -1.57 + (R() - .5) * 2.6, L = s * (.18 + R() * .3); g.beginPath(); g.moveTo(s / 2 + (R() - .5) * 40, s * (.6 + R() * .25)); g.quadraticCurveTo(s / 2 + Math.cos(a) * L * .6, s * .5 + Math.sin(a) * L * .4, s / 2 + Math.cos(a) * L, s * .55 + Math.sin(a) * L); g.stroke(); }
+    const eb = g.createRadialGradient(s / 2, s * .66, 2, s / 2, s * .66, s * .13);   /* موضع الجنين */
+    eb.addColorStop(0, "rgba(120,160,70,.55)"); eb.addColorStop(1, "rgba(120,160,70,0)"); g.fillStyle = eb; g.beginPath(); g.ellipse(s / 2, s * .66, s * .07, s * .13, 0, 0, 6.283); g.fill();
+    const hl = g.createRadialGradient(s * .38, s * .35, 2, s * .38, s * .35, s * .25); hl.addColorStop(0, "rgba(255,255,255,.28)"); hl.addColorStop(1, "rgba(255,255,255,0)");
+    g.fillStyle = hl; g.fillRect(0, 0, s, s);
+  });
 
   const leafTex = canvasTex(256, (g, s) => {
     g.beginPath(); g.moveTo(s / 2, s * .98);
@@ -128,7 +160,7 @@
   /* ---------- الإضاءة ---------- */
   const hemi = new T.HemisphereLight("#7aa88f", "#1a1008", 0.55);
   const key = new T.DirectionalLight("#ffe0b0", 1.3); key.position.set(3, 5, 4);
-  const rim = new T.DirectionalLight("#cfe9dd", 1.0); rim.position.set(-3, 2.5, -3);
+  const rim = new T.DirectionalLight("#cfe9dd", 1.5); rim.position.set(-3, 2.5, -3);
   const under = new T.PointLight("#ffd1a0", 0, 0, 2); under.position.set(0, -2.2, 1.7);
   scene.add(hemi, key, rim, under);
 
@@ -137,30 +169,53 @@
   const topMat = new T.MeshStandardMaterial({ map: topTex, color: "#b8a999", roughness: 1 });
   const TOP_A = new T.Color("#b8a999"), TOP_B = new T.Color("#7da35a");
   const soil = new T.Mesh(
-    new T.BoxGeometry(16, 9, 6),
+    new T.BoxGeometry(44, 9, 30),
     [soilSide, soilSide,
       topMat,
       soilSide,
       new T.MeshStandardMaterial({ map: soilTex, roughness: 1 }),
       soilSide]
   );
-  soil.position.set(0, -4.5, -3);
+  soil.position.set(0, -4.5, -15);
   scene.add(soil);
 
   /* ---------- البذرة (نصفان قابلان للانفتاح) ---------- */
   const SEED_POS = new T.Vector3(0, 0.12, 0.12);
   const SX = 0.3, SY = 0.46, SZ = 0.3; /* أنصاف الأبعاد */
-  const seedMat = new T.MeshPhysicalMaterial({ map: seedTex, bumpMap: seedBump, bumpScale: 2.2, roughness: 0.55, clearcoat: 0.25, clearcoatRoughness: 0.5 });
-  const capMat = new T.MeshStandardMaterial({ color: "#e7dcb4", roughness: 0.9, side: T.DoubleSide });
+  const seedMat = new T.MeshPhysicalMaterial({ map: seedTex, bumpMap: seedBump, bumpScale: 2.6, roughness: 1, roughnessMap: seedRough, clearcoat: 0.4, clearcoatRoughness: 0.4 });
+  const capMat = new T.MeshStandardMaterial({ map: capTex, roughness: 0.5, side: T.DoubleSide });
   const seed = new T.Group(); seed.position.copy(SEED_POS); scene.add(seed);
 
+  /* تشويه عضوي: شكل بيضوي مدبّب قليلاً مع انتفاخات غير متماثلة. الدالة نفسها تُطبَّق على الجسم ووجه القطع فيتطابق الحد تماماً */
+  function deform(x, y, z, o) {
+    const egg = 1 - 0.13 * y;
+    const n = 1 + 0.04 * Math.sin(4.7 * x + 1.3) * Math.cos(3.9 * y + 0.7) + 0.035 * Math.sin(3.3 * z + y * 2.1 + 0.4) + 0.02 * Math.sin(8.5 * y + 3.1 * x + z);
+    return o.set(x * egg * n, y * (0.98 + 0.02 * n) * (1 + 0.03 * Math.sin(2.3 * x + 1.1)), z * egg * n * 0.94);
+  }
+  const _d = new T.Vector3();
   function makeHalf(sign) {
     const pivot = new T.Group(); pivot.position.set(0, -SY, 0);
-    const body = new T.Mesh(new T.SphereGeometry(1, 48, 32, sign > 0 ? Math.PI / 2 : -Math.PI / 2, Math.PI), seedMat);
+    const geo = new T.SphereGeometry(1, isMobile ? 40 : 64, isMobile ? 28 : 48, sign > 0 ? Math.PI / 2 : -Math.PI / 2, Math.PI);
+    const P = geo.attributes.position;
+    for (let i = 0; i < P.count; i++) { deform(P.getX(i), P.getY(i), P.getZ(i), _d); P.setXYZ(i, _d.x, _d.y, _d.z); }
+    geo.computeVertexNormals();
+    const body = new T.Mesh(geo, seedMat);
     body.scale.set(SX, SY, SZ); body.position.y = SY;
-    const cap = new T.Mesh(new T.CircleGeometry(1, 48), capMat);
-    cap.rotation.y = sign > 0 ? -Math.PI / 2 : Math.PI / 2;
-    cap.scale.set(SZ, SY, 1); cap.position.y = SY;
+
+    /* وجه القطع: شبكة حلقات تنتفخ قليلاً نحو الشق */
+    const rings = 10, segs = isMobile ? 40 : 64, pos = [], uv = [], idx = [];
+    for (let ri = 0; ri <= rings; ri++) for (let si = 0; si <= segs; si++) {
+      const r = ri / rings, a = (si / segs) * Math.PI * 2, vx = Math.cos(a), vy = Math.sin(a);
+      deform(0, vy, vx, _d);
+      pos.push(-sign * 0.07 * (1 - r * r), _d.y * r, _d.z * r); uv.push(0.5 + vx * r * 0.5, 0.5 + vy * r * 0.5);
+    }
+    for (let ri = 0; ri < rings; ri++) for (let si = 0; si < segs; si++) {
+      const a = ri * (segs + 1) + si, b = a + segs + 1; idx.push(a, b, a + 1, a + 1, b, b + 1);
+    }
+    const cg = new T.BufferGeometry();
+    cg.setAttribute("position", new T.Float32BufferAttribute(pos, 3)); cg.setAttribute("uv", new T.Float32BufferAttribute(uv, 2));
+    cg.setIndex(idx); cg.computeVertexNormals();
+    const cap = new T.Mesh(cg, capMat); cap.scale.set(SX, SY, SZ); cap.position.y = SY;
     pivot.add(body, cap); seed.add(pivot);
     return pivot;
   }
@@ -366,7 +421,7 @@
     { p: 0.56, pos: [0.0, -2.3, 5.4], look: [0, -2.2, 0.1], fov: 40 },
     { p: 0.68, pos: [1.2, 0.4, 5.2], look: [0, 0.9, 0.1], fov: 40 },
     { p: 0.82, pos: [1.7, 1.5, 8.4], look: [0, 1.8, 0.1], fov: 40 },
-    { p: 1.00, pos: [0.4, 2.3, 14.6], look: [0, 1.3, 0.1], fov: 40 },
+    { p: 1.00, pos: [0.4, 2.6, 14.2], look: [0, 2.15, 0.1], fov: 40 },
   ];
   const posCurve = new T.CatmullRomCurve3(KEYS.map((k) => new T.Vector3(...k.pos)), false, "centripetal");
   const lookCurve = new T.CatmullRomCurve3(KEYS.map((k) => new T.Vector3(...k.look)), false, "centripetal");
@@ -393,9 +448,9 @@
   function apply(p, time) {
     /* لون السماء والضباب */
     bg.copy(DARK).lerp(SKY, smooth(p, 0.6, 0.95)); scene.fog.color.copy(bg);
-    scene.fog.density = lerp(0.05, 0.022, smooth(p, 0.05, 0.9));
-    key.intensity = 1.3 + 1.5 * smooth(p, 0.6, 0.95);
-    hemi.intensity = 0.55 + 0.5 * smooth(p, 0.6, 0.95);
+    scene.fog.density = lerp(0.03, 0.02, smooth(p, 0.05, 0.9));
+    key.intensity = 1.8 + 1.2 * smooth(p, 0.6, 0.95);
+    hemi.intensity = 0.9 + 0.3 * smooth(p, 0.6, 0.95);
     under.intensity = 11 * smooth(p, 0.3, 0.4) * (1 - smooth(p, 0.56, 0.66));
 
     /* البذرة: ارتجاف خفيف ثم انفتاح */
