@@ -137,6 +137,7 @@ function buildFooter() {
             <h3>صفحات الموقع</h3>
             <ul class="footer-links">
               ${PAGES.map((p) => `<li><a href="${p.href}">${p.label}</a></li>`).join("")}
+              <li><a href="certificate.html">شهادة زراعة</a></li>
             </ul>
           </div>
           <div class="footer-college">

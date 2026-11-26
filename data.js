@@ -1,5 +1,32 @@
 /* بيانات الموقع — عدّل هنا فقط. القيم الحالية أمثلة تجريبية. */
 window.GB = {
+  /* رقم واتساب المبادرة بالصيغة الدولية بدون + أو أصفار (0115937058 ← 249115937058) */
+  whatsapp: "249115937058",
+  whatsappLabel: "0115937058",
+
+  /* أنواع الأشجار المتاحة (من ملصق الحملة). img = صورة من assets/species/ */
+  species: [
+    { id: "poinciana", kind: "shade", name: "البونسيانا", img: "poinciana" },
+    { id: "neem", kind: "shade", name: "النيم السعودي", img: "neem" },
+    { id: "khuf", kind: "shade", name: "خف الجمل", img: "khuf" },
+    { id: "ficus", kind: "shade", name: "فايسنس بنجامينا", img: "ficus" },
+    { id: "fol", kind: "ornamental", name: "الفل", img: "fol" },
+    { id: "yasmin", kind: "ornamental", name: "الياسمين", img: "yasmin" },
+    { id: "hibiscus", kind: "ornamental", name: "الهيبسكس", img: "hibiscus" },
+    { id: "cosmos", kind: "ornamental", name: "الكوزمس", img: "cosmos" },
+    { id: "rose", kind: "ornamental", name: "الورد البلدي", img: "rose" },
+    { id: "bougainvillea", kind: "ornamental", name: "الجهنمية", img: "bougainvillea" },
+    { id: "fitna", kind: "ornamental", name: "الفتنة", img: "fitna" },
+    { id: "oleander", kind: "ornamental", name: "الدفلة", img: "oleander" },
+    { id: "araucaria", kind: "ornamental", name: "الأروكاري", img: "araucaria" },
+    { id: "cordyline", kind: "ornamental", name: "الكوردلين", img: "cordyline" },
+    { id: "narcissus", kind: "ornamental", name: "الترجس", img: "narcissus" },
+    { id: "pothos", kind: "ornamental", name: "البوتس", img: "pothos" },
+    { id: "coleus", kind: "ornamental", name: "الكوليوس", img: "coleus" },
+    { id: "snapdragon", kind: "ornamental", name: "حنك السبع", img: "snapdragon" },
+    { id: "morning-glory", kind: "ornamental", name: "الادهاق (الصباح)", img: "morning-glory" },
+    { id: "lantana", kind: "ornamental", name: "الألانتانا كامارا", img: "lantana" },
+  ],
   /* lat و lng = إحداثيات كل منطقة على الخريطة.
      القيم الحالية مؤقتة حول مركز الجامعة. اضبطها من الصفحة: map.html?edit=1 */
   areas: [

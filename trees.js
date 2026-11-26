@@ -46,4 +46,41 @@
   }
   ["f-q", "f-area", "f-college", "f-status"].forEach((id) => $(id).addEventListener("input", render));
   render();
+
+  /* ---------- ساهم بشجرة ---------- */
+  const { species, whatsapp } = window.GB;
+  let kind = "shade", picked = null;
+  const spGrid = $("sp-grid"), pickText = $("pick-text"), pickGo = $("pick-go"), pickName = $("pick-name");
+  function msg() {
+    const who = pickName.value.trim();
+    return "السلام عليكم، " + (who ? "أنا " + who + "، " : "") + "أرغب في المساهمة بشجرة (" + picked.name + ") في مبادرة نهضة جامعة بحري – حملة التشجير الكبرى. كيف أرتب الزراعة؟";
+  }
+  function updatePick() {
+    document.querySelectorAll(".sp").forEach((b) => b.classList.toggle("is-on", picked && b.dataset.id === picked.id));
+    if (!picked) { pickText.textContent = "لم تختر شجرة بعد"; pickGo.classList.add("is-disabled"); pickGo.setAttribute("aria-disabled", "true"); pickGo.removeAttribute("href"); return; }
+    pickText.innerHTML = "اخترت: <b></b>"; pickText.querySelector("b").textContent = picked.name;
+    pickGo.classList.remove("is-disabled"); pickGo.removeAttribute("aria-disabled");
+    pickGo.href = "https://wa.me/" + whatsapp + "?text=" + encodeURIComponent(msg());
+  }
+  function drawSpecies() {
+    spGrid.className = "sp-grid sp-" + kind;
+    spGrid.replaceChildren(...species.filter((s) => s.kind === kind).map((s) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "sp"; b.dataset.id = s.id;
+      b.innerHTML = '<img alt=""><span></span>';
+      b.querySelector("img").src = "assets/species/" + s.img + ".webp";
+      b.querySelector("span").textContent = s.name;
+      b.addEventListener("click", () => { picked = s; updatePick(); });
+      return b;
+    }));
+    updatePick();
+  }
+  document.querySelectorAll(".sp-tabs .chip").forEach((c) => c.addEventListener("click", () => {
+    kind = c.dataset.kind;
+    document.querySelectorAll(".sp-tabs .chip").forEach((x) => x.classList.toggle("is-on", x === c));
+    drawSpecies();
+  }));
+  pickName.addEventListener("input", () => { if (picked) updatePick(); });
+  pickGo.addEventListener("click", (e) => { if (!picked) e.preventDefault(); });
+  drawSpecies();
 })();

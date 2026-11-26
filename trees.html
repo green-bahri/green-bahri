@@ -20,11 +20,34 @@
       <div class="container">
         <span class="eyebrow">ازرع أثر</span>
         <h1>ازرع أثراً في جامعة بحري</h1>
-        <p>ساهم بشجرة تبقى أثراً. وهذه الأشجار المسجلة بمكانها وكليتها وتاريخ زراعتها.</p>
+        <p>ساهم بشجرة تبقى أثراً. اختر النوع الذي تحبه، وتواصل معنا لنرتب الزراعة.</p>
       </div>
     </header>
-    <section class="section">
+    <section class="section donate" id="donate">
       <div class="container">
+        <div class="card donate-card">
+          <div class="section-head">
+            <span class="eyebrow">ساهم بشجرة</span>
+            <h2>اختر الشجرة التي تحب أن تزرعها</h2>
+            <p>اضغط على النوع الذي يعجبك، ثم أرسل طلبك لنا على واتساب. أو سلّم شتلاتك مباشرة لمشتل كلية الزراعة – جامعة بحري.</p>
+          </div>
+          <div class="sp-tabs" role="tablist" aria-label="نوع الشجرة">
+            <button class="chip is-on" role="tab" type="button" data-kind="shade">أشجار الظل</button>
+            <button class="chip" role="tab" type="button" data-kind="ornamental">أشجار الزينة</button>
+          </div>
+          <div id="sp-grid" class="sp-grid"></div>
+          <div class="pick-bar" id="pick-bar">
+            <label class="pick-name"><span>اسمك (اختياري)</span><input id="pick-name" type="text" maxlength="40" placeholder="ليُكتب في رسالتك وشهادتك"></label>
+            <p id="pick-text" class="pick-text">لم تختر شجرة بعد</p>
+            <a id="pick-go" class="btn btn-primary is-disabled" href="#" target="_blank" rel="noopener" aria-disabled="true">أرسل الطلب على واتساب</a>
+          </div>
+          <p class="donate-foot">بعد الزراعة احصل على <a href="certificate.html">شهادة زراعة باسمك</a> وشاركها مع أصدقائك.</p>
+        </div>
+      </div>
+    </section>
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head"><h2>الأشجار المسجلة</h2><p>بمكانها وكليتها وتاريخ زراعتها.</p></div>
         <div class="filters">
           <input id="f-q" type="search" placeholder="ابحث باسم الشجرة أو رقمها" aria-label="بحث">
           <select id="f-area" aria-label="المنطقة"><option value="">كل المناطق</option></select>

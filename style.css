@@ -764,3 +764,34 @@ main, #site-footer { position: relative; z-index: 1; }
 .steps p { margin: 0; color: var(--text-soft); }
 .step-n { position: absolute; top: 1rem; inset-inline-end: 1.2rem; font-size: 2.6rem; font-weight: 900; color: var(--color-natural); opacity: .7; line-height: 1; }
 .steps-cta { text-align: center; margin-top: 1.6rem; }
+
+/* ساهم بشجرة */
+.donate-card { padding: 1.6rem 1.2rem; }
+@media (min-width: 800px) { .donate-card { padding: 2.2rem; } }
+.donate .section-head { margin-bottom: 1.2rem; }
+.sp-tabs { display: flex; gap: .5rem; justify-content: center; margin-bottom: 1.2rem; }
+.sp-grid { display: grid; gap: .8rem; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 640px) { .sp-grid.sp-ornamental { grid-template-columns: repeat(4, 1fr); } .sp-grid.sp-shade { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 980px) { .sp-grid.sp-ornamental { grid-template-columns: repeat(5, 1fr); } }
+.sp { font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: .8rem .5rem; border-radius: 1.1rem; border: 2px solid var(--line); background: var(--surface); color: var(--text); font-weight: 700; transition: transform .2s var(--ease), border-color .2s, box-shadow .2s; }
+.sp:hover { transform: translateY(-3px); border-color: var(--color-natural); }
+.sp.is-on { border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 25%, transparent); }
+.sp img { width: 100%; max-width: 6.5rem; aspect-ratio: 1; object-fit: contain; }
+.sp-shade .sp img { max-width: none; aspect-ratio: 4 / 3; object-fit: cover; border-radius: .8rem; }
+.pick-bar { margin-top: 1.4rem; padding: 1rem; border-radius: 1.2rem; background: var(--color-bg-green); display: grid; gap: .8rem; align-items: center; }
+[data-theme="dark"] .pick-bar { background: color-mix(in srgb, var(--color-primary) 18%, var(--surface)); }
+@media (min-width: 800px) { .pick-bar { grid-template-columns: 1.2fr 1fr auto; } }
+.pick-name { display: grid; gap: .25rem; font-size: .8rem; font-weight: 700; }
+.pick-name input { font: inherit; padding: .65rem .9rem; border-radius: .8rem; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
+.pick-text { margin: 0; font-weight: 700; }
+.is-disabled { opacity: .45; pointer-events: none; }
+.donate-foot { text-align: center; margin: 1.2rem 0 0; color: var(--text-soft); }
+.donate-foot a { color: var(--color-primary); font-weight: 800; }
+
+/* شهادة زراعة */
+.cert-layout { display: grid; gap: 1.4rem; }
+@media (min-width: 900px) { .cert-layout { grid-template-columns: 22rem 1fr; align-items: start; } }
+.cert-form { display: grid; gap: .9rem; padding: 1.4rem; }
+.cert-form label { display: grid; gap: .3rem; font-weight: 700; font-size: .9rem; }
+.cert-form input, .cert-form select { font: inherit; padding: .65rem .9rem; border-radius: .8rem; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
+.cert-preview canvas { width: 100%; height: auto; border-radius: 1rem; box-shadow: 0 12px 40px rgba(0,0,0,.18); background: #fff; }

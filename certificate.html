@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>شهادة زراعة | جرين بحري</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+  <script src="data.js" defer></script>
+  <script src="certificate.js" defer></script>
+</head>
+<body>
+  <div id="site-header"></div>
+  <main>
+    <header class="page-head">
+      <div class="container">
+        <span class="eyebrow">شهادة زراعة</span>
+        <h1>شهادة باسمك لأنك زرعت أثراً</h1>
+        <p>اكتب اسمك واختر شجرتك، وحمّل شهادتك جاهزة للمشاركة.</p>
+      </div>
+    </header>
+    <section class="section">
+      <div class="container cert-layout">
+        <form id="cert-form" class="card cert-form" autocomplete="off">
+          <label>الاسم<input id="c-name" type="text" maxlength="36" placeholder="مثال: أحمد محمد" required></label>
+          <label>الشجرة<select id="c-species"></select></label>
+          <label>الكلية (اختياري)<select id="c-college"><option value="">بدون</option></select></label>
+          <label>تاريخ الزراعة<input id="c-date" type="date"></label>
+          <button id="c-dl" class="btn btn-primary" type="button">تحميل الشهادة</button>
+          <button id="c-share" class="btn btn-outline" type="button" hidden>مشاركة</button>
+          <p id="c-note" class="muted"></p>
+        </form>
+        <div class="cert-preview">
+          <canvas id="cert" width="1600" height="1131" aria-label="معاينة الشهادة"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>
