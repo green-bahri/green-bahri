@@ -132,13 +132,6 @@ function buildFooter() {
               مبادرة طلابية لزراعة الأشجار والعناية بها في جامعة بحري.
             </p>
           </div>
-          <div>
-            <h3>صفحات الموقع</h3>
-            <ul class="footer-links">
-              ${PAGES.map((p) => `<li><a href="${p.href}">${p.label}</a></li>`).join("")}
-              <li><a href="certificate.html">شهادة زراعة</a></li>
-            </ul>
-          </div>
           <div class="footer-college">
             <img src="assets/college-logo.webp" alt="شعار كلية علوم الحاسوب والرياضيات — جامعة بحري" width="96" height="98" loading="lazy">
             <p>تنفيذ طلاب<br><strong>كلية علوم الحاسوب والرياضيات</strong><br>جامعة بحري</p>
