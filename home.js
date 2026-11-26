@@ -42,4 +42,17 @@
     toast.hidden = false;
     setTimeout(() => (toast.hidden = true), 3500);
   });
+
+  /* آخر زراعة (من data.js → lastPlanting) */
+  (function () {
+    const lp = window.GB && window.GB.lastPlanting, el = document.getElementById("today-pill");
+    if (!lp || !el || !lp.count) return;
+    const n = (v) => v.toLocaleString("ar-EG");
+    const d0 = new Date(); d0.setHours(0, 0, 0, 0);
+    const days = Math.round((d0 - new Date(lp.date + "T00:00:00")) / 864e5);
+    const what = lp.count === 1 ? "شجرة واحدة" : lp.count === 2 ? "شجرتان" : n(lp.count) + (lp.count <= 10 ? " أشجار" : " شجرة");
+    el.innerHTML = '<i class="live-dot"></i><span></span>';
+    el.lastChild.textContent = days <= 0 ? "زُرعت اليوم " + what : days === 1 ? "آخر زراعة أمس: " + what : "آخر زراعة قبل " + n(days) + " يوم: " + what;
+    el.hidden = false;
+  })();
 })();

@@ -37,6 +37,13 @@ window.GB = {
     { id: "hurriya", name: "محيط قاعة الحرية", lat: 15.75210, lng: 32.59620 },
     { id: "central-lib", name: "محيط المكتبة المركزية", lat: 15.75290, lng: 32.59400 },
   ],
+  /* آخر زراعة: عدّل التاريخ والعدد كل مرة تُزرع فيها أشجار جديدة */
+  lastPlanting: { date: "2026-11-26", count: 3 },
+
+  /* صور قبل/بعد للمعرض. أضف عنصراً لكل مكان (تظهر في صفحة المعرض تلقائياً):
+     { title: "حديقة الزقوم", before: "assets/before1.jpg", after: "assets/after1.jpg" } */
+  compare: [],
+
   colleges: [
     { id: "eng", name: "كلية الهندسة" },
     { id: "agri", name: "كلية الزراعة" },

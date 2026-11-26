@@ -19,4 +19,21 @@
     grid.appendChild(b);
   });
   box.addEventListener("click", (e) => { if (e.target === box || e.target.closest(".lb-close")) box.close(); });
+
+  /* قبل / بعد: العناصر من data.js → compare */
+  (function () {
+    const list = (window.GB && window.GB.compare) || [], box = document.getElementById("compare");
+    if (!list.length || !box) return;
+    list.forEach((c) => {
+      const w = document.createElement("div");
+      w.className = "ba";
+      w.innerHTML = `<img alt="" class="ba-before"><img alt="" class="ba-after"><span class="ba-tag b">قبل</span><span class="ba-tag a">بعد</span><div class="ba-handle"></div><input type="range" min="0" max="100" value="50" aria-label="مقارنة قبل وبعد">`;
+      const [b, a] = w.querySelectorAll("img");
+      b.src = c.before; a.src = c.after; b.alt = (c.title || "المكان") + " قبل الزراعة"; a.alt = (c.title || "المكان") + " بعد الزراعة";
+      w.querySelector("input").addEventListener("input", (e) => w.style.setProperty("--pos", e.target.value + "%"));
+      box.appendChild(w);
+      if (c.title) { const p = document.createElement("p"); p.className = "muted"; p.style.margin = "-.6rem 0 1.4rem"; p.textContent = c.title; box.appendChild(p); }
+    });
+    document.getElementById("compare-sec").hidden = false;
+  })();
 })();
