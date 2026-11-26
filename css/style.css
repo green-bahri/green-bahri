@@ -506,6 +506,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .about p { color: var(--text-soft); font-size: 1.1rem; margin-bottom: 1rem; }
 .cards { display: grid; gap: 1.5rem; }
 @media (min-width: 900px) { .cards-3 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 600px) { .cards-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .cards-4 { grid-template-columns: repeat(4, 1fr); } }
+a.card-link { display: block; color: inherit; text-decoration: none; }
 .card {
   background: color-mix(in srgb, var(--surface) 70%, transparent); border: 1px solid var(--line); border-radius: 1.5rem; padding: 2rem;
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
