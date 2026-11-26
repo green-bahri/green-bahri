@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>تجربة البذرة | جرين بحري (صفحة اختبار)</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="seed-experience.css">
+
+  <!-- مكتبات محلية (مجلد lib) -->
+  <script type="importmap">{ "imports": { "three": "./lib/three.module.min.js" } }</script>
+  <script src="main.js" defer></script>
+  <script src="lib/gsap.min.js" defer></script>
+  <script src="lib/ScrollTrigger.min.js" defer></script>
+  <script src="seed-experience.js" type="module"></script>
+</head>
+<body class="has-hero">
+  <div id="site-header"></div>
+  <main>
+    <section id="seed-story" class="seed-story" aria-label="رحلة البذرة إلى الشجرة">
+      <div class="seed-pin">
+        <canvas id="seed-canvas" aria-hidden="true"></canvas>
+        <div class="seed-shade" aria-hidden="true"></div>
+
+        <div class="seed-steps">
+          <div class="seed-step" data-step="0">
+            <h2>كل حكاية خضراء... تبدأ ببذرة.</h2>
+            <p>من فكرة صغيرة، تبدأ رحلة تغيير حقيقية في جامعة بحري.</p>
+          </div>
+          <div class="seed-step" data-step="1">
+            <h2>كل بداية عظيمة... كانت شيئاً صغيراً.</h2>
+          </div>
+          <div class="seed-step" data-step="2">
+            <h2>الجذور القوية تبدأ من رعاية مستمرة.</h2>
+          </div>
+          <div class="seed-step" data-step="3">
+            <h2>كل نمو يحتاج إلى رعاية.</h2>
+          </div>
+          <div class="seed-step" data-step="4">
+            <h2>معاً، نجعل جامعة بحري أكثر خضرة.</h2>
+            <p>كل شجرة نزرعها اليوم، هي أثر نتركه للأجيال القادمة.</p>
+            <div class="seed-cta">
+              <a class="btn btn-lime" href="map.html">استكشف المساحات الخضراء</a>
+              <a class="btn btn-ghost" href="index.html#join">كن جزءاً من التغيير</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="seed-progress" aria-hidden="true"><i></i></div>
+        <button class="seed-skip" type="button">تخطي المقدمة</button>
+        <div class="seed-hint" aria-hidden="true"><span>اسحب للأسفل</span><i></i></div>
+
+        <div class="seed-loading" role="status">
+          <span class="seed-loading-seed" aria-hidden="true"></span>
+          <p>نجهّز البذرة...</p>
+          <span class="seed-loading-bar" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container" style="text-align:center">
+        <h2>هنا تبدأ بقية الصفحة</h2>
+        <p style="margin-top:1rem;color:var(--text-soft)">صفحة اختبار للمرحلة 2: بعد انتهاء المشهد تعود الصفحة للتمرير العادي.</p>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>
