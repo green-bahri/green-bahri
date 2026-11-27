@@ -29,20 +29,18 @@
     border-radius: 1.05rem;
     column-gap: .35rem;
     row-gap: .35rem;
-    background: rgba(13, 42, 29, .46);
     border-color: rgba(255,255,255,.26);
-    backdrop-filter: blur(20px) saturate(1.7);
-    -webkit-backdrop-filter: blur(20px) saturate(1.7);
     box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 10px 28px rgba(0,0,0,.22);
   }
+  .nav::before { background: rgba(13, 42, 29, .38); backdrop-filter: blur(14px) saturate(1.7); -webkit-backdrop-filter: blur(14px) saturate(1.7); }
   .nav-wrap.is-scrolled .nav {
-    background: rgba(248, 250, 246, .94);
     border-color: rgba(36,92,69,.12);
   }
+  .nav-wrap.is-scrolled .nav::before { background: rgba(248, 250, 246, .68); }
   [data-theme="dark"] .nav-wrap.is-scrolled .nav {
-    background: rgba(13, 29, 21, .95);
     border-color: rgba(164,195,162,.16);
   }
+  [data-theme="dark"] .nav-wrap.is-scrolled .nav::before { background: rgba(13, 29, 21, .66); }
   .nav .brand {
     margin-inline: auto;
     justify-content: center;
@@ -505,7 +503,7 @@
 .tile p { margin: 0; font-size: .8rem; line-height: 1.6; color: rgba(255,255,255,.84); }
 .tile-arrow {
   position: absolute; top: .75rem; inset-inline-end: .75rem; display: grid; place-items: center;
-  width: 2.2rem; height: 2.2rem; border-radius: 50%; color: #fff;
+  width: 2.7rem; height: 2.7rem; border-radius: 50%; color: #fff;
   background: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.7);
   backdrop-filter: blur(10px) saturate(1.4); -webkit-backdrop-filter: blur(10px) saturate(1.4);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 4px 10px -4px rgba(0,0,0,.35);
@@ -514,7 +512,7 @@
 .tile-arrow img { position: absolute; inset: 0; margin: auto; width: 1.7rem; height: 1.7rem; object-fit: contain; transition: transform .45s var(--ease); }
 .tile:hover { transform: translateY(-4px); box-shadow: 0 26px 44px -20px rgba(8,40,25,.75), 0 0 0 1px rgba(255,255,255,.1); }
 .tile:hover .tile-img { transform: scale(1.07); }
-.tile:hover .tile-arrow { background: rgba(255,255,255,.55); transform: translate(-3px, -3px); }
+.tile:hover .tile-arrow { background: rgba(255,255,255,.2); transform: translate(-3px, -3px); }
 .tile:hover .tile-arrow img { transform: rotate(-12deg) scale(1.1); }
 .tile:active { transform: scale(.985); }
 .tile:focus-visible { outline: 3px solid var(--color-natural); outline-offset: 3px; }
@@ -556,8 +554,8 @@
 
 /* ليكويد جلاس: زرّا الهيرو + الدائرة الصغيرة في بطاقات الاستكشاف */
 .hero-actions .btn.liquid-glass { color: #fff; border: 1px solid rgba(255,255,255,.36); text-shadow: 0 1px 8px rgba(0,0,0,.4); }
-.hero-actions .btn-white.liquid-glass { background: rgba(70,160,110,.32); }
+.hero-actions .btn-white.liquid-glass { background: rgba(70,160,110,.2); }
 .hero-actions .btn-white.liquid-glass:hover { background: rgba(70,160,110,.46); }
-.hero-actions .btn-ghost.liquid-glass { background: rgba(255,255,255,.10); }
+.hero-actions .btn-ghost.liquid-glass { background: rgba(255,255,255,.04); }
 .hero-actions .btn-ghost.liquid-glass:hover { background: rgba(255,255,255,.2); }
-.tile-arrow.liquid-glass { background: rgba(255,255,255,.42); border-color: rgba(255,255,255,.7); }
+.tile-arrow.liquid-glass { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.6); }
