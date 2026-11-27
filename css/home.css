@@ -76,11 +76,11 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: 2.45rem;
+    min-height: 2.8rem;
     padding: .28rem .08rem;
     border-radius: .62rem;
     color: rgba(255,255,255,.9);
-    font-size: .69rem;
+    font-size: .74rem;
     font-weight: 800;
     line-height: 1.22;
     text-align: center;
@@ -147,27 +147,6 @@
     font-size: .98rem;
     line-height: 1.8;
   }
-  .hero-seed {
-    display: inline-flex;
-    align-items: center;
-    gap: .55rem;
-    margin-top: .35rem;
-    padding: .62rem .9rem;
-    border: 1px solid rgba(255,255,255,.22);
-    border-radius: 1rem;
-    background: rgba(9,35,22,.48);
-    color: #f4f8ef;
-    font-size: .82rem;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-  .hero-seed strong {
-    color: #d4f0b9;
-    font-family: "Poppins", var(--font);
-    font-size: 1.45rem;
-    line-height: 1;
-  }
-  .hero-seed small { display: none; }
   .hero-giant {
     bottom: .45rem;
     opacity: .27;
@@ -280,8 +259,8 @@
   #explore .card h3 { padding: 0 .8rem; font-size: .98rem; margin: 0 0 .35rem; }
   #explore .card p {
     padding: 0 .8rem;
-    font-size: .78rem;
-    line-height: 1.55;
+    font-size: .82rem;
+    line-height: 1.6;
     color: var(--text-soft);
   }
 
@@ -306,10 +285,10 @@
 }
 
 @media (max-width: 380px) {
-  .nav-links a { font-size: .64rem; padding-inline: .03rem; }
+  .nav-links a { font-size: .68rem; padding-inline: .03rem; }
   .hero-card h1 { font-size: 2.05rem; }
   #explore .explore-image { height: 6.2rem; }
-  #explore .card p { font-size: .74rem; }
+  #explore .card p { font-size: .78rem; }
 }
 
 /* العناصر المصورة الجديدة مخصصة لتجربة الموبايل */
@@ -323,3 +302,79 @@
   .field-note { display: block; }
   #explore .explore-image { display: block; }
 }
+
+
+/* =========================================================
+   المرحلة 1: شريط أرقام الأثر (كل الشاشات)
+   ========================================================= */
+.stats { position: relative; z-index: 5; padding: 0 0 1.2rem; margin-top: -1.6rem; }
+.stats-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 1.25rem;
+  box-shadow: 0 14px 34px rgba(20,65,40,.14); padding: 1.05rem .3rem;
+}
+.stat { text-align: center; padding: .15rem .35rem; }
+.stat + .stat { border-inline-start: 1px solid var(--line); }
+.stat b { display: block; font-size: 2rem; font-weight: 900; line-height: 1.15; color: var(--color-primary); }
+[data-theme="dark"] .stat b { color: var(--color-natural); }
+.stat span { display: block; margin-top: .2rem; font-size: .8rem; line-height: 1.4; color: var(--text-soft); font-weight: 700; }
+.stats .today-pill {
+  display: flex; width: fit-content; max-width: 100%; margin: .9rem auto 0;
+  background: var(--color-bg-green); color: var(--color-primary); border-color: var(--line);
+  backdrop-filter: none; -webkit-backdrop-filter: none; font-size: .86rem;
+}
+[data-theme="dark"] .stats .today-pill { background: rgba(164,195,162,.12); color: var(--color-natural); }
+@media (min-width: 900px) {
+  .stats { margin-top: -2.6rem; }
+  .stats-grid { max-width: 46rem; margin-inline: auto; padding: 1.5rem 1rem; }
+  .stat b { font-size: 2.8rem; }
+  .stat span { font-size: .95rem; }
+}
+
+/* زر ثانوي زجاجي بدل البني (يقرأ أفضل فوق الصورة) */
+.hero-actions .btn-ghost { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.hero-actions .btn-ghost:hover { background: rgba(255,255,255,.24); }
+.hero-actions .btn-primary, .hero-actions .btn-white { border: 1px solid rgba(255,255,255,.22); }
+
+/* =========================================================
+   المرحلة 3: كيف تشارك (3 خطوات)
+   ========================================================= */
+.how-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; counter-reset: s; }
+.how-step {
+  display: flex; align-items: flex-start; gap: .9rem; padding: 1.05rem 1.1rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 1.1rem;
+}
+.how-num {
+  flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--color-primary); color: #fff; font-weight: 900; font-size: 1.1rem;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-natural) 35%, transparent);
+}
+.how-step h3 { margin: 0 0 .2rem; font-size: 1.05rem; }
+.how-step p { margin: 0; color: var(--text-soft); font-size: .9rem; line-height: 1.65; }
+@media (min-width: 900px) {
+  .how-list { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .how-step { flex-direction: column; align-items: center; text-align: center; padding: 2rem 1.5rem; }
+  .how-step p { font-size: 1rem; }
+}
+
+/* =========================================================
+   المرحلة 2: زر ثابت أسفل الشاشة (موبايل فقط)
+   ========================================================= */
+.sticky-cta { display: none; }
+@media (max-width: 899px) {
+  .sticky-cta {
+    display: block; position: fixed; inset-inline: 0; bottom: 0; z-index: 60;
+    padding: .8rem 1rem calc(.8rem + env(safe-area-inset-bottom));
+    pointer-events: none; transform: translateY(130%); transition: transform .4s var(--ease);
+  }
+  .sticky-cta.show { transform: none; }
+  .sticky-cta a {
+    pointer-events: auto; display: flex; align-items: center; justify-content: center;
+    min-height: 3.1rem; border-radius: 999px; background: var(--color-primary); color: #fff;
+    font-weight: 800; font-size: 1rem; border: 1px solid rgba(255,255,255,.25);
+    box-shadow: 0 10px 28px rgba(8,40,25,.35);
+  }
+  .sticky-cta a:active { transform: scale(.98); }
+  body { padding-bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
