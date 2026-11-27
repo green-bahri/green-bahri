@@ -157,6 +157,25 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   white-space: nowrap;
 }
 
+/* =========================================================
+   ليكويد جلاس (الانكسار الحقيقي من main.js: initLiquidGlass، وهذا الاحتياطي لسفاري/فايرفوكس)
+   ========================================================= */
+.liquid-glass {
+  position: relative; isolation: isolate;
+  -webkit-backdrop-filter: blur(12px) saturate(1.7) brightness(1.06);
+  backdrop-filter: blur(12px) saturate(1.7) brightness(1.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 0 14px rgba(255, 255, 255, 0.12),
+    0 10px 24px -12px rgba(0, 0, 0, 0.5);
+}
+.liquid-glass::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 36%, rgba(255, 255, 255, 0) 64%, rgba(255, 255, 255, 0.16) 100%);
+}
+
 /* ---------- الأزرار ---------- */
 .btn {
   display: inline-flex;
@@ -167,9 +186,25 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   border-radius: 999px;
   font-weight: 700;
   font-size: 1.05rem;
-  transition: background-color 0.15s, transform 0.15s var(--ease);
+  position: relative; overflow: hidden; isolation: isolate;
+  box-shadow: 0 7px 14px -9px rgba(0, 0, 0, 0.38);
+  transition: background-color 0.15s, transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
 }
-.btn:active { transform: translateY(1px); }
+.btn:active { transform: translateY(1px); box-shadow: 0 3px 6px -5px rgba(0, 0, 0, 0.35); }
+
+/* تأثير الريبل (زي زر Get started في الفيديو): دائرة تنتشر من مكان اللمس وتتلاشى.
+   لونها من لون نص الزر (currentColor) فتناسب كل الأزرار. يُضاف من main.js */
+.btn-ripple {
+  position: absolute; z-index: -1; border-radius: 50%; pointer-events: none;
+  background: currentColor; opacity: 0; transform: scale(0);
+  animation: btn-ripple 0.75s var(--ease) forwards;
+}
+@keyframes btn-ripple {
+  0% { transform: scale(0); opacity: 0.28; }
+  60% { transform: scale(1); opacity: 0.24; }
+  100% { transform: scale(1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .btn-ripple { display: none; } }
 
 .btn-primary {
   background: var(--color-primary);
@@ -304,48 +339,58 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .has-hero .nav-wrap:not(.is-scrolled) .brand-text small { color: #86efac; }
 .has-hero .nav-wrap:not(.is-scrolled) .brand-mark { background: var(--lime); color: #fff; }
 
-/* أيقونة الشمس/القمر حسب الوضع */
-/* زر الوضع الليلي (مقبض ينزلق مع توهّج) */
-.theme-switch {
-  direction: ltr; /* القمر يسار والشمس يمين مهما كان اتجاه الصفحة */
+/* =========================================================
+   زر الوضع الليلي: لمبة بحبل (تتدلّى من أعلى الشريط)
+   اسحب الحبل ← الضوء يشتغل (الوضع الليلي) / اسحبه تاني ← يطفي
+   ========================================================= */
+.nav-actions { align-self: stretch; align-items: flex-start; }
+.lamp-switch {
+  --lamp-shade: var(--color-primary);
+  --lamp-shade-line: rgba(255, 255, 255, 0.35);
+  --lamp-cord: rgba(36, 92, 69, 0.55);
+  --lamp-bulb: #d6d3d1;
+  --lamp-glow: 190, 242, 100;
   position: relative; flex-shrink: 0;
-  width: 4.1rem; height: 2.3rem; padding: 0; border-radius: 999px;
-  background: rgba(0, 0, 0, 0.07);
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.18), inset 0 -1px 0 rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: background-color 0.4s;
+  width: 2.5rem; height: 3.2rem; margin-top: -0.55rem; padding: 0;
+  background: none; border: 0; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.ts-knob {
-  position: absolute; top: 0.2rem; left: 0.2rem; width: 2.5rem; height: 1.8rem; border-radius: 0.6rem;
-  display: grid; place-items: center;
-  background: linear-gradient(#fff, #f1f1f3);
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.55), 0 3px 6px rgba(0, 0, 0, 0.18), inset 0 -2px 0 #f59e0b;
-  transform: translateX(1.2rem);
-  transition: transform 0.55s var(--ease), background 0.4s, box-shadow 0.4s;
+.lamp-switch svg { display: block; width: 100%; height: 100%; overflow: visible; transform-origin: 50% 0; }
+.lamp-cord-top, .lamp-pull-line { stroke: var(--lamp-cord); stroke-width: 1.3; stroke-linecap: round; fill: none; }
+.lamp-shade {
+  fill: var(--lamp-shade); stroke: var(--lamp-shade-line); stroke-width: 0.8;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+  transition: filter 0.5s;
 }
-.ts-icon { position: absolute; display: grid; place-items: center; transition: opacity 0.35s, transform 0.5s var(--ease), filter 0.35s; }
-.ts-icon svg { width: 1.1rem; height: 1.1rem; }
-.ts-sun { color: #b45309; }
-.ts-moon { color: #e0e7ff; opacity: 0; transform: scale(0.5) rotate(-40deg); filter: blur(3px); }
-[data-theme="dark"] .ts-knob {
-  transform: translateX(0);
-  background: linear-gradient(#3b3b45, #1f1f27);
-  box-shadow: 0 0 16px rgba(129, 140, 248, 0.7), 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 -2px 0 #a5b4fc;
+.lamp-bulb { fill: var(--lamp-bulb); transition: fill 0.4s; }
+.lamp-bead { fill: var(--lamp-shade); stroke: var(--lamp-shade-line); stroke-width: 0.8; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.25)); }
+.lamp-cone {
+  opacity: 0; transform: scaleY(0.35); transform-origin: 22px 27px; transform-box: view-box;
+  transition: opacity 0.45s, transform 0.55s var(--ease);
+  pointer-events: none;
 }
-[data-theme="dark"] .theme-switch { background: rgba(0, 0, 0, 0.45); border-color: rgba(255, 255, 255, 0.08); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6); }
-[data-theme="dark"] .ts-moon { opacity: 1; transform: none; filter: none; }
-[data-theme="dark"] .ts-sun { opacity: 0; transform: scale(0.5) rotate(40deg); filter: blur(3px); }
-.has-hero .nav-wrap:not(.is-scrolled) .theme-switch { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.3); }
-.theme-switch:focus-visible { outline-offset: 2px; border-radius: 999px; }
-/* مربعات التفتّت */
-.ts-px {
-  position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px; pointer-events: none;
-  animation: ts-px 0.65s steps(7) forwards;
-}
-@keyframes ts-px { to { transform: translate(var(--dx), var(--dy)) scale(0.4); opacity: 0; } }
+.lamp-cone polygon { fill: url(#lamp-grad); }
+.lamp-grad-top { stop-color: rgb(var(--lamp-glow)); stop-opacity: 0.85; }
+.lamp-grad-bot { stop-color: rgb(var(--lamp-glow)); stop-opacity: 0; }
+
+[data-theme="dark"] .lamp-switch { --lamp-shade: #e8f0ea; --lamp-shade-line: rgba(255, 255, 255, 0.25); --lamp-cord: rgba(255, 255, 255, 0.5); --lamp-bulb: #fef9c3; }
+[data-theme="dark"] .lamp-cone { opacity: 1; transform: none; }
+[data-theme="dark"] .lamp-shade { filter: drop-shadow(0 0 7px rgba(var(--lamp-glow), 0.6)); }
+.has-hero .nav-wrap:not(.is-scrolled) .lamp-switch { --lamp-shade: #ffffff; --lamp-shade-line: rgba(36, 92, 69, 0.28); --lamp-cord: rgba(255, 255, 255, 0.8); }
+.lamp-switch:focus-visible { outline-offset: 2px; border-radius: 0.5rem; }
+
+/* سحب الحبل: الخرزة تنزل وترجع بنطّة، واللمبة تتأرجح شوية */
+.lamp-switch.is-pulling .lamp-pull { animation: lamp-pull 0.55s var(--ease); }
+.lamp-switch.is-pulling svg { animation: lamp-sway 0.9s ease-out; }
+@keyframes lamp-pull { 0% { transform: translateY(0); } 30% { transform: translateY(7px); } 62% { transform: translateY(-1.5px); } 100% { transform: translateY(0); } }
+@keyframes lamp-sway { 0% { transform: rotate(0); } 25% { transform: rotate(4deg); } 55% { transform: rotate(-2.4deg); } 80% { transform: rotate(0.8deg); } 100% { transform: rotate(0); } }
+
 /* انتقال ناعم للألوان وقت التبديل */
 .theme-anim *, .theme-anim *::before, .theme-anim *::after { transition: background-color 0.55s, color 0.55s, border-color 0.55s, fill 0.55s !important; }
-@media (prefers-reduced-motion: reduce) { .ts-knob, .ts-icon { transition-duration: 0.01ms; } .ts-px { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .lamp-cone, .lamp-shade, .lamp-bulb { transition-duration: 0.01ms; }
+  .lamp-switch.is-pulling .lamp-pull, .lamp-switch.is-pulling svg { animation: none; }
+}
 
 /* النافبار في الموبايل: صف الشعار + الأزرار، وتحتو صف الروابط جنب بعض (زي الكمبيوتر) */
 .nav { flex-wrap: wrap; row-gap: 0.35rem; column-gap: 0.4rem; padding: 0.5rem; }
@@ -369,9 +414,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .nav .brand-text strong { font-size: 1.1rem; }
 .nav .brand-text small { font-size: 0.76rem; }
 .nav-actions { gap: 0.35rem; }
-.theme-switch { width: 3.5rem; height: 2rem; }
-.theme-switch .ts-knob { width: 2.1rem; height: 1.55rem; top: 0.2rem; left: 0.2rem; transform: translateX(0.95rem); }
-[data-theme="dark"] .theme-switch .ts-knob { transform: translateX(0); }
 .nav-cta { display: inline-block; padding: 0.45rem 0.75rem; font-size: 0.8rem; }
 /* الروابط في الموبايل: صف واحد ثابت (بدون تمرير). الرئيسية على اليمين،
    والكلمات المركّبة (مساهمات الكليات، معرض المبادرة) تنزل لسطرين داخل نفس الشريط. */
@@ -442,21 +484,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 
   .nav-actions {
     gap: 0.5rem;
-  }
-
-  .theme-switch {
-    width: 4.1rem;
-    height: 2.3rem;
-  }
-
-  .theme-switch .ts-knob {
-    width: 2.5rem;
-    height: 1.8rem;
-    transform: translateX(1.2rem);
-  }
-
-  [data-theme="dark"] .theme-switch .ts-knob {
-    transform: translateX(0);
   }
 
   .nav-cta {
@@ -648,8 +675,8 @@ background: linear-gradient(to bottom, rgba(164, 195, 162, 0.9), rgba(248, 246, 
 .section-head h2 { font-size: clamp(2rem, 5vw, 3rem); margin: .8rem 0 1.2rem; }
 .section-head p { color: var(--text-soft); font-size: 1.15rem; }
 
-.reveal { opacity: 0; transform: translateY(1.5rem); transition: opacity .7s var(--ease), transform .7s var(--ease); }
-.reveal.in { opacity: 1; transform: none; }
+.reveal { opacity: 0; transform: translateY(1.5rem); filter: blur(6px); transition: opacity .7s var(--ease), transform .7s var(--ease), filter .7s var(--ease); }
+.reveal.in { opacity: 1; transform: none; filter: none; }
 
 .about { display: grid; gap: 2.5rem; align-items: center; }
 @media (min-width: 900px) { .about { grid-template-columns: 1fr 1fr; gap: 4rem; } }
@@ -999,3 +1026,63 @@ main, #site-footer { position: relative; z-index: 1; }
 .ba-handle { position: absolute; top: 0; bottom: 0; left: calc(100% - var(--pos)); width: 3px; background: #fff; transform: translateX(-50%); box-shadow: 0 0 10px rgba(0,0,0,.5); }
 .ba-handle::after { content: "\2194"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 2.6rem; height: 2.6rem; border-radius: 50%; background: #fff; color: var(--color-primary); display: grid; place-items: center; font-weight: 900; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
 .ba input[type=range] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+
+/* =========================================================
+   ليكويد جلاس للنافبار (فقاعة زجاجية تنزلق بين الروابط)
+   الفقاعة يضيفها main.js → initGlassNav
+   ========================================================= */
+.nav {
+  backdrop-filter: blur(22px) saturate(1.7);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.38), inset 0 -1px 0 rgba(255,255,255,.08), 0 12px 32px -14px rgba(0,0,0,.35);
+}
+.nav-links.has-glass { isolation: isolate; }
+.nav-links.has-glass a {
+  position: relative; z-index: 1;
+  background: transparent !important; box-shadow: none !important;
+}
+@media (max-width: 899px) { .nav-links.has-glass { position: relative !important; } }
+
+.glass-pill {
+  position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 0;
+  border-radius: 999px; pointer-events: none; opacity: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.36), rgba(255,255,255,.1));
+  border: 1px solid rgba(255,255,255,.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.75),
+    inset 0 -7px 12px rgba(255,255,255,.08),
+    0 8px 20px -8px rgba(0,0,0,.38),
+    0 0 18px rgba(164,195,162,.3);
+  backdrop-filter: blur(6px) saturate(1.8) brightness(1.12);
+  -webkit-backdrop-filter: blur(6px) saturate(1.8) brightness(1.12);
+  transition:
+    transform .62s cubic-bezier(.34,1.45,.5,1),
+    width .62s cubic-bezier(.34,1.45,.5,1),
+    height .62s cubic-bezier(.34,1.45,.5,1),
+    opacity .3s ease;
+  will-change: transform, width;
+}
+.glass-pill.is-moving { animation: glassStretch .62s cubic-bezier(.3,.9,.4,1); }
+@keyframes glassStretch {
+  0%   { scale: 1 1;      filter: blur(0); }
+  35%  { scale: 1.16 .84; filter: blur(.8px); }
+  70%  { scale: .97 1.05; filter: blur(0); }
+  100% { scale: 1 1;      filter: blur(0); }
+}
+/* بعد النزول: شريط فاتح → فقاعة خضراء زجاجية */
+.nav-wrap.is-scrolled .glass-pill,
+body:not(.has-hero) .glass-pill {
+  background: linear-gradient(180deg, rgba(36,92,69,.2), rgba(36,92,69,.07));
+  border-color: rgba(36,92,69,.34);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 -6px 10px rgba(36,92,69,.06), 0 8px 18px -9px rgba(36,92,69,.55);
+}
+[data-theme="dark"] .nav-wrap.is-scrolled .glass-pill,
+[data-theme="dark"] body:not(.has-hero) .glass-pill {
+  background: linear-gradient(180deg, rgba(164,195,162,.32), rgba(36,92,69,.5));
+  border-color: rgba(164,195,162,.5);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 8px 20px -8px rgba(0,0,0,.6), 0 0 18px rgba(164,195,162,.28);
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-pill { transition: opacity .2s; }
+  .glass-pill.is-moving { animation: none; }
+}

@@ -7,8 +7,14 @@
 /* ---------- 1) الهيرو: أقصر، والكلمة الكبيرة أعلى ---------- */
 .hero { min-height: min(100svh, 42rem); }
 .hero-content { padding-bottom: calc(12vw + 1.5rem); } /* مساحة بقدر ارتفاع كلمة GREEN BAHRI */
-@media (min-width: 900px) { .hero-content { padding-top: 6.5rem; } }
+@media (min-width: 900px) {
+  /* مساحة تكفي الكلمة كاملة فوق بطاقة الأرقام (ارتفاعها يحسبه home.js في --giant-h) */
+  .hero-content { padding-top: 5.6rem; padding-bottom: calc(var(--giant-h, 12vw) + 2.8rem + 1.4rem); }
+  .hero-giant { bottom: 2.8rem; }
+}
 .hero-giant { bottom: 0.15em; }
+/* أبيض زجاجي يخفت لتحت (بدل الأخضر الذي يتشابه مع كلمة «ومستدام») */
+.hero-giant { background-image: linear-gradient(to bottom, rgba(255,255,255,.36), rgba(255,255,255,.08) 95%); }
 .hero-card .hero-actions { margin-bottom: 1.4rem; }
 
 /* ---------- 2) تحسين الموبايل ---------- */
@@ -23,9 +29,11 @@
     border-radius: 1.05rem;
     column-gap: .35rem;
     row-gap: .35rem;
-    background: rgba(13, 42, 29, .78);
-    border-color: rgba(255,255,255,.18);
-    box-shadow: 0 8px 28px rgba(0,0,0,.16);
+    background: rgba(13, 42, 29, .46);
+    border-color: rgba(255,255,255,.26);
+    backdrop-filter: blur(20px) saturate(1.7);
+    -webkit-backdrop-filter: blur(20px) saturate(1.7);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 10px 28px rgba(0,0,0,.22);
   }
   .nav-wrap.is-scrolled .nav {
     background: rgba(248, 250, 246, .94);
@@ -50,13 +58,7 @@
   .nav .brand-text strong { font-size: .98rem; }
   .nav .brand-text small { font-size: .65rem; }
   .nav-actions { gap: .25rem; }
-  .theme-switch { width: 2.95rem; height: 1.75rem; }
-  .theme-switch .ts-knob {
-    width: 1.75rem; height: 1.3rem; top: .17rem; left: .17rem;
-    transform: translateX(.83rem);
-  }
-  [data-theme="dark"] .theme-switch .ts-knob { transform: translateX(0); }
-  .theme-switch .ts-icon svg { width: .85rem; height: .85rem; }
+  .lamp-switch { width: 2.2rem; height: 2.9rem; }
 
   .nav-links {
     display: flex;
@@ -148,8 +150,8 @@
     line-height: 1.8;
   }
   .hero-giant {
-    bottom: .45rem;
-    opacity: .27;
+    bottom: 2rem;
+    opacity: .55;
     line-height: .85;
   }
 
@@ -292,7 +294,7 @@
 }
 
 /* العناصر المصورة الجديدة مخصصة لتجربة الموبايل */
-.field-note, .explore-image { display: none; }
+.explore-image { display: none; }
 
 @media (min-width: 900px) {
   .hero-card h1 br { display: none; }
