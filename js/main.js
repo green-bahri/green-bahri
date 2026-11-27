@@ -212,7 +212,7 @@ function buildFooter() {
 /* ---------- ليكويد جلاس حقيقي (انكسار الخلفية عند الحواف + حافة لامعة + تلوّن بسيط) ----------
    أي عنصر عليه data-liquid يأخذ التأثير. الانكسار الفعلي يشتغل في كروم/إيدج/أندرويد،
    وفي سفاري وفايرفوكس يرجع تلقائياً لزجاج مموّه بنفس الشكل (الكلاس liquid-glass في style.css). */
-const LG = { ok: null, defs: null, n: 0, strength: 1.35 }; /* strength: ارفعه لانكسار أقوى أو نزّله لأخف */
+const LG = { ok: null, defs: null, n: 0, strength: 1.6 }; /* strength: ارفعه لانكسار أقوى أو نزّله لأخف */
 
 function lgSupported() {
   if (LG.ok === null) {
@@ -264,7 +264,7 @@ function lgApply(el, fw, fh) {
     svg.appendChild(LG.defs); document.body.appendChild(svg);
   }
   const rad = Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius) || h / 2, h / 2, w / 2);
-  const bezel = Math.min(h * 0.5, 24);                 // سمك الحافة المنكسرة (كل الحافة تقريباً زي الفيديو)
+  const bezel = Math.min(h * 0.34, 16);                 // سمك الحافة المنكسرة (كل الحافة تقريباً زي الفيديو)
   const S = 2 * Math.min(16, h * 0.34) * LG.strength; // أقصى إزاحة × 2
   const url = lgMap(w, h, rad, bezel);
   const id = "lg-" + ++LG.n;
