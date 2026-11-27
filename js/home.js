@@ -197,12 +197,16 @@
   })();
 })();
 
-/* فيديو الهيرو: لو "تقليل الحركة" أو "توفير البيانات" أو نت 2G بنوقفه ونخلي الصورة الثابتة (poster) */
+/* فيديو الهيرو: عمودي، فبنشغّله في الموبايل بس. في اللابتوب بنستخدم صورة عريضة (hero-desktop.webp).
+   لو "تقليل الحركة" أو "توفير البيانات" أو نت 2G بنخلي الصورة الثابتة (poster) */
 (function () {
   const v = document.querySelector(".hero-video");
   if (!v) return;
   const conn = navigator.connection;
   const lite = (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) ||
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (lite) { v.removeAttribute("autoplay"); v.pause(); v.removeAttribute("src"); v.load(); }
+  const desktop = window.matchMedia("(min-width: 900px)").matches;
+  if (lite || desktop) return; // بدون src: ما بينزّل شيء
+  v.src = v.dataset.src;
+  v.play().catch(() => {});
 })();
