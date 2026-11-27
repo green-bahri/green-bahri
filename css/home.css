@@ -542,3 +542,9 @@
 [data-theme="dark"] .stats .stats-grid .today-pill { background: none; color: var(--text-soft); }
 .field-note.section { padding-top: 3rem; }
 @media (min-width: 900px) { .field-note.section { padding-top: 4.5rem; } }
+
+/* ---------- خلفية الهيرو في اللابتوب: صورة عريضة بدل الفيديو العمودي ---------- */
+@media (min-width: 900px) {
+  .hero { background: url("../assets/hero-desktop.webp") center 62% / cover no-repeat, linear-gradient(160deg, var(--green-950), #14532d 55%, var(--green-800)); }
+  .hero-video { display: none; }
+}
