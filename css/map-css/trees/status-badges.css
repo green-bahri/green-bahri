@@ -1,0 +1,41 @@
+/* ===== css/trees/status-badges.css ===== */
+
+.tree-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  direction: rtl;
+}
+
+.tree-status-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.tree-status-badge--healthy {
+  background: #d4edda;
+  color: #155724;
+}
+
+.tree-status-badge--needs_water {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.tree-status-badge--sick {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.tree-status-badge--dead {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
