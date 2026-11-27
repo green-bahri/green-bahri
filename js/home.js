@@ -55,4 +55,31 @@
     el.lastChild.textContent = days <= 0 ? "زُرعت اليوم " + what : days === 1 ? "آخر زراعة أمس: " + what : "آخر زراعة قبل " + n(days) + " يوم: " + what;
     el.hidden = false;
   })();
+  /* أرقام الأثر: تُقرأ من data.js، والعدّاد يشغّله main.js عبر data-count */
+  (function () {
+    const GB = window.GB || {};
+    const vals = {
+      trees: (GB.trees || []).length,
+      colleges: (GB.colleges || []).length,
+      seedlings: typeof GB.seedlings === "number" ? GB.seedlings : 150, /* أضف seedlings: 150 في data.js لتغييره */
+    };
+    document.querySelectorAll("[data-stat]").forEach((el) => { el.dataset.count = vals[el.dataset.stat] || 0; });
+  })();
+
+  /* زر «ازرع أثر» الثابت: يظهر بعد الهيرو ويختفي عند قسم الدعوة والفوتر */
+  (function () {
+    const bar = document.getElementById("sticky-cta"), hero = document.getElementById("home");
+    if (!bar || !hero || !("IntersectionObserver" in window)) return;
+    const seen = { hero: true, join: false, foot: false };
+    const render = () => {
+      const on = !seen.hero && !seen.join && !seen.foot;
+      bar.classList.toggle("show", on);
+      bar.setAttribute("aria-hidden", on ? "false" : "true");
+      bar.firstElementChild.tabIndex = on ? 0 : -1;
+    };
+    const watch = (el, key) => el && new IntersectionObserver((es) => { seen[key] = es[0].isIntersecting; render(); }).observe(el);
+    watch(hero, "hero");
+    watch(document.getElementById("join"), "join");
+    watch(document.getElementById("site-footer"), "foot");
+  })();
 })();
