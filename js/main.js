@@ -117,6 +117,65 @@ function buildHeader() {
   window.addEventListener("scroll", onScroll, { passive: true });
 }
 
+/* ---------- ليكويد جلاس: فقاعة زجاجية تنزلق بين روابط القائمة ----------
+   - تتبع الماوس/التركيز وترجع للصفحة الحالية
+   - تتمطّط أثناء الحركة (squash & stretch)
+   - عند الانتقال بين الصفحات تنزلق من رابط الصفحة السابقة للحالية
+   لو فشل هذا الجزء يرجع التمييز العادي للرابط النشط (الكلاس has-glass لا يُضاف). */
+function initGlassNav() {
+  const ul = document.querySelector(".nav-links");
+  if (!ul) return;
+  const links = Array.from(ul.querySelectorAll("a"));
+  if (!links.length) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const active = links.find((a) => a.getAttribute("aria-current") === "page") || null;
+  const pill = document.createElement("span");
+  pill.className = "glass-pill";
+  pill.setAttribute("aria-hidden", "true");
+  ul.prepend(pill);
+  ul.classList.add("has-glass");
+  let cur = null;
+
+  function place(a, opts) {
+    const o = opts || {};
+    if (!a) { pill.style.opacity = "0"; cur = null; return; }
+    const u = ul.getBoundingClientRect(), r = a.getBoundingClientRect();
+    const x = r.left - u.left - ul.clientLeft, y = r.top - u.top - ul.clientTop;
+    if (o.instant) pill.style.transition = "none";
+    pill.style.width = r.width + "px";
+    pill.style.height = r.height + "px";
+    pill.style.transform = "translate(" + x + "px," + y + "px)";
+    pill.style.opacity = "1";
+    if (o.instant) { void pill.offsetWidth; pill.style.transition = ""; }
+    else if (!reduce && cur && cur !== a) {
+      pill.classList.remove("is-moving"); void pill.offsetWidth; pill.classList.add("is-moving");
+    }
+    cur = a;
+  }
+
+  /* الانتقال بين الصفحات: نبدأ من رابط الصفحة السابقة ثم ننزلق للحالية */
+  let prev = null;
+  try { prev = sessionStorage.getItem("gb-nav-prev"); } catch (e) {}
+  const prevLink = prev && prev !== currentPage() ? links.find((a) => a.getAttribute("href") === prev) : null;
+  if (prevLink && active && !reduce) {
+    place(prevLink, { instant: true });
+    requestAnimationFrame(() => requestAnimationFrame(() => place(active)));
+  } else {
+    place(active, { instant: true });
+  }
+
+  links.forEach((a) => {
+    a.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") place(a); });
+    a.addEventListener("focus", () => place(a));
+    a.addEventListener("blur", () => place(active));
+  });
+  ul.addEventListener("pointerleave", () => place(active));
+  const refit = () => place(cur || active, { instant: true });
+  window.addEventListener("resize", refit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit);
+  window.addEventListener("pagehide", () => { try { sessionStorage.setItem("gb-nav-prev", currentPage()); } catch (e) {} });
+}
+
 function buildFooter() {
   const slot = document.getElementById("site-footer");
   if (!slot) return;
@@ -144,6 +203,7 @@ function buildFooter() {
 
 document.addEventListener("DOMContentLoaded", () => {
   buildHeader();
+  initGlassNav();
   buildFooter();
 
   /* لو ملف الفيديو غير موجود نخفيه فتظهر الخلفية الخضراء البديلة */
