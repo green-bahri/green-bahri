@@ -371,7 +371,32 @@ function addRipple(e) {
 document.addEventListener("pointerdown", addRipple);
 document.addEventListener("click", (e) => { if (e.detail === 0) addRipple(e); });
 
+/* ---------- تحميل مسبق للصفحة الجاية ----------
+   أول ما الزول يقرّب الماوس أو يلمس رابط لصفحة من الموقع، نبدأ نحمّلها في الخلفية،
+   فلما يضغط تفتح تقريباً فوراً. ما بنعمل شيء لو "توفير البيانات" مفعّل أو النت بطيء جداً. */
+function initPrefetch() {
+  const conn = navigator.connection;
+  if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) return;
+  const done = new Set([location.href]);
+  function warm(e) {
+    const a = e.target.closest && e.target.closest("a[href]");
+    if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
+    const url = new URL(a.href, location.href);
+    if (url.origin !== location.origin || !/\.html?$|\/$/.test(url.pathname)) return;
+    url.hash = "";
+    if (done.has(url.href)) return;
+    done.add(url.href);
+    const l = document.createElement("link");
+    l.rel = "prefetch"; l.href = url.href; l.as = "document";
+    document.head.appendChild(l);
+  }
+  document.addEventListener("pointerover", (e) => { if (e.pointerType === "mouse") warm(e); }, { passive: true });
+  document.addEventListener("touchstart", warm, { passive: true });
+  document.addEventListener("focusin", warm);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  initPrefetch();
   buildHeader();
   initGlassNav();
   buildFooter();
