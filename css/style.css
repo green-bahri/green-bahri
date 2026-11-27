@@ -456,6 +456,27 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 @media (max-width: 380px) { .nav-links a { font-size: 0.72rem; padding: 0.4rem 0.1rem; } }
 @media (max-width: 335px) { .nav-links a { font-size: 0.66rem; } }
 
+/* مقاسات النافبار في الموبايل — موحّدة لكل الصفحات (كانت في home.css للرئيسية بس، فكانت باقي الصفحات أطول).
+   الألوان الخاصة بالهيرو تبقى في home.css. */
+@media (max-width: 899px) {
+  .nav-wrap { padding: .55rem .55rem 0; }
+  .nav { padding: .48rem .55rem .42rem; border-radius: 1.05rem; column-gap: .35rem; row-gap: .35rem; }
+  .nav .brand { gap: .48rem; }
+  .nav .brand-mark { width: 2.2rem; height: 2.2rem; border-radius: .72rem; }
+  .nav .brand-mark img { width: 1.7rem; height: 1.7rem; }
+  .nav .brand-text strong { font-size: .98rem; }
+  .nav .brand-text small { font-size: .65rem; }
+  .nav-actions { gap: .25rem; }
+  .lamp-switch { width: 2.2rem; height: 2.9rem; }
+  .nav-links { gap: .12rem; margin: .12rem 0 0; padding: .38rem 0 .05rem; justify-content: space-between; }
+  .nav-links li { min-width: 0; }
+  .nav-links a {
+    width: 100%; min-height: 2.8rem; padding: .28rem .08rem; border-radius: .62rem;
+    font-size: .74rem; font-weight: 800; line-height: 1.22; word-break: normal;
+  }
+}
+@media (max-width: 380px) { .nav-links a { font-size: .68rem; padding-inline: .03rem; } }
+
 /* تنسيق اللابتوب والشاشات الكبيرة */
 @media (min-width: 900px) {
 
