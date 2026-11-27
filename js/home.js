@@ -35,9 +35,10 @@
       if (!w) return;
       let size = (100 * hero.clientWidth * 0.94) / w;
       /* في اللابتوب: لا نخلّي الكلمة أطول من ٢٢٪ من ارتفاع الشاشة، حتى يدخل الهيرو كله في شاشة واحدة */
-      if (window.innerWidth >= 900) size = Math.min(size, window.innerHeight * 0.22);
+      if (window.innerWidth >= 900) size = Math.min(size, window.innerHeight * 0.14);
       giant.style.fontSize = size + "px";
       hero.style.setProperty("--giant-h", giant.getBoundingClientRect().height + "px");
+      document.documentElement.style.setProperty("--giant-h", giant.getBoundingClientRect().height + "px"); /* تقرأه بطاقة الأرقام عشان تغطي جزء بس من الكلمة */
     };
     fit();
     window.addEventListener("resize", fit);

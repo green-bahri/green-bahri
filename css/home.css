@@ -511,3 +511,15 @@
 .hero-actions .btn-ghost.liquid-glass { background: rgba(255,255,255,.04); }
 .hero-actions .btn-ghost.liquid-glass:hover { background: rgba(255,255,255,.2); }
 .tile-arrow.liquid-glass { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.6); }
+
+/* ---------- اللابتوب: كلمة GREEN BAHRI بنفس شكل التلفون (نفس اللون والشفافية)، بس بحجم أصغر ----------
+   حجم الخط يحسبه home.js (سقف ارتفاعها 14% من ارتفاع الشاشة). */
+@media (min-width: 900px) {
+  .hero-giant { opacity: .55; line-height: .85; }
+  /* بطاقة الأرقام أصغر في اللابتوب */
+  .stats-grid { max-width: 36rem; padding: 1rem .8rem; }
+  .stat b { font-size: 2.1rem; }
+  .stat span { font-size: .82rem; }
+  .stat-ico { width: 2.2rem; height: 2.2rem; }
+  .stat-ico svg { width: 1.15rem; height: 1.15rem; }
+}
