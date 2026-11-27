@@ -22,72 +22,20 @@
 @media (max-width: 899px) {
   body { overflow-x: hidden; }
 
-  /* نافبار أخف وأقصر */
-  .nav-wrap { padding: .55rem .55rem 0; }
+  /* النافبار: المقاسات في style.css (موحّدة لكل الصفحات)، هنا ألوان الهيرو فقط */
   .nav {
-    padding: .48rem .55rem .42rem;
-    border-radius: 1.05rem;
-    column-gap: .35rem;
-    row-gap: .35rem;
     border-color: rgba(255,255,255,.26);
     box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 10px 28px rgba(0,0,0,.22);
   }
   .nav::before { background: rgba(13, 42, 29, .38); backdrop-filter: blur(14px) saturate(1.7); -webkit-backdrop-filter: blur(14px) saturate(1.7); }
-  .nav-wrap.is-scrolled .nav {
-    border-color: rgba(36,92,69,.12);
-  }
+  .nav-wrap.is-scrolled .nav { border-color: rgba(36,92,69,.12); }
   .nav-wrap.is-scrolled .nav::before { background: rgba(248, 250, 246, .68); }
-  [data-theme="dark"] .nav-wrap.is-scrolled .nav {
-    border-color: rgba(164,195,162,.16);
-  }
+  [data-theme="dark"] .nav-wrap.is-scrolled .nav { border-color: rgba(164,195,162,.16); }
   [data-theme="dark"] .nav-wrap.is-scrolled .nav::before { background: rgba(13, 29, 21, .66); }
-  .nav .brand {
-    margin-inline: auto;
-    justify-content: center;
-    gap: .48rem;
-  }
-  .nav .brand-mark {
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: .72rem;
-    background: var(--green-700);
-  }
-  .nav .brand-mark img { width: 1.7rem; height: 1.7rem; }
-  .nav .brand-text strong { font-size: .98rem; }
-  .nav .brand-text small { font-size: .65rem; }
-  .nav-actions { gap: .25rem; }
-  .lamp-switch { width: 2.2rem; height: 2.9rem; }
-
-  .nav-links {
-    display: flex;
-    width: 100%;
-    position: static;
-    order: 3;
-    gap: .12rem;
-    margin: .12rem 0 0;
-    padding: .38rem 0 .05rem;
-    border-top: 1px solid rgba(255,255,255,.17);
-    justify-content: space-between;
-  }
+  .nav .brand-mark { background: var(--green-700); }
+  .nav-links { border-top: 1px solid rgba(255,255,255,.17); }
   .nav-wrap.is-scrolled .nav-links { border-top-color: var(--line); }
-  .nav-links li { display: flex; flex: 1 1 0; min-width: 0; }
-  .nav-links a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 2.8rem;
-    padding: .28rem .08rem;
-    border-radius: .62rem;
-    color: rgba(255,255,255,.9);
-    font-size: .74rem;
-    font-weight: 800;
-    line-height: 1.22;
-    text-align: center;
-    white-space: normal;
-    word-break: normal;
-    overflow-wrap: normal;
-  }
+  .nav-links a { color: rgba(255,255,255,.9); }
   .nav-wrap.is-scrolled .nav-links a { color: var(--nav-link); }
   .nav-links a[aria-current="page"] {
     background: rgba(164,195,162,.2);
@@ -285,7 +233,6 @@
 }
 
 @media (max-width: 380px) {
-  .nav-links a { font-size: .68rem; padding-inline: .03rem; }
   .hero-card h1 { font-size: 2.05rem; }
   #explore .explore-image { height: 6.2rem; }
   #explore .card p { font-size: .78rem; }
