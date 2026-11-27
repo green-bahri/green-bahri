@@ -9,18 +9,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="preload" as="image" href="assets/hero-poster.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/hero-poster.webp" media="(max-width: 899px)" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/hero-desktop.webp" media="(min-width: 900px)" fetchpriority="high">
   <link rel="stylesheet" href="css/style.css?v=7">
-  <link rel="stylesheet" href="css/home.css?v=13">
+  <link rel="stylesheet" href="css/home.css?v=14">
   <script src="js/main.js?v=2" defer></script>
   <script src="js/data.js" defer></script>
-  <script src="js/home.js?v=5" defer></script>
+  <script src="js/home.js?v=6" defer></script>
 </head>
 <body class="has-hero">
   <div id="site-header"></div>
   <main>
     <section id="home" class="hero">
-      <video class="hero-video" src="assets/hero.mp4" poster="assets/hero-poster.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
+      <video class="hero-video" data-src="assets/hero.mp4" poster="assets/hero-poster.webp" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
       <div class="hero-content">
         <div class="hero-card">
           <h1>من حملة تشجير إلى مشروع بيئي <em class="hl">مستدام</em></h1>
