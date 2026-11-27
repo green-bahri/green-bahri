@@ -1,0 +1,71 @@
+/* share-button.css - زر ومشاركة الموقع (نسخ الإحداثيات) */
+
+.share-bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-bottom-sheet);
+  background: var(--share-sheet-bg);
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(100%);
+  transition: var(--share-sheet-transition);
+  max-height: var(--share-sheet-max-height);
+}
+
+.share-bottom-sheet.visible {
+  transform: translateY(0);
+}
+
+.share-sheet-handle {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 8px;
+  cursor: grab;
+}
+
+.share-handle-bar {
+  width: 40px;
+  height: 4px;
+  background: var(--share-sheet-handle);
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+.share-sheet-content {
+  padding: 8px 20px 20px;
+  text-align: center;
+  direction: rtl;
+}
+
+.share-location-btn {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--c-accent);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.share-location-btn:active {
+  transform: scale(0.97);
+}
+
+.share-location-btn.copied {
+  background: #10b981;
+}
+
+.share-btn-icon {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
