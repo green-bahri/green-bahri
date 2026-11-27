@@ -335,10 +335,10 @@
    ========================================================= */
 
 /* كلمة مميّزة في عنوان الهيرو مع خط منحني تحتها */
-.hero-card h1 .hl { position: relative; display: inline-block; font-style: normal; color: #c8e6b8; white-space: nowrap; }
+.hero-card h1 .hl { position: relative; display: inline-block; font-style: normal; color: #39e75f; white-space: nowrap; text-shadow: 0 0 18px rgba(57,231,95,.35); }
 .hero-card h1 .hl::after {
   content: ""; position: absolute; inset-inline: -.04em; bottom: -.2em; height: .32em; pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C 45 2, 100 2, 197 7' fill='none' stroke='%23a4c3a2' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C 45 2, 100 2, 197 7' fill='none' stroke='%2339e75f' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
   opacity: .9;
 }
 
@@ -548,3 +548,35 @@
   .hero { background: url("../assets/hero-desktop.webp") center 62% / cover no-repeat, linear-gradient(160deg, var(--green-950), #14532d 55%, var(--green-800)); }
   .hero-video { display: none; }
 }
+
+/* قسم الرؤية: بطاقتان (الرسالة والهدف) في عمودين متوازنين */
+@media (min-width: 900px) { .vision .cards-2 { grid-template-columns: repeat(2, 1fr); max-width: 52rem; margin-inline: auto; } }
+
+/* =========================================================
+   بطاقتا الرسالة والهدف: رمز أخضر + عنوان أخضر مميز (بدون زينة على الحافة)
+   ========================================================= */
+.vision .cards-2 .card {
+  --accent: #39e75f;
+  background-color: rgba(255,255,255,.08);
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 100% 4px; background-repeat: no-repeat; background-position: top;
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow: 0 10px 26px rgba(0,0,0,.22);
+  transition: transform .3s var(--ease), border-color .3s;
+}
+.vision .cards-2 .card:hover { transform: translateY(-3px); border-color: rgba(139,255,166,.55); }
+.vision .cards-2 .card::before { display: none; }
+.vision .cards-2 .card-icon {
+  width: 3.4rem; height: 3.4rem; border-radius: 50%; color: #fff;
+  background: linear-gradient(145deg, #3fdc68, #17a243);
+  box-shadow: 0 0 0 5px rgba(57,231,95,.14), 0 6px 14px rgba(20,150,60,.35);
+}
+.vision .cards-2 .card-icon svg { width: 1.6rem; height: 1.6rem; stroke-width: 2.2; }
+.vision .cards-2 .card h3 { color: #8bffa6; font-weight: 900; font-size: 1.35rem; }
+@media (max-width: 899px) {
+  .vision .cards-2 .card { grid-template-columns: 3.2rem 1fr; column-gap: .9rem; padding: 1.05rem 1.1rem; }
+  .vision .cards-2 .card-icon { width: 3rem; height: 3rem; box-shadow: 0 0 0 4px rgba(57,231,95,.14), 0 5px 12px rgba(20,150,60,.3); }
+  .vision .cards-2 .card-icon svg { width: 1.45rem; height: 1.45rem; }
+  .vision .cards-2 .card h3 { font-size: 1.1rem; }
+}
+@media (prefers-reduced-motion: reduce) { .vision .cards-2 .card { transition: none; } .vision .cards-2 .card:hover { transform: none; } }

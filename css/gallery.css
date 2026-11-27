@@ -659,3 +659,7 @@
   .gx-lb-bar { display: none; }
   .gx-spark { display: none; }
 }
+
+/* نصوص المحتوى الجديدة: كلمة مميزة داخل العناوين وجملة الهيرو */
+.gx-head h2 em { font-style: normal; color: var(--gx-bz-hi); }
+.gx-lead .gx-key { color: var(--gx-bz-hi); font-weight: 800; }

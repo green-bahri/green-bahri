@@ -1126,3 +1126,26 @@ body:not(.has-hero) .glass-pill {
   @view-transition { navigation: none; }
   .reveal { opacity: 1; transform: none; filter: none; transition: none; }
 }
+/* =========================================================
+   تمييز الكلمات المهمة في العناوين والنصوص (نفس الخط، لون أخضر فقط)
+   ========================================================= */
+.mark { font-style: normal; color: #1b8f3f; }
+[data-theme="dark"] .mark { color: #5df283; }
+.vision .mark, .cta .mark, [data-theme="dark"] .vision .mark, [data-theme="dark"] .cta .mark { color: #8bffa6; }
+.key { font-weight: 800; color: var(--color-primary); }
+[data-theme="dark"] .key { color: var(--color-natural); }
+.hero-card .key, .vision .key, .cta .key { color: #9dffb4; }
+
+/* عنوان فرعي صغير على شكل حبّة مع ورقة */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: .45rem; padding: .3rem .9rem .3rem 1rem; border-radius: 999px;
+  color: var(--color-primary); letter-spacing: .04em;
+  background: color-mix(in srgb, var(--color-natural) 26%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-natural) 55%, transparent);
+}
+.eyebrow::before {
+  content: ""; flex: none; width: 1em; height: 1em; background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z'/%3E%3Cpath d='M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z'/%3E%3Cpath d='M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+[data-theme="dark"] .eyebrow { color: var(--color-natural); background: rgba(164,195,162,.12); border-color: rgba(164,195,162,.3); }
+.vision .eyebrow, [data-theme="dark"] .vision .eyebrow { color: #b9f5c6; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.22); }
