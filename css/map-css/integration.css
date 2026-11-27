@@ -1,0 +1,115 @@
+/* =========================================================
+   integration.css - دمج خريطة أشجار بحري في موقع Green Bahri
+   يستند إلى sudmap (https://sudamap.pages.dev)
+   ========================================================= */
+
+:root {
+  --nav-h: 80px;
+  --gap: 0.75rem;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --float-top: calc(max(var(--nav-h), var(--safe-top)) + var(--gap));
+}
+
+/* 1) تحييد تأثيرات base.css على الصفحة لضمان استقرار العرض */
+html.map-page,
+body.map-page {
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+body.map-page {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--color-bg-green);
+  line-height: 1.7;
+}
+body.map-page * { -webkit-tap-highlight-color: transparent; }
+
+/* 2) حاوية الصفحة والخريطة (تملأ الشاشة) */
+body.map-page main { height: 100dvh; overflow: hidden; }
+#map-page {
+  position: relative; width: 100%; height: 100dvh; overflow: hidden; isolation: isolate;
+}
+#map-page #map {
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0;
+  font-family: var(--font); background: var(--color-bg-green);
+}
+
+/* 3) طبقات الـ Z-index (Nav فوق الخريطة) */
+body.on-map-page .nav-wrap { z-index: 1100; }
+
+/* 4) أزرار التحكم العائمة (مواضع ثابتة تمنع التمدد) */
+#map-page .gps-btn,
+#map-page .center-btn,
+#map-page .zoom-container,
+#map-page .layer-btn,
+#map-page .menu-btn,
+#map-page .base-layer-btn,
+#map-page .search-container {
+  position: absolute !important;
+  z-index: 1000;
+  transition: opacity 0.2s ease;
+}
+
+#map-page .search-container { top: var(--float-top); inset-inline: 0.75rem; }
+#map-page .layer-btn { top: calc(var(--float-top) + 3.5rem); inset-inline-start: 1rem; inset-inline-end: auto; bottom: auto; }
+#map-page .base-layer-btn { top: calc(var(--float-top) + 3.5rem); inset-inline-end: 1rem; inset-inline-start: auto; bottom: auto; }
+#map-page .menu-btn { top: calc(var(--float-top) + 6.5rem); inset-inline-start: 1rem; inset-inline-end: auto; bottom: auto; }
+
+#map-page .gps-btn { bottom: calc(var(--gap) + var(--safe-bottom)); inset-inline-start: 1rem; inset-inline-end: auto; top: auto; }
+#map-page .center-btn { bottom: calc(var(--gap) + var(--safe-bottom) + 3.5rem); inset-inline-start: 1rem; inset-inline-end: auto; top: auto; }
+#map-page .zoom-container {
+  bottom: calc(var(--gap) + var(--safe-bottom) + 7rem);
+  inset-inline-start: 1rem; inset-inline-end: auto; top: auto;
+  height: auto !important; max-height: none !important; display: flex; flex-direction: column;
+}
+
+/* 5) مؤشر التحميل (Skeleton) */
+#map-page #skeleton-loader { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 900; }
+
+/* 6) إخفاء الأزرار العائمة عند فتح أي شيت */
+body.sheet-open #map-page .gps-btn,
+body.sheet-open #map-page .center-btn,
+body.sheet-open #map-page .zoom-container,
+body.sheet-open #map-page .layer-btn,
+body.sheet-open #map-page .menu-btn,
+body.sheet-open #map-page .base-layer-btn,
+body.sheet-open #map-page .search-container {
+  opacity: 0; pointer-events: none;
+}
+
+/* 7) مؤشر عدم الاتصال */
+#offline-indicator { z-index: 9998; top: calc(var(--safe-top) + 5rem); }
+
+/* 8) تحسينات Leaflet */
+#map-page .leaflet-control-attribution { font-family: var(--font); font-size: 10px; background: rgba(255, 255, 255, 0.7); }
+#map-page .leaflet-control-zoom { display: none; }
+
+/* 9) إشعارات (Toast) */
+.sudamap-toast { z-index: 9999; bottom: calc(1.5rem + var(--safe-bottom)) !important; }
+
+/* 10) أسماء المناطق (Tooltips) - متمركزة بدقة ولا تعترض النقر */
+.leaflet-tooltip.map-area-label {
+  background: rgba(255, 255, 255, 0.75);
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  color: #1f2937;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  direction: rtl;
+}
+.leaflet-tooltip.map-area-label::before { display: none !important; }
+
+/* 11) استجابة الشاشات الصغيرة */
+@media (max-width: 640px) {
+  #map-page .layer-btn, #map-page .base-layer-btn { width: 40px; height: 40px; }
+  .leaflet-tooltip.map-area-label { font-size: 10px; padding: 2px 6px; }
+}
