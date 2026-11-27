@@ -1,11 +1,325 @@
 /* =========================================================
-   Green Bahri — تحسين الصفحة الرئيسية للموبايل
-   هذه القواعد تخص الشاشات الأقل من 900px فقط.
+   Green Bahri — home.css (الصفحة الرئيسية فقط)
+   1) قواعد الهيرو العامة (من main)
+   2) تحسينات الموبايل (الشاشات أقل من 900px) — تأتي بعدها لتتغلب عليها في الموبايل
    ========================================================= */
 
-/* ---------- الهيرو: أقصر، والكلمة الكبيرة أعلى ---------- */
+/* ---------- 1) الهيرو: أقصر، والكلمة الكبيرة أعلى ---------- */
 .hero { min-height: min(100svh, 42rem); }
 .hero-content { padding-bottom: calc(12vw + 1.5rem); } /* مساحة بقدر ارتفاع كلمة GREEN BAHRI */
 @media (min-width: 900px) { .hero-content { padding-top: 6.5rem; } }
 .hero-giant { bottom: 0.15em; }
 .hero-card .hero-actions { margin-bottom: 1.4rem; }
+
+/* ---------- 2) تحسين الموبايل ---------- */
+
+@media (max-width: 899px) {
+  body { overflow-x: hidden; }
+
+  /* نافبار أخف وأقصر */
+  .nav-wrap { padding: .55rem .55rem 0; }
+  .nav {
+    padding: .48rem .55rem .42rem;
+    border-radius: 1.05rem;
+    column-gap: .35rem;
+    row-gap: .35rem;
+    background: rgba(13, 42, 29, .78);
+    border-color: rgba(255,255,255,.18);
+    box-shadow: 0 8px 28px rgba(0,0,0,.16);
+  }
+  .nav-wrap.is-scrolled .nav {
+    background: rgba(248, 250, 246, .94);
+    border-color: rgba(36,92,69,.12);
+  }
+  [data-theme="dark"] .nav-wrap.is-scrolled .nav {
+    background: rgba(13, 29, 21, .95);
+    border-color: rgba(164,195,162,.16);
+  }
+  .nav .brand {
+    margin-inline: auto;
+    justify-content: center;
+    gap: .48rem;
+  }
+  .nav .brand-mark {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: .72rem;
+    background: #a4c3a2;
+  }
+  .nav .brand-mark img { width: 1.7rem; height: 1.7rem; }
+  .nav .brand-text strong { font-size: .98rem; }
+  .nav .brand-text small { font-size: .65rem; }
+  .nav-actions { gap: .25rem; }
+  .theme-switch { width: 2.95rem; height: 1.75rem; }
+  .theme-switch .ts-knob {
+    width: 1.75rem; height: 1.3rem; top: .17rem; left: .17rem;
+    transform: translateX(.83rem);
+  }
+  [data-theme="dark"] .theme-switch .ts-knob { transform: translateX(0); }
+  .theme-switch .ts-icon svg { width: .85rem; height: .85rem; }
+
+  .nav-links {
+    display: flex;
+    width: 100%;
+    position: static;
+    order: 3;
+    gap: .12rem;
+    margin: .12rem 0 0;
+    padding: .38rem 0 .05rem;
+    border-top: 1px solid rgba(255,255,255,.17);
+    justify-content: space-between;
+  }
+  .nav-wrap.is-scrolled .nav-links { border-top-color: var(--line); }
+  .nav-links li { display: flex; flex: 1 1 0; min-width: 0; }
+  .nav-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 2.45rem;
+    padding: .28rem .08rem;
+    border-radius: .62rem;
+    color: rgba(255,255,255,.9);
+    font-size: .69rem;
+    font-weight: 800;
+    line-height: 1.22;
+    text-align: center;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+  .nav-wrap.is-scrolled .nav-links a { color: var(--nav-link); }
+  .nav-links a[aria-current="page"] {
+    background: rgba(164,195,162,.2);
+    color: #fff;
+  }
+  .nav-wrap.is-scrolled .nav-links a[aria-current="page"] {
+    background: #e4eee4;
+    color: #245c45;
+  }
+  [data-theme="dark"] .nav-wrap.is-scrolled .nav-links a[aria-current="page"] {
+    background: rgba(164,195,162,.16);
+    color: #d8ead8;
+  }
+
+  /* الهيرو: صورة الحرم هي البطل، والنص واضح ومختصر */
+  .hero {
+    min-height:  min(780px, 88svh);
+    min-height: min(780px, 88svh);
+    background-position: 52% center;
+    background-size: cover;
+    align-items: end;
+    padding-top: 6.8rem;
+  }
+  .hero::after {
+    background:
+      linear-gradient(180deg, rgba(5,24,15,.34) 0%, rgba(5,24,15,.12) 28%, rgba(5,24,15,.82) 100%),
+      linear-gradient(90deg, rgba(5,24,15,.12), rgba(5,24,15,.2));
+  }
+  .hero-content {
+    padding: 4rem 1.15rem 5.6rem;
+    max-width: 34rem;
+    text-align: right;
+  }
+  .hero-card { text-shadow: 0 2px 16px rgba(0,0,0,.28); }
+  .hero-card .eyebrow {
+    padding: .34rem .8rem;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    background: rgba(226,239,221,.16);
+    border-color: rgba(255,255,255,.32);
+  }
+  .hero-card h1 {
+    font-size: clamp(2.05rem, 8.6vw, 3.1rem);
+    line-height: 1.22;
+    margin: 1.1rem 0 .85rem;
+    text-wrap: balance;
+  }
+  .hero-card h1 span { display: block; color: #c8e6b8; text-wrap: balance; }
+  .hero-card h1 { max-width: 21rem; }
+  .hero-actions { flex-direction: row; gap: .6rem; margin: 0 0 1.1rem; }
+  .hero-actions .btn { flex: 1 1 0; padding: .72rem .5rem; font-size: .92rem; min-height: 2.9rem; }
+  .hero-actions .btn-primary { background: #2f6b4c; border: 1px solid rgba(255,255,255,.22); }
+  .hero-card p {
+    max-width: 28rem;
+    margin: 0 0 1.15rem;
+    color: rgba(255,255,255,.88);
+    font-size: .98rem;
+    line-height: 1.8;
+  }
+  .hero-seed {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    margin-top: .35rem;
+    padding: .62rem .9rem;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 1rem;
+    background: rgba(9,35,22,.48);
+    color: #f4f8ef;
+    font-size: .82rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .hero-seed strong {
+    color: #d4f0b9;
+    font-family: "Poppins", var(--font);
+    font-size: 1.45rem;
+    line-height: 1;
+  }
+  .hero-seed small { display: none; }
+  .hero-giant {
+    bottom: .45rem;
+    opacity: .27;
+    line-height: .85;
+  }
+
+  /* الأقسام: إيقاع أسرع ومساحات مناسبة للهاتف */
+  .section { padding: 3.6rem 0; }
+  .container { padding-inline: 1.05rem; }
+  .section-head { margin: 0 auto 1.65rem; text-align: right; }
+  .section-head .eyebrow { font-size: .75rem; letter-spacing: .08em; }
+  .section-head h2 { font-size: 1.8rem; line-height: 1.3; margin: .45rem 0 .55rem; }
+  .section-head p { font-size: .98rem; line-height: 1.7; }
+
+  /* الرؤية: خلفية داكنة وبطاقات فاتحة بحدود هادئة */
+  .vision {
+    padding-block: 3.7rem;
+    background-position: center;
+  }
+  .vision .section-head { text-align: center; }
+  .vision .section-head h2 { color: #fff; }
+  .vision .cards { gap: .75rem; }
+  .vision .card {
+    display: grid;
+    grid-template-columns: 2.8rem 1fr;
+    column-gap: .8rem;
+    align-items: center;
+    padding: .95rem 1rem;
+    border-radius: 1.1rem;
+    background: rgba(248,250,244,.11);
+    border-color: rgba(255,255,255,.19);
+    text-align: right;
+  }
+  .vision .card-icon {
+    grid-row: span 2;
+    width: 2.65rem;
+    height: 2.65rem;
+    margin: 0;
+    border-radius: .85rem;
+    background: rgba(196,225,183,.2);
+    color: #d7efc8;
+  }
+  .vision .card-icon svg { width: 1.35rem; height: 1.35rem; }
+  .vision .card h3 { font-size: 1.02rem; margin: 0 0 .12rem; color: #fff; }
+  .vision .card p { font-size: .83rem; line-height: 1.55; color: rgba(255,255,255,.78); }
+
+  /* ورقة الزينة كانت تلمس النص في بطاقات الموبايل */
+  .vision .card::before, #explore .card::before { display: none; }
+
+  /* فقرة مصورة من أرض الجامعة */
+  .field-note {
+    position: relative;
+    overflow: hidden;
+    background: #edf3e9;
+  }
+  [data-theme="dark"] .field-note { background: #102219; }
+  .field-note .container { display: grid; gap: 1.35rem; }
+  .field-note-copy .eyebrow { font-size: .75rem; letter-spacing: .08em; }
+  .field-note-copy h2 {
+    margin: .45rem 0 .65rem;
+    color: #1c4d38;
+    font-size: 1.85rem;
+    line-height: 1.28;
+  }
+  [data-theme="dark"] .field-note-copy h2 { color: #d8ead8; }
+  .field-note-copy p { max-width: 27rem; color: var(--text-soft); font-size: .94rem; line-height: 1.75; }
+  .field-note-photos {
+    display: grid;
+    grid-template-columns: 1.25fr .85fr;
+    grid-template-rows: 7rem 7rem;
+    gap: .55rem;
+  }
+  .field-note-photos img {
+    width: 100%; height: 100%; object-fit: cover;
+    border-radius: 1rem;
+    box-shadow: 0 8px 22px rgba(23,63,48,.12);
+  }
+  .field-note-photos img:first-child { grid-row: 1 / 3; }
+  .field-note-photos img:nth-child(2) { object-position: center; }
+  .field-note-photos img:nth-child(3) { object-position: center 55%; }
+
+  /* روابط الأقسام: صور واضحة وبطاقات مرتبة في عمودين */
+  #explore { padding-top: 3.2rem; }
+  #explore .cards-4 { grid-template-columns: repeat(2, minmax(0,1fr)); gap: .8rem; }
+  #explore .card {
+    position: relative;
+    overflow: hidden;
+    padding: 0 0 .95rem;
+    border-radius: 1.05rem;
+    border-color: var(--line);
+    background: var(--surface);
+    box-shadow: 0 7px 22px rgba(28,58,40,.07);
+  }
+  #explore .explore-image {
+    width: 100%;
+    height: 7.1rem;
+    object-fit: cover;
+    display: block;
+  }
+  #explore .card-icon {
+    width: 2.5rem; height: 2.5rem;
+    margin: -.95rem .8rem .55rem auto;
+    position: relative;
+    border: 3px solid var(--surface);
+    border-radius: .85rem;
+    background: #2f6b4c;
+    box-shadow: 0 4px 12px rgba(20,65,40,.18);
+  }
+  #explore .card-icon svg { width: 1.2rem; height: 1.2rem; }
+  #explore .card h3 { padding: 0 .8rem; font-size: .98rem; margin: 0 0 .35rem; }
+  #explore .card p {
+    padding: 0 .8rem;
+    font-size: .78rem;
+    line-height: 1.55;
+    color: var(--text-soft);
+  }
+
+  /* دعوة المشاركة */
+  #join { padding-top: 1.5rem; }
+  .cta {
+    padding: 2.2rem 1.15rem;
+    border-radius: 1.35rem;
+    background:
+      linear-gradient(135deg, rgba(20,70,47,.92), rgba(36,92,69,.96)),
+      url("../assets/leaves-dark.webp") center / cover;
+    box-shadow: 0 15px 32px rgba(20,65,40,.16);
+  }
+  .cta h2 { font-size: 1.75rem; margin-bottom: .55rem; }
+  .cta p { font-size: .92rem; line-height: 1.7; margin-bottom: 1.2rem; color: #e0eee0; }
+  .cta .btn { min-height: 2.9rem; padding: .7rem 1.35rem; font-size: .95rem; }
+
+  /* dialog مريح للموبايل */
+  #join-dialog { width: calc(100% - 1.5rem); max-width: 28rem; padding: 1.2rem; border-radius: 1.2rem; }
+  .join-form { gap: .9rem; }
+  .join-form h3 { font-size: 1.25rem; }
+}
+
+@media (max-width: 380px) {
+  .nav-links a { font-size: .64rem; padding-inline: .03rem; }
+  .hero-card h1 { font-size: 2.05rem; }
+  #explore .explore-image { height: 6.2rem; }
+  #explore .card p { font-size: .74rem; }
+}
+
+/* العناصر المصورة الجديدة مخصصة لتجربة الموبايل */
+.field-note, .explore-image { display: none; }
+
+@media (min-width: 900px) {
+  .hero-card h1 br { display: none; }
+  .hero-card h1 { text-wrap: balance; }
+}
+@media (max-width: 899px) {
+  .field-note { display: block; }
+  #explore .explore-image { display: block; }
+}
