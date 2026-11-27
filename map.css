@@ -1,0 +1,104 @@
+/* أنماط خريطة Leaflet — تعتمد على متغيرات style.css */
+
+.map-box { position: relative; }
+
+#campus-map.leaflet-map,
+.leaflet-map {
+  position: relative;
+  z-index: 0;
+  isolation: isolate; /* يمنع عناصر الخريطة من الظهور فوق شريط التنقل */
+  height: clamp(420px, 68vh, 640px);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--color-bg-green);
+  overflow: hidden;
+  font-family: var(--font);
+}
+
+.map-fit {
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: .8rem;
+  bottom: 1.6rem;
+  padding: .5rem 1rem;
+  font-size: .9rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+}
+
+.map-note { margin-top: .6rem; font-size: .85rem; color: var(--text-soft); text-align: center; }
+.map-error { padding: 2rem; text-align: center; color: var(--text-soft); }
+
+/* الدبوس: دائرة خضراء فيها عدد الأشجار */
+.gb-pin-wrap { background: none; border: 0; }
+.gb-pin {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 6px rgba(36, 92, 69, .28), 0 4px 12px rgba(0, 0, 0, .4);
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  transition: background-color .2s, box-shadow .2s;
+}
+.gb-pin b { font-weight: 800; }
+.leaflet-marker-icon.is-on .gb-pin {
+  background: var(--color-brown);
+  box-shadow: 0 0 0 9px rgba(139, 99, 71, .38), 0 4px 12px rgba(0, 0, 0, .4);
+}
+.leaflet-marker-icon:focus-visible { outline: 3px solid #fff; outline-offset: 4px; border-radius: 50%; }
+
+/* اسم المنطقة تحت الدبوس */
+.leaflet-tooltip.gb-tip {
+  background: rgba(15, 42, 32, .88);
+  border: 0;
+  border-radius: .6rem;
+  color: #fff;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 13px;
+  padding: .25rem .6rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+}
+.leaflet-tooltip-bottom.gb-tip::before { border-bottom-color: rgba(15, 42, 32, .88); }
+
+/* أزرار Leaflet */
+.leaflet-control-layers,
+.leaflet-bar { border-radius: .75rem !important; overflow: hidden; }
+.leaflet-control-layers { padding: .3rem .5rem; font-family: var(--font); font-weight: 700; }
+.leaflet-control-layers label { margin: .15rem 0; font-size: 14px; }
+.leaflet-control-attribution { font-size: 11px; }
+
+/* صندوق ضبط الإحداثيات */
+.edit-box { margin-top: 1.2rem; padding: 1.2rem; }
+.edit-box h3 { font-size: 1.1rem; margin-bottom: .4rem; }
+.edit-box p { color: var(--text-soft); font-size: .92rem; margin-bottom: .8rem; }
+.edit-box textarea {
+  width: 100%;
+  margin-bottom: .8rem;
+  padding: .8rem;
+  border: 1px solid var(--line);
+  border-radius: .75rem;
+  background: var(--surface);
+  color: var(--text);
+  font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace;
+  resize: vertical;
+}
+
+/* رسالة حالة تظهر فوق الخريطة (مثلاً عند تعذّر تحميل الصور) */
+.map-status {
+  position: absolute;
+  z-index: 2;
+  top: .8rem;
+  inset-inline: 4rem;
+  padding: .5rem .9rem;
+  border-radius: .75rem;
+  background: rgba(15, 42, 32, .92);
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 700;
+  text-align: center;
+}
