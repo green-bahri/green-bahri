@@ -79,6 +79,17 @@
       seedlings: typeof GB.seedlings === "number" ? GB.seedlings : 150, /* أضف seedlings: 150 في data.js لتغييره */
     };
     document.querySelectorAll("[data-stat]").forEach((el) => { el.dataset.count = vals[el.dataset.stat] || 0; });
+    /* تطابق العدد والمعدود في العربية: 1 مفرد، 2 مثنى، 3–10 جمع، 11 وأكثر مفرد (13 شجرة، 8 أشجار) */
+    const FORMS = {
+      trees:     { one: "شجرة موثّقة",  two: "شجرتان موثّقتان",       few: "أشجار موثّقة",  many: "شجرة موثّقة" },
+      colleges:  { one: "كلية مشاركة",  two: "كليتان مشاركتان",       few: "كليات مشاركة",  many: "كلية مشاركة" },
+      seedlings: { one: "شتلة جاهزة للزراعة", two: "شتلتان جاهزتان للزراعة", few: "شتلات جاهزة للزراعة", many: "شتلة جاهزة للزراعة" },
+    };
+    document.querySelectorAll("[data-stat-label]").forEach((el) => {
+      const f = FORMS[el.dataset.statLabel], v = vals[el.dataset.statLabel] || 0;
+      if (!f) return;
+      el.textContent = v === 2 ? f.two : v >= 3 && v <= 10 ? f.few : v === 1 || v === 0 ? f.one : f.many;
+    });
   })();
 
   /* زر «ازرع أثر» الثابت: يظهر بعد الهيرو ويختفي عند قسم الدعوة والفوتر */

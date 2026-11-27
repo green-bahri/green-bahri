@@ -273,12 +273,10 @@
   backdrop-filter: none; -webkit-backdrop-filter: none; font-size: .86rem;
 }
 [data-theme="dark"] .stats .today-pill { background: rgba(164,195,162,.12); color: var(--color-natural); }
-#steps.section { padding-top: .45rem; }
 @media (min-width: 900px) {
   .stats { margin-top: -2.6rem; }
   .stats-grid { max-width: 46rem; margin-inline: auto; padding: 1.5rem 1rem; }
   .stats .today-pill { margin-top: 3rem; }
-  #steps.section { padding-top: 1.2rem; }
   .stat b { font-size: 2.8rem; }
   .stat span { font-size: .95rem; }
 }
@@ -523,3 +521,24 @@
   .stat-ico { width: 2.2rem; height: 2.2rem; }
   .stat-ico svg { width: 1.15rem; height: 1.15rem; }
 }
+
+/* ---------- «آخر زراعة» داخل بطاقة الأرقام ---------- */
+/* البطاقة تتداخل مع آخر الهيرو (--ov مقدار التداخل). الجزء اللي فوق حافة الهيرو شفاف (يظهر الهيرو)،
+   وتحت الحافة طوالي أخضر «من أرض الجامعة» الفاتح، فمافي أخضر غامق ولا أبيض بينهم. */
+.stats {
+  --ov: 1.6rem; --band: #edf3e9;
+  margin-top: calc(var(--ov) * -1); margin-bottom: 0; padding: 0;
+  background: linear-gradient(to bottom, transparent var(--ov), var(--band) var(--ov));
+}
+[data-theme="dark"] .stats { --band: #102219; }
+@media (min-width: 900px) { .stats { --ov: 2.6rem; } }
+.stats .today-pill[hidden] { display: none; }
+.stats .stats-grid .today-pill {
+  grid-column: 1 / -1; justify-self: stretch; width: auto; max-width: none;
+  justify-content: center; margin: .8rem .9rem 0; padding: .65rem 0 .1rem;
+  border: 0; border-top: 1px solid var(--line); border-radius: 0;
+  background: none; color: var(--text-soft); font-size: .82rem; font-weight: 700;
+}
+[data-theme="dark"] .stats .stats-grid .today-pill { background: none; color: var(--text-soft); }
+.field-note.section { padding-top: 3rem; }
+@media (min-width: 900px) { .field-note.section { padding-top: 4.5rem; } }

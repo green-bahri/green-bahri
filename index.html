@@ -11,10 +11,10 @@
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="preload" as="image" href="assets/hero.jpg" fetchpriority="high">
   <link rel="stylesheet" href="css/style.css?v=6">
-  <link rel="stylesheet" href="css/home.css?v=9">
+  <link rel="stylesheet" href="css/home.css?v=13">
   <script src="js/main.js?v=2" defer></script>
   <script src="js/data.js" defer></script>
-  <script src="js/home.js?v=3" defer></script>
+  <script src="js/home.js?v=4" defer></script>
 </head>
 <body class="has-hero">
   <div id="site-header"></div>
@@ -37,29 +37,13 @@
     <section class="stats" aria-label="أرقام المبادرة">
       <div class="container">
         <div class="stats-grid reveal">
-          <div class="stat"><i class="stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6"/><path d="M12 16a5 5 0 0 0 5-5c0-2-1.2-3.4-2.6-4.4A3.5 3.5 0 0 0 12 2a3.5 3.5 0 0 0-2.4 4.6C8.2 7.6 7 9 7 11a5 5 0 0 0 5 5Z"/></svg></i><b data-stat="trees">0</b><span>شجرة موثّقة</span></div>
-          <div class="stat"><i class="stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6M9 11h.01M15 11h.01"/></svg></i><b data-stat="colleges">0</b><span>كليات مشاركة</span></div>
-          <div class="stat"><i class="stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9"/><path d="M12 13c0-4 2.5-6.5 7-6.5 0 4-2.5 6.5-7 6.5Z"/><path d="M12 15c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg></i><b data-stat="seedlings">0</b><span>شتلة جاهزة للزراعة</span></div>
+          <div class="stat"><i class="stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6"/><path d="M12 16a5 5 0 0 0 5-5c0-2-1.2-3.4-2.6-4.4A3.5 3.5 0 0 0 12 2a3.5 3.5 0 0 0-2.4 4.6C8.2 7.6 7 9 7 11a5 5 0 0 0 5 5Z"/></svg></i><b data-stat="trees">0</b><span data-stat-label="trees">شجرة موثّقة</span></div>
+          <div class="stat"><i class="stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6M9 11h.01M15 11h.01"/></svg></i><b data-stat="colleges">0</b><span data-stat-label="colleges">كليات مشاركة</span></div>
+          <div class="stat"><i class="stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9"/><path d="M12 13c0-4 2.5-6.5 7-6.5 0 4-2.5 6.5-7 6.5Z"/><path d="M12 15c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg></i><b data-stat="seedlings">0</b><span data-stat-label="seedlings">شتلة جاهزة للزراعة</span></div>
+          <div id="today-pill" class="today-pill" hidden></div>
         </div>
-        <div id="today-pill" class="today-pill" hidden></div>
       </div>
     </section>
-
-    <!-- المرحلة 3: كيف تشارك (3 خطوات) -->
-    <section id="steps" class="section how">
-      <div class="container">
-        <div class="section-head reveal">
-          <span class="eyebrow">كيف تشارك؟</span>
-          <h2>ثلاث خطوات لتترك أثراً</h2>
-        </div>
-        <ol class="how-list">
-          <li class="how-step reveal"><span class="how-num">1</span><div><h3>اختر شتلتك</h3><p>تصفّح دليل الأشجار والنباتات واختر ما يناسبك.</p></div></li>
-          <li class="how-step reveal"><span class="how-num">2</span><div><h3>تواصل مع المبادرة</h3><p>عبر واتساب، أو سلّمها مباشرةً لمشتل كلية الزراعة.</p></div></li>
-          <li class="how-step reveal"><span class="how-num">3</span><div><h3>تُسجَّل باسمك</h3><p>تُزرع في الجامعة ويظهر أثرها على الخريطة.</p></div></li>
-        </ol>
-      </div>
-    </section>
-
 
     <section class="field-note section" aria-label="من أرض الجامعة">
       <div class="container">
@@ -81,7 +65,7 @@
       </div>
     </section>
 
-    <section id="vision" class="section vision">
+    <section id="explore" class="section vision">
       <div class="container">
         <div class="section-head reveal">
           <span class="eyebrow">اكتشف المبادرة</span>
@@ -107,6 +91,21 @@
           <div class="card reveal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><h3>الرسالة</h3><p>زراعة الأشجار والعناية بها عبر عمل تطوعي منظم وتوعية بيئية مستمرة.</p></div>
           <div class="card reveal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12Z"/></svg></div><h3>الهدف</h3><p>رفع الغطاء الشجري في الجامعة وتحسين مناخها وجودة الحياة فيها.</p></div>
         </div>
+      </div>
+    </section>
+
+    <!-- المرحلة 3: كيف تشارك (3 خطوات) -->
+    <section id="steps" class="section how">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">كيف تشارك؟</span>
+          <h2>ثلاث خطوات لتترك أثراً</h2>
+        </div>
+        <ol class="how-list">
+          <li class="how-step reveal"><span class="how-num">1</span><div><h3>اختر شتلتك</h3><p>تصفّح دليل الأشجار والنباتات واختر ما يناسبك.</p></div></li>
+          <li class="how-step reveal"><span class="how-num">2</span><div><h3>تواصل مع المبادرة</h3><p>عبر واتساب، أو سلّمها مباشرةً لمشتل كلية الزراعة.</p></div></li>
+          <li class="how-step reveal"><span class="how-num">3</span><div><h3>تُسجَّل باسمك</h3><p>تُزرع في الجامعة ويظهر أثرها على الخريطة.</p></div></li>
+        </ol>
       </div>
     </section>
 
