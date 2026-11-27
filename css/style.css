@@ -352,8 +352,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .nav-actions { align-self: stretch; align-items: flex-start; }
 .lamp-switch {
   --lamp-shade: var(--color-primary);
-  --lamp-shade-line: rgba(255, 255, 255, 0.35);
-  --lamp-cord: rgba(36, 92, 69, 0.55);
+  --lamp-shade-line: rgba(255, 255, 255, 0.85);
+  --lamp-cord: #6fa183;
   --lamp-bulb: #d6d3d1;
   --lamp-glow: 190, 242, 100;
   position: relative; flex-shrink: 0;
@@ -361,6 +361,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   background: none; border: 0; cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
+.lamp-switch { transform: rotate(var(--lamp-angle, 0deg)); transform-origin: 50% 0; will-change: transform; }
 .lamp-switch svg { display: block; width: 100%; height: 100%; overflow: visible; transform-origin: 50% 0; }
 .lamp-cord-top, .lamp-pull-line { stroke: var(--lamp-cord); stroke-width: 1.3; stroke-linecap: round; fill: none; }
 .lamp-shade {
@@ -382,7 +383,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 [data-theme="dark"] .lamp-switch { --lamp-shade: #e8f0ea; --lamp-shade-line: rgba(255, 255, 255, 0.25); --lamp-cord: rgba(255, 255, 255, 0.5); --lamp-bulb: #fef9c3; }
 [data-theme="dark"] .lamp-cone { opacity: 1; transform: none; }
 [data-theme="dark"] .lamp-shade { filter: drop-shadow(0 0 7px rgba(var(--lamp-glow), 0.6)); }
-.has-hero .nav-wrap:not(.is-scrolled) .lamp-switch { --lamp-shade: #ffffff; --lamp-shade-line: rgba(36, 92, 69, 0.28); --lamp-cord: rgba(255, 255, 255, 0.8); }
+/* الأباجورة لها شكل واحد في كل وضع (نهاري/ليلي) سواء كنت فوق الهيرو أو بعد النزول، فلا نغيّر لونها حسب التمرير */
 .lamp-switch:focus-visible { outline-offset: 2px; border-radius: 0.5rem; }
 
 /* سحب الحبل: الخرزة تنزل وترجع بنطّة، واللمبة تتأرجح شوية */
@@ -396,6 +397,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 @media (prefers-reduced-motion: reduce) {
   .lamp-cone, .lamp-shade, .lamp-bulb { transition-duration: 0.01ms; }
   .lamp-switch.is-pulling .lamp-pull, .lamp-switch.is-pulling svg { animation: none; }
+  .lamp-switch { transform: none; }
 }
 
 /* النافبار في الموبايل: صف الشعار + الأزرار، وتحتو صف الروابط جنب بعض (زي الكمبيوتر) */
@@ -453,6 +455,27 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 }
 @media (max-width: 380px) { .nav-links a { font-size: 0.72rem; padding: 0.4rem 0.1rem; } }
 @media (max-width: 335px) { .nav-links a { font-size: 0.66rem; } }
+
+/* مقاسات النافبار في الموبايل — موحّدة لكل الصفحات (كانت في home.css للرئيسية بس، فكانت باقي الصفحات أطول).
+   الألوان الخاصة بالهيرو تبقى في home.css. */
+@media (max-width: 899px) {
+  .nav-wrap { padding: .55rem .55rem 0; }
+  .nav { padding: .48rem .55rem .42rem; border-radius: 1.05rem; column-gap: .35rem; row-gap: .35rem; }
+  .nav .brand { gap: .48rem; }
+  .nav .brand-mark { width: 2.2rem; height: 2.2rem; border-radius: .72rem; }
+  .nav .brand-mark img { width: 1.7rem; height: 1.7rem; }
+  .nav .brand-text strong { font-size: .98rem; }
+  .nav .brand-text small { font-size: .65rem; }
+  .nav-actions { gap: .25rem; }
+  .lamp-switch { width: 2.2rem; height: 2.9rem; }
+  .nav-links { gap: .12rem; margin: .12rem 0 0; padding: .38rem 0 .05rem; justify-content: space-between; }
+  .nav-links li { min-width: 0; }
+  .nav-links a {
+    width: 100%; min-height: 2.8rem; padding: .28rem .08rem; border-radius: .62rem;
+    font-size: .74rem; font-weight: 800; line-height: 1.22; word-break: normal;
+  }
+}
+@media (max-width: 380px) { .nav-links a { font-size: .68rem; padding-inline: .03rem; } }
 
 /* تنسيق اللابتوب والشاشات الكبيرة */
 @media (min-width: 900px) {
@@ -537,7 +560,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   overflow: hidden;
   color: #fff;
   /* خلفية بديلة تظهر لو الفيديو غير موجود */
-  background: url("../assets/hero.jpg") center 55% / cover no-repeat, linear-gradient(160deg, var(--green-950), #14532d 55%, var(--green-800));
+  background: url("../assets/hero-poster.webp") center 55% / cover no-repeat, linear-gradient(160deg, var(--green-950), #14532d 55%, var(--green-800));
 }
 
 .hero-video {
@@ -1090,3 +1113,92 @@ body:not(.has-hero) .glass-pill {
   .glass-pill { transition: opacity .2s; }
   .glass-pill.is-moving { animation: none; }
 }
+
+/* ---------- انتقال ناعم بين الصفحات (View Transitions) ----------
+   المتصفحات الحديثة (كروم/إيدج/سفاري 18.2+) تعمل تلاشي قصير بدل الوميض الأبيض.
+   المتصفحات الأقدم تتجاهله وتفتح الصفحة عادي. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out .18s ease both; }
+::view-transition-new(root) { animation: vt-in .28s ease both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+}
+
+/* =========================================================
+   زر أصوات الطبيعة (ورقة شجر + موجات صوت) — في الشريط جنب الأباجورة
+   ========================================================= */
+.sound-btn {
+  --sb-fg: var(--nav-link, var(--color-primary));
+  position: relative; flex-shrink: 0; align-self: center;
+  width: 2.3rem; height: 2.3rem; padding: 0; margin-top: .1rem;
+  display: grid; place-items: center; cursor: pointer;
+  color: var(--sb-fg);
+  background: var(--glass-bg); border: 1px solid var(--glass-line); border-radius: 50%;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .2s, color .2s, border-color .2s, transform .15s var(--ease);
+}
+.sound-btn[hidden] { display: none; }
+.sound-btn:hover { transform: translateY(-1px); }
+.sound-btn:active { transform: scale(.94); }
+.sound-btn svg { width: 1.35rem; height: 1.35rem; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.sound-btn .sb-leaf { fill: currentColor; fill-opacity: .2; }
+.sound-btn .sb-vein { stroke-width: 1.3; }
+.sound-btn .sb-wave { opacity: 0; transform-origin: 14px 12px; }
+.sound-btn .sb-slash { stroke-width: 2; stroke-dasharray: 24; stroke-dashoffset: 0; transition: stroke-dashoffset .25s; }
+/* شغّال: أخضر ممتلئ + الموجات تنبض بالتتابع */
+.sound-btn.is-on { background: var(--color-primary); border-color: rgba(255,255,255,.4); color: #fff; }
+.sound-btn.is-on .sb-slash { stroke-dashoffset: 24; }
+.sound-btn.is-on .sb-leaf { fill-opacity: .35; }
+.sound-btn.is-on .sb-wave { opacity: 1; animation: sb-pulse 1.8s ease-in-out infinite; }
+.sound-btn.is-on .sb-w2 { animation-delay: .35s; }
+@keyframes sb-pulse { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.sound-btn:focus-visible { outline: 2px solid var(--green-400, #4ade80); outline-offset: 2px; }
+[data-theme="dark"] .sound-btn.is-on { background: #2f7a5a; }
+@media (max-width: 899px) { .sound-btn { width: 2.1rem; height: 2.1rem; } .sound-btn svg { width: 1.25rem; height: 1.25rem; } }
+@media (prefers-reduced-motion: reduce) { .sound-btn.is-on .sb-wave { animation: none; } .sound-btn { transition: none; } }
+
+/* معلومات سريعة تحت عنوان الصفحة */
+.page-facts { list-style: none; margin: 1.6rem auto 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; max-width: 52rem; }
+.page-facts li {
+  padding: .5rem 1rem; border-radius: 999px; font-size: .95rem; font-weight: 700; color: var(--text);
+  background: var(--color-bg-green); border: 1px solid color-mix(in srgb, var(--color-natural) 55%, transparent);
+}
+.page-facts li b { color: var(--color-primary); font-weight: 900; margin-inline-end: .25rem; }
+[data-theme="dark"] .page-facts li { background: rgba(164,195,162,.1); }
+[data-theme="dark"] .page-facts li b { color: var(--color-natural); }
+.donate-now { margin-top: .8rem; color: var(--text); font-weight: 700; }
+.donate-now b { color: var(--color-primary); }
+[data-theme="dark"] .donate-now b { color: var(--color-natural); }
+
+/* علامة الموقع بجانب عنوان الخريطة */
+.page-head h1 .h1-pin { display: inline-block; width: .85em; height: .85em; vertical-align: -.06em; margin-inline-end: .35em; filter: drop-shadow(0 3px 4px rgba(20,120,50,.35)); transform-origin: 50% 100%; animation: pinDrop 2.6s ease-in-out infinite; }
+@keyframes pinDrop { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-.14em); } 60% { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .page-head h1 .h1-pin { animation: none; } }
+
+/* =========================================================
+   تمييز الكلمات المهمة في العناوين والنصوص (نفس الخط، لون أخضر فقط)
+   ========================================================= */
+.mark { font-style: normal; color: #1b8f3f; }
+[data-theme="dark"] .mark { color: #5df283; }
+.vision .mark, .cta .mark, [data-theme="dark"] .vision .mark, [data-theme="dark"] .cta .mark { color: #8bffa6; }
+.key { font-weight: 800; color: var(--color-primary); }
+[data-theme="dark"] .key { color: var(--color-natural); }
+.hero-card .key, .vision .key, .cta .key { color: #9dffb4; }
+
+/* عنوان فرعي صغير على شكل حبّة مع ورقة */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: .45rem; padding: .3rem .9rem .3rem 1rem; border-radius: 999px;
+  color: var(--color-primary); letter-spacing: .04em;
+  background: color-mix(in srgb, var(--color-natural) 26%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-natural) 55%, transparent);
+}
+.eyebrow::before {
+  content: ""; flex: none; width: 1em; height: 1em; background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z'/%3E%3Cpath d='M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z'/%3E%3Cpath d='M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+[data-theme="dark"] .eyebrow { color: var(--color-natural); background: rgba(164,195,162,.12); border-color: rgba(164,195,162,.3); }
+.vision .eyebrow, [data-theme="dark"] .vision .eyebrow { color: #b9f5c6; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.22); }

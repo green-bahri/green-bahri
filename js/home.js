@@ -35,9 +35,10 @@
       if (!w) return;
       let size = (100 * hero.clientWidth * 0.94) / w;
       /* في اللابتوب: لا نخلّي الكلمة أطول من ٢٢٪ من ارتفاع الشاشة، حتى يدخل الهيرو كله في شاشة واحدة */
-      if (window.innerWidth >= 900) size = Math.min(size, window.innerHeight * 0.22);
+      if (window.innerWidth >= 900) size = Math.min(size, window.innerHeight * 0.14);
       giant.style.fontSize = size + "px";
       hero.style.setProperty("--giant-h", giant.getBoundingClientRect().height + "px");
+      document.documentElement.style.setProperty("--giant-h", giant.getBoundingClientRect().height + "px"); /* تقرأه بطاقة الأرقام عشان تغطي جزء بس من الكلمة */
     };
     fit();
     window.addEventListener("resize", fit);
@@ -78,6 +79,17 @@
       seedlings: typeof GB.seedlings === "number" ? GB.seedlings : 150, /* أضف seedlings: 150 في data.js لتغييره */
     };
     document.querySelectorAll("[data-stat]").forEach((el) => { el.dataset.count = vals[el.dataset.stat] || 0; });
+    /* تطابق العدد والمعدود في العربية: 1 مفرد، 2 مثنى، 3–10 جمع، 11 وأكثر مفرد (13 شجرة، 8 أشجار) */
+    const FORMS = {
+      trees:     { one: "شجرة موثّقة",  two: "شجرتان موثّقتان",       few: "أشجار موثّقة",  many: "شجرة موثّقة" },
+      colleges:  { one: "كلية مشاركة",  two: "كليتان مشاركتان",       few: "كليات مشاركة",  many: "كلية مشاركة" },
+      seedlings: { one: "شتلة جاهزة للزراعة", two: "شتلتان جاهزتان للزراعة", few: "شتلات جاهزة للزراعة", many: "شتلة جاهزة للزراعة" },
+    };
+    document.querySelectorAll("[data-stat-label]").forEach((el) => {
+      const f = FORMS[el.dataset.statLabel], v = vals[el.dataset.statLabel] || 0;
+      if (!f) return;
+      el.textContent = v === 2 ? f.two : v >= 3 && v <= 10 ? f.few : v === 1 || v === 0 ? f.one : f.many;
+    });
   })();
 
   /* زر «ازرع أثر» الثابت: يظهر بعد الهيرو ويختفي عند قسم الدعوة والفوتر */
@@ -183,4 +195,18 @@
     cf.addEventListener("pointerleave", play);
     render();
   })();
+})();
+
+/* فيديو الهيرو: عمودي، فبنشغّله في الموبايل بس. في اللابتوب بنستخدم صورة عريضة (hero-desktop.webp).
+   لو "تقليل الحركة" أو "توفير البيانات" أو نت 2G بنخلي الصورة الثابتة (poster) */
+(function () {
+  const v = document.querySelector(".hero-video");
+  if (!v) return;
+  const conn = navigator.connection;
+  const lite = (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const desktop = window.matchMedia("(min-width: 900px)").matches;
+  if (lite || desktop) return; // بدون src: ما بينزّل شيء
+  v.src = v.dataset.src;
+  v.play().catch(() => {});
 })();
