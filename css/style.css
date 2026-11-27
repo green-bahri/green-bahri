@@ -560,7 +560,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   overflow: hidden;
   color: #fff;
   /* خلفية بديلة تظهر لو الفيديو غير موجود */
-  background: url("../assets/hero.jpg") center 55% / cover no-repeat, linear-gradient(160deg, var(--green-950), #14532d 55%, var(--green-800));
+  background: url("../assets/hero-poster.webp") center 55% / cover no-repeat, linear-gradient(160deg, var(--green-950), #14532d 55%, var(--green-800));
 }
 
 .hero-video {

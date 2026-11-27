@@ -196,3 +196,13 @@
     render();
   })();
 })();
+
+/* فيديو الهيرو: لو "تقليل الحركة" أو "توفير البيانات" أو نت 2G بنوقفه ونخلي الصورة الثابتة (poster) */
+(function () {
+  const v = document.querySelector(".hero-video");
+  if (!v) return;
+  const conn = navigator.connection;
+  const lite = (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (lite) { v.removeAttribute("autoplay"); v.pause(); v.removeAttribute("src"); v.load(); }
+})();
