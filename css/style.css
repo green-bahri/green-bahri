@@ -1113,3 +1113,16 @@ body:not(.has-hero) .glass-pill {
   .glass-pill { transition: opacity .2s; }
   .glass-pill.is-moving { animation: none; }
 }
+
+/* ---------- انتقال ناعم بين الصفحات (View Transitions) ----------
+   المتصفحات الحديثة (كروم/إيدج/سفاري 18.2+) تعمل تلاشي قصير بدل الوميض الأبيض.
+   المتصفحات الأقدم تتجاهله وتفتح الصفحة عادي. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out .18s ease both; }
+::view-transition-new(root) { animation: vt-in .28s ease both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+}
