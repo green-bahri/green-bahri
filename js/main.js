@@ -94,7 +94,7 @@ function buildHeader() {
         <ul class="nav-links">${links.map((l) => `<li>${l}</li>`).join("")}</ul>
         <div class="nav-actions">
           <button class="lamp-switch" id="theme-toggle" type="button" role="switch"
-                  aria-checked="${document.documentElement.dataset.theme === "dark"}" aria-label="تبديل الوضع الليلي">
+                  aria-checked="${document.documentElement.dataset.theme === "dark"}" aria-label="تبديل الوضع الليلي" title="اسحب الحبل لتبديل الوضع الليلي">
             <svg viewBox="0 0 44 52" aria-hidden="true">
               <defs>
                 <linearGradient id="lamp-grad" x1="0" y1="0" x2="0" y2="1">
@@ -122,6 +122,57 @@ function buildHeader() {
   const onScroll = () => wrap.classList.toggle("is-scrolled", window.scrollY > 24);
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
+  initLampSwing();
+}
+
+/* ---------- تأرجح الأباجورة مع السكرول ----------
+   - اللمبة معلّقة بحبل: لما الصفحة تتحرك تتأرجح بقدر سرعة السكرول، وبعدين تهدا تدريجياً
+   - هزة خفيفة واحدة بعد ثانيتين من فتح الصفحة عشان اللي ما بيعمل سكرول يلاحظها
+   - لو المستخدم مفعّل "تقليل الحركة" ما بنحرّك شيء
+   الزاوية تُكتب في المتغيّر --lamp-angle على الزر (والـCSS يطبّق الدوران). */
+function initLampSwing() {
+  const btn = document.getElementById("theme-toggle");
+  if (!btn) return;
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (mq.matches) return;
+
+  const MAX = 14;          // أقصى زاوية بالدرجات
+  const STIFF = 38;        // قوة الرجوع للمنتصف
+  const DAMP = 3.2;        // التخميد (كل ما زاد هدت أسرع)
+  let angle = 0, vel = 0, running = false, last = 0, lastY = window.scrollY;
+
+  function frame(t) {
+    const dt = Math.min((t - last) / 1000, 0.032);
+    last = t;
+    vel += (-STIFF * angle - DAMP * vel) * dt;
+    angle += vel * dt;
+    angle = Math.max(-MAX, Math.min(MAX, angle));
+    if (Math.abs(angle) < 0.02 && Math.abs(vel) < 0.05) {
+      angle = 0; vel = 0; running = false;
+      btn.style.removeProperty("--lamp-angle");
+      return;
+    }
+    btn.style.setProperty("--lamp-angle", angle.toFixed(2) + "deg");
+    requestAnimationFrame(frame);
+  }
+  function kick(impulse) {
+    vel = Math.max(-90, Math.min(90, vel + impulse));
+    if (!running) { running = true; last = performance.now(); requestAnimationFrame(frame); }
+  }
+
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY, dy = y - lastY;
+    lastY = y;
+    if (Math.abs(dy) < 1) return;
+    kick(Math.max(-40, Math.min(40, dy)) * 0.5); // النزول يحرّكها لجهة، والطلوع للجهة الثانية
+  }, { passive: true });
+
+  /* هزة واحدة خفيفة بعد ثانيتين من الفتح (إلا لو الزول بدأ يعمل سكرول) */
+  setTimeout(() => { if (!running) kick(26); }, 2000);
+
+  mq.addEventListener && mq.addEventListener("change", (e) => {
+    if (e.matches) { angle = 0; vel = 0; btn.style.removeProperty("--lamp-angle"); }
+  });
 }
 
 /* ---------- ليكويد جلاس: فقاعة زجاجية تنزلق بين روابط القائمة ----------

@@ -50,7 +50,7 @@
     width: 2.2rem;
     height: 2.2rem;
     border-radius: .72rem;
-    background: #a4c3a2;
+    background: var(--green-700);
   }
   .nav .brand-mark img { width: 1.7rem; height: 1.7rem; }
   .nav .brand-text strong { font-size: .98rem; }
@@ -318,15 +318,20 @@
 .stat b { display: block; font-size: 2rem; font-weight: 900; line-height: 1.15; color: var(--color-primary); }
 [data-theme="dark"] .stat b { color: var(--color-natural); }
 .stat span { display: block; margin-top: .2rem; font-size: .8rem; line-height: 1.4; color: var(--text-soft); font-weight: 700; }
+/* الشارة في منتصف المسافة بين بطاقة الأرقام وقسم «كيف تشارك» (نفس الفراغ فوقها وتحتها) */
+.stats { padding-bottom: 0; }
 .stats .today-pill {
-  display: flex; width: fit-content; max-width: 100%; margin: .9rem auto 0;
+  display: flex; width: fit-content; max-width: 100%; margin: 2.4rem auto 0;
   background: var(--color-bg-green); color: var(--color-primary); border-color: var(--line);
   backdrop-filter: none; -webkit-backdrop-filter: none; font-size: .86rem;
 }
 [data-theme="dark"] .stats .today-pill { background: rgba(164,195,162,.12); color: var(--color-natural); }
+#steps.section { padding-top: .45rem; }
 @media (min-width: 900px) {
   .stats { margin-top: -2.6rem; }
   .stats-grid { max-width: 46rem; margin-inline: auto; padding: 1.5rem 1rem; }
+  .stats .today-pill { margin-top: 3rem; }
+  #steps.section { padding-top: 1.2rem; }
   .stat b { font-size: 2.8rem; }
   .stat span { font-size: .95rem; }
 }

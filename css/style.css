@@ -352,8 +352,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .nav-actions { align-self: stretch; align-items: flex-start; }
 .lamp-switch {
   --lamp-shade: var(--color-primary);
-  --lamp-shade-line: rgba(255, 255, 255, 0.35);
-  --lamp-cord: rgba(36, 92, 69, 0.55);
+  --lamp-shade-line: rgba(255, 255, 255, 0.85);
+  --lamp-cord: #6fa183;
   --lamp-bulb: #d6d3d1;
   --lamp-glow: 190, 242, 100;
   position: relative; flex-shrink: 0;
@@ -361,6 +361,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   background: none; border: 0; cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
+.lamp-switch { transform: rotate(var(--lamp-angle, 0deg)); transform-origin: 50% 0; will-change: transform; }
 .lamp-switch svg { display: block; width: 100%; height: 100%; overflow: visible; transform-origin: 50% 0; }
 .lamp-cord-top, .lamp-pull-line { stroke: var(--lamp-cord); stroke-width: 1.3; stroke-linecap: round; fill: none; }
 .lamp-shade {
@@ -382,7 +383,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 [data-theme="dark"] .lamp-switch { --lamp-shade: #e8f0ea; --lamp-shade-line: rgba(255, 255, 255, 0.25); --lamp-cord: rgba(255, 255, 255, 0.5); --lamp-bulb: #fef9c3; }
 [data-theme="dark"] .lamp-cone { opacity: 1; transform: none; }
 [data-theme="dark"] .lamp-shade { filter: drop-shadow(0 0 7px rgba(var(--lamp-glow), 0.6)); }
-.has-hero .nav-wrap:not(.is-scrolled) .lamp-switch { --lamp-shade: #ffffff; --lamp-shade-line: rgba(36, 92, 69, 0.28); --lamp-cord: rgba(255, 255, 255, 0.8); }
+/* الأباجورة لها شكل واحد في كل وضع (نهاري/ليلي) سواء كنت فوق الهيرو أو بعد النزول، فلا نغيّر لونها حسب التمرير */
 .lamp-switch:focus-visible { outline-offset: 2px; border-radius: 0.5rem; }
 
 /* سحب الحبل: الخرزة تنزل وترجع بنطّة، واللمبة تتأرجح شوية */
@@ -396,6 +397,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 @media (prefers-reduced-motion: reduce) {
   .lamp-cone, .lamp-shade, .lamp-bulb { transition-duration: 0.01ms; }
   .lamp-switch.is-pulling .lamp-pull, .lamp-switch.is-pulling svg { animation: none; }
+  .lamp-switch { transform: none; }
 }
 
 /* النافبار في الموبايل: صف الشعار + الأزرار، وتحتو صف الروابط جنب بعض (زي الكمبيوتر) */
