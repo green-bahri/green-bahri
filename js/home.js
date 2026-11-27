@@ -13,6 +13,15 @@
   document.querySelectorAll("[data-icon]").forEach((el) => { el.innerHTML = ICONS[el.dataset.icon] || ""; });
 
   /* فيديو بطاقة السقاية: يتوقف لو الجهاز مفعّل «تقليل الحركة» */
+  /* فيديو بطاقة «تبنَّ شجرة»: يعمل فقط حين يكون ظاهراً، ويتوقف لو «تقليل الحركة» مفعّل */
+  (function () {
+    const v = document.querySelector(".cta-video");
+    if (!v) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { v.removeAttribute("autoplay"); v.pause(); return; }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((es) => { es[0].isIntersecting ? v.play().catch(() => {}) : v.pause(); }, { threshold: 0.25 }).observe(v);
+    }
+  })();
   const jv = document.querySelector(".jv-bg");
   if (jv && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { jv.removeAttribute("autoplay"); jv.pause(); }
 
@@ -23,7 +32,12 @@
     const fit = () => {
       giant.style.fontSize = "100px";
       const w = span.getBoundingClientRect().width;
-      if (w) giant.style.fontSize = (100 * hero.clientWidth * 0.94) / w + "px";
+      if (!w) return;
+      let size = (100 * hero.clientWidth * 0.94) / w;
+      /* في اللابتوب: لا نخلّي الكلمة أطول من ٢٢٪ من ارتفاع الشاشة، حتى يدخل الهيرو كله في شاشة واحدة */
+      if (window.innerWidth >= 900) size = Math.min(size, window.innerHeight * 0.22);
+      giant.style.fontSize = size + "px";
+      hero.style.setProperty("--giant-h", giant.getBoundingClientRect().height + "px");
     };
     fit();
     window.addEventListener("resize", fit);
@@ -54,5 +68,119 @@
     el.innerHTML = '<i class="live-dot"></i><span></span>';
     el.lastChild.textContent = days <= 0 ? "زُرعت اليوم " + what : days === 1 ? "آخر زراعة أمس: " + what : "آخر زراعة قبل " + n(days) + " يوم: " + what;
     el.hidden = false;
+  })();
+  /* أرقام الأثر: تُقرأ من data.js، والعدّاد يشغّله main.js عبر data-count */
+  (function () {
+    const GB = window.GB || {};
+    const vals = {
+      trees: (GB.trees || []).length,
+      colleges: (GB.colleges || []).length,
+      seedlings: typeof GB.seedlings === "number" ? GB.seedlings : 150, /* أضف seedlings: 150 في data.js لتغييره */
+    };
+    document.querySelectorAll("[data-stat]").forEach((el) => { el.dataset.count = vals[el.dataset.stat] || 0; });
+  })();
+
+  /* زر «ازرع أثر» الثابت: يظهر بعد الهيرو ويختفي عند قسم الدعوة والفوتر */
+  (function () {
+    const bar = document.getElementById("sticky-cta"), hero = document.getElementById("home");
+    if (!bar || !hero || !("IntersectionObserver" in window)) return;
+    const seen = { hero: true, join: false, foot: false };
+    const render = () => {
+      const on = !seen.hero && !seen.join && !seen.foot;
+      bar.classList.toggle("show", on);
+      bar.setAttribute("aria-hidden", on ? "false" : "true");
+      bar.firstElementChild.tabIndex = on ? 0 : -1;
+    };
+    const watch = (el, key) => el && new IntersectionObserver((es) => { seen[key] = es[0].isIntersecting; render(); }).observe(el);
+    watch(hero, "hero");
+    watch(document.getElementById("join"), "join");
+    watch(document.getElementById("site-footer"), "foot");
+  })();
+  /* كاروسيل Coverflow ثلاثي الأبعاد لصور الميدان: اسحب، أو الأسهم، أو اضغط أي صورة جانبية.
+     لتغيير الصور عدّل المصفوفة SHOTS (الصور في assets/) */
+  (function () {
+    const SHOTS = [
+      { src: "assets/g4.jpg", alt: "طلاب يزرعون شتلة في الجامعة" },
+      { src: "assets/team.jpg", alt: "فريق جرين بحري أثناء العمل على الموقع", pos: "center 50%" },
+      { src: "assets/g3.jpg", alt: "مساحة خضراء داخل الجامعة" },
+      { src: "assets/g1.jpg", alt: "شتلة صغيرة بعد زراعتها" },
+      { src: "assets/g2.jpg", alt: "من فعاليات المبادرة" },
+      { src: "assets/about.jpg", alt: "من فعاليات المبادرة" },
+    ];
+    const cf = document.getElementById("cf"), stage = document.getElementById("cf-stage");
+    if (!cf || !stage) return;
+    const dotsBox = document.getElementById("cf-dots"), ambient = document.getElementById("cf-ambient");
+    const n = SHOTS.length, reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const toAr = (v) => String(v).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]);
+    let index = 0, timer = null, stopped = false;
+    const drag = { x: 0, on: false, moved: false };
+
+    const cards = SHOTS.map((s, i) => {
+      const c = document.createElement("button");
+      c.type = "button"; c.className = "cf-card";
+      c.innerHTML = '<img draggable="false" alt="">';
+      const img = c.querySelector("img"); img.src = s.src; img.alt = s.alt; if (s.pos) img.style.objectPosition = s.pos; if (i > 1) img.loading = "lazy";
+      c.addEventListener("click", () => {
+        if (drag.moved) return;
+        if (i === index) location.href = "gallery.html"; else go(i);
+      });
+      stage.appendChild(c);
+      return c;
+    });
+    const dots = SHOTS.map((s, i) => {
+      const d = document.createElement("button");
+      d.type = "button"; d.className = "cf-dot"; d.setAttribute("role", "tab");
+      d.setAttribute("aria-label", "الصورة " + toAr(i + 1));
+      d.addEventListener("click", () => { halt(); go(i); });
+      dotsBox.appendChild(d);
+      return d;
+    });
+
+    const offset = (i) => { let d = i - index; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d; };
+    function render() {
+      cards.forEach((c, i) => {
+        const d = offset(i), a = Math.abs(d), side = Math.sign(d), vis = a <= 2; /* RTL: التالي على اليسار */
+        c.style.setProperty("--x", (-side * (a === 0 ? 0 : 52 + (a - 1) * 30)) + "%");
+        c.style.setProperty("--z", (-a * 150) + "px");
+        c.style.setProperty("--r", (side * 42) + "deg");
+        c.style.setProperty("--s", String(1 - a * 0.08));
+        c.style.zIndex = String(10 - a);
+        c.style.opacity = vis ? "1" : "0";
+        c.style.pointerEvents = vis ? "auto" : "none";
+        c.style.filter = a === 0 ? "none" : "brightness(" + (0.78 - a * 0.14) + ")";
+        c.classList.toggle("is-active", a === 0);
+        c.tabIndex = a === 0 ? 0 : -1;
+        c.setAttribute("aria-hidden", vis ? "false" : "true");
+        c.setAttribute("aria-label", a === 0 ? "فتح معرض المبادرة" : "عرض الصورة " + toAr(i + 1));
+      });
+      dots.forEach((d, i) => { d.classList.toggle("on", i === index); d.setAttribute("aria-selected", String(i === index)); });
+      ambient.style.backgroundImage = 'url("' + SHOTS[index].src + '")';
+    }
+    function go(i) { index = (i + n) % n; render(); }
+    const next = () => go(index + 1), prev = () => go(index - 1);
+    function halt() { stopped = true; clearInterval(timer); }
+    function play() { if (reduce || stopped) return; clearInterval(timer); timer = setInterval(next, 4800); }
+
+    document.getElementById("cf-next").addEventListener("click", () => { halt(); next(); });
+    document.getElementById("cf-prev").addEventListener("click", () => { halt(); prev(); });
+    cf.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") { halt(); next(); e.preventDefault(); }
+      else if (e.key === "ArrowRight") { halt(); prev(); e.preventDefault(); }
+    });
+    /* السحب لليمين = التالي (لأن التالي على اليسار) */
+    stage.addEventListener("pointerdown", (e) => { drag.on = true; drag.moved = false; drag.x = e.clientX; });
+    window.addEventListener("pointerup", (e) => {
+      if (!drag.on) return;
+      drag.on = false;
+      const dx = e.clientX - drag.x;
+      if (Math.abs(dx) > 40) { drag.moved = true; halt(); dx > 0 ? next() : prev(); setTimeout(() => (drag.moved = false), 60); }
+    });
+    stage.addEventListener("dragstart", (e) => e.preventDefault());
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((es) => { es[0].isIntersecting ? play() : clearInterval(timer); }, { threshold: 0.4 }).observe(cf);
+    } else play();
+    cf.addEventListener("pointerenter", () => clearInterval(timer));
+    cf.addEventListener("pointerleave", play);
+    render();
   })();
 })();
