@@ -1,0 +1,155 @@
+/* buttons.css - GPS, Layer, Center buttons */
+
+.gps-btn,
+.layer-btn,
+.center-btn,
+.base-layer-btn {
+  position: absolute;
+  z-index: var(--z-buttons);
+  width: var(--btn-size);
+  height: var(--btn-size);
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--c-surface);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@media (hover: hover) {
+  .gps-btn:hover,
+  .layer-btn:hover,
+  .center-btn:hover,
+  .base-layer-btn:hover {
+    transform: scale(1.08);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.gps-btn:active,
+.layer-btn:active,
+.center-btn:active,
+.base-layer-btn:active {
+  transform: scale(0.92);
+  box-shadow: var(--shadow-press, 0 1px 4px rgba(0,0,0,0.2));
+  background: linear-gradient(145deg, #2ecc71, #27ae60);
+}
+
+/* تموضع الأزرار */
+.layer-btn {
+  top: 60px;
+  right: max(10px, var(--safe-r));
+}
+
+.gps-btn {
+  bottom: calc(125px + var(--safe-b));
+  right: max(10px, var(--safe-r));
+}
+
+.center-btn {
+  bottom: calc(75px + var(--safe-b));
+  right: max(10px, var(--safe-r));
+}
+
+.base-layer-btn {
+  bottom: calc(175px + var(--safe-b));
+  right: max(10px, var(--safe-r));
+}
+/* أيقونات الأزرار */
+.gps-btn svg,
+.layer-btn svg,
+.center-btn svg,
+.base-layer-btn svg {
+  width: 25px;
+  height: 25px;
+  fill: var(--c-accent);
+  pointer-events: none;
+}
+
+.gps-btn:active svg,
+.layer-btn:active svg,
+.center-btn:active svg,
+.base-layer-btn:active svg {
+  fill: #ffffff;
+  transition: fill 0.8 ease;
+}
+/* قائمة تصفية الطبقات */
+.menu-btn {
+  position: absolute;
+  top: 105px;
+  right: max(10px, var(--safe-r));
+  z-index: var(--z-menu);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 12px 16px;
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg, 0 8px 24px rgba(0,0,0,0.15));
+  display: none;
+  width: max-content;
+  min-width: 100px;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu-btn label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  cursor: pointer;
+  color: var(--c-text, #333);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.menu-btn label:hover {
+  color: var(--c-accent, #2ecc71);
+}
+
+/* تلوين الـ Checkbox باللون الأخضر */
+.menu-btn input[type="checkbox"] {
+  accent-color: var(--c-accent, #2ecc71);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ===== حالة نشطة لزر الطبقات ===== */
+.layer-btn.active {
+  background: linear-gradient(145deg, #2ecc71, #27ae60);
+  box-shadow: 0 0 0 2px #2ecc71;
+}
+
+.layer-btn.active svg {
+  fill: #ffffff;
+}
+
+.layer-btn.active:active {
+  transform: scale(0.92);
+  background: linear-gradient(145deg, #27ae60, #1e8e4a);
+  box-shadow: 0 0 0 2px #1e8e4a;
+}
+.base-layer-btn.satellite-active svg {
+  fill: #ffffff;
+}
+
+/* حالة القمر الصناعي النشط (يضاف/يزال عبر JS) */
+.base-layer-btn.satellite-active {
+  background: linear-gradient(145deg, #2ecc71, #27ae60);
+  box-shadow: 0 0 0 2px #2ecc71;
+}
+
+.base-layer-btn.satellite-active:active {
+  transform: scale(0.92);
+  background: linear-gradient(145deg, #27ae60, #1e8e4a);
+  box-shadow: 0 0 0 2px #1e8e4a;
+}

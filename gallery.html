@@ -2,43 +2,208 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>معرض المبادرة | جرين بحري</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>معرضنا | جرين بحري</title>
+  <meta name="description" content="معرضنا: لقطات حقيقية من ميدان مبادرة جرين بحري لتشجير جامعة بحري، من الشتلة الأولى إلى الفريق الذي صنع الفرق.">
+  <meta property="og:title" content="معرضنا | جرين بحري">
+  <meta property="og:description" content="أيادٍ زرعت، فأثمر الأثر. لقطات من ميدان مبادرة جرين بحري.">
+  <meta property="og:image" content="assets/gallery/g4.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/gallery.css">
+  <!-- يعلّم الصفحة أن الجافاسكربت شغّال، فتُخفى عناصر الظهور التدريجي فقط حين يكون الكشف ممكناً -->
+  <script>document.documentElement.classList.add("gx-js");setTimeout(function(){if(!window.__gxReady)document.documentElement.classList.remove("gx-js")},5000);</script>
   <script src="js/main.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/gallery.js" defer></script>
 </head>
 <body>
   <div id="site-header"></div>
-  <main>
-    <header class="page-head">
-      <div class="container">
-        <span class="eyebrow">معرض المبادرة</span>
-        <h1>حكاية <em class="mark">تُروى بالصور</em></h1>
-        <p>شاهد تفاصيل رحلتنا من لحظات الزراعة إلى المساحات التي بدأت <strong class="key">تكتسي بالخضرة</strong>.</p>
+  <noscript><p style="padding:7rem 1.2rem 2rem;text-align:center;font-weight:800">فعّل JavaScript في متصفحك لعرض معرض جرين بحري.</p></noscript>
+  <div class="gx-progress" id="gx-progress" aria-hidden="true"></div>
+
+  <main class="gx" id="gx-top">
+
+    <!-- ===== A) الهيرو السينمائي ===== -->
+    <section class="gx-hero" aria-labelledby="gx-title">
+      <div class="gx-hero-media" aria-hidden="true">
+        <img class="gx-hero-img"
+             src="assets/gallery/g4.webp"
+             srcset="assets/gallery/g4-sm.webp 800w, assets/gallery/g4.webp 1600w"
+             sizes="100vw" width="1600" height="1063" alt="" fetchpriority="high" decoding="async">
       </div>
-    </header>
-    <section id="compare-sec" class="section" hidden>
-      <div class="container">
-        <h2 class="ba-title">قبل <em class="mark">وبعد</em></h2>
-        <div id="compare"></div>
+      <div class="gx-hero-shade" aria-hidden="true"></div>
+      <div class="gx-rays" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="gx-bokeh" id="gx-bokeh" aria-hidden="true"></div>
+      <div class="gx-spot" aria-hidden="true"></div>
+
+      <div class="container gx-hero-inner">
+        <span class="gx-eyebrow">معرض مبادرة جرين بحري</span>
+
+        <!-- الكلمة كلها قطعة واحدة (لا تُقسَّم حروفها) حتى لا ينكسر اتصال الحروف العربية -->
+        <h1 class="gx-word-wrap" id="gx-title">
+          <span class="gx-word-glow" aria-hidden="true">معرضنا</span>
+          <span class="gx-word">معرضنا</span>
+        </h1>
+
+        <p class="gx-slogan" data-split>حكاية <em>تُروى بالصور</em></p>
+        <p class="gx-lead">شاهد تفاصيل رحلتنا من لحظات الزراعة إلى المساحات التي بدأت <strong class="gx-key">تكتسي بالخضرة</strong>.</p>
+
+        <a class="gx-scroll" href="#gx-story" aria-label="انزل لبداية الحكاية">
+          <span class="gx-scroll-line" aria-hidden="true"></span>
+          <span>ابدأ الحكاية</span>
+        </a>
       </div>
     </section>
-    <section class="section">
+
+    <!-- ===== B) شريط توقيع الكلية (تحت الهيرو مباشرة) ===== -->
+    <section class="gx-sig-wrap" aria-label="توقيع الكلية">
       <div class="container">
-        <div id="gallery-grid" class="gallery-grid"></div>
+        <div class="gx-sig gx-reveal">
+          <div class="gx-ring">
+            <img src="assets/college-logo.webp" alt="شعار كلية علوم الحاسوب والرياضيات — جامعة بحري" width="96" height="98">
+          </div>
+          <div class="gx-sig-txt">
+            <small>تم بواسطة <bdi>دفعة 23 &amp; 24</bdi></small>
+            <strong>كلية علوم الحاسوب والرياضيات</strong>
+            <span>جامعة بحري</span>
+          </div>
+        </div>
+
+        <!-- ===== C) الإحصائيات (تُبنى من أرقام حقيقية فقط في gallery.js) ===== -->
+        <ul class="gx-stats gx-reveal" id="gx-stats" aria-label="أرقام المعرض"></ul>
       </div>
     </section>
-    <dialog id="lightbox" class="lightbox" aria-label="عرض الصورة">
-      <button class="lb-close" type="button" aria-label="إغلاق">✕</button>
-      <img alt="" id="lb-img">
+
+    <!-- ===== D) فصول الحكاية ===== -->
+    <section class="gx-story" id="gx-story" aria-labelledby="gx-story-h">
+      <div class="container">
+        <div class="gx-head gx-reveal">
+          <span class="gx-kicker">الحكاية</span>
+          <h2 id="gx-story-h" data-split>أربعة فصول، من البذرة إلى الفريق</h2>
+          <p>كل أثر يبدأ بخطوة صغيرة. هكذا مشينا.</p>
+        </div>
+        <div id="gx-chapters"></div>
+      </div>
+    </section>
+
+    <!-- ===== نباتات الحملة (من data.js → species، حقيقية من ملصق الحملة) ===== -->
+    <section class="gx-species" id="gx-species" aria-labelledby="gx-sp-h" hidden>
+      <div class="container">
+        <div class="gx-head gx-reveal">
+          <span class="gx-kicker">النباتات</span>
+          <h2 id="gx-sp-h" data-split>نباتات حملتنا</h2>
+          <p id="gx-sp-p"></p>
+        </div>
+      </div>
+      <div class="gx-mq-wrap" id="gx-mq" aria-hidden="true"></div>
+    </section>
+
+    <!-- ===== E) المعرض: الفلاتر + شبكة Bento ===== -->
+    <section class="gx-gallery" id="gx-gallery" aria-labelledby="gx-gal-h">
+      <div class="container">
+        <div class="gx-head gx-reveal">
+          <span class="gx-kicker">اللقطات</span>
+          <h2 id="gx-gal-h" data-split>قاعة العرض</h2>
+          <p>اضغط على أي صورة لتراها كاملة.</p>
+        </div>
+        <div class="gx-bar">
+          <div class="gx-filters" id="gx-filters" role="group" aria-label="تصفية حسب القسم"></div>
+          <div class="gx-filters gx-years" id="gx-years" role="group" aria-label="تصفية حسب السنة" hidden></div>
+          <span class="gx-count" id="gx-count" aria-live="polite"></span>
+        </div>
+        <div id="gallery-grid" class="gx-grid"></div>
+      </div>
+    </section>
+
+    <!-- ===== H) قبل وبعد ===== -->
+    <section class="gx-compare" id="compare-sec" aria-labelledby="gx-cmp-h">
+      <div class="container">
+        <div class="gx-head gx-reveal">
+          <span class="gx-kicker">التحوّل</span>
+          <h2 id="gx-cmp-h" data-split>قبل <em>وبعد</em></h2>
+          <p>حرّك الشريط يميناً ويساراً وشاهد كيف يتغيّر المكان بعد الزراعة.</p>
+        </div>
+        <div id="compare" class="gx-compare-list"></div>
+      </div>
+    </section>
+
+    <!-- ===== I) شارك لحظتك ===== -->
+    <section class="gx-cta-wrap" aria-labelledby="gx-cta-h">
+      <div class="container">
+        <div class="gx-cta gx-reveal">
+          <div class="gx-cta-txt">
+            <span class="gx-kicker gx-kicker-light">شارك لحظتك</span>
+            <h2 id="gx-cta-h" data-split>عندك لقطة من يوم الزراعة؟</h2>
+            <p>أرسلها لنا على واتساب وتظهر هنا في المعرض باسمك.</p>
+          </div>
+          <a id="gx-share-btn" class="gx-btn" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.5 10h7M8.5 13.500h4.500"/></svg>
+            <span>شارك صورتك</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== J) البطاقة الختامية ===== -->
+    <section class="gx-final-wrap" aria-label="خاتمة المعرض">
+      <div class="container">
+        <div class="gx-final gx-reveal">
+          <div class="gx-final-halo" aria-hidden="true"></div>
+          <div class="gx-ring gx-ring-xl">
+            <img src="assets/college-logo.webp" alt="شعار كلية علوم الحاسوب والرياضيات — جامعة بحري" width="96" height="98" loading="lazy">
+          </div>
+          <p class="gx-final-uni">جامعة بحري</p>
+          <h2 data-split>كلية علوم الحاسوب والرياضيات</h2>
+          <p class="gx-final-by">تم بواسطة <bdi>دفعة 23 &amp; 24</bdi></p>
+          <p class="gx-final-msg">كل شتلة وراءها يد آمنت أن الأثر يبدأ صغيراً، وأن الجامعة تستحق ظلاً يبقى بعدنا.</p>
+          <p class="gx-final-rights">© <span id="gx-year"></span> جرين بحري — جميع الحقوق محفوظة</p>
+          <a class="gx-top" href="#gx-top">العودة للأعلى ↑</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- زر العودة للأعلى مع حلقة تقدّم -->
+    <a class="gx-fab" id="gx-fab" href="#gx-top" aria-label="العودة لأعلى الصفحة">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><circle class="trk" cx="22" cy="22" r="19"/><circle class="bar" cx="22" cy="22" r="19" pathLength="100"/><path d="m15 25 7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+
+    <!-- ===== F) عارض الصور ===== -->
+    <dialog id="lightbox" class="gx-lb" aria-label="عارض الصور">
+      <div class="gx-lb-top">
+        <button class="gx-lb-btn" type="button" data-act="close" aria-label="إغلاق العارض">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+        <span class="gx-lb-counter" id="gx-lb-counter"></span>
+        <span class="gx-lb-spacer"></span>
+        <button class="gx-lb-btn" type="button" data-act="play" aria-pressed="false" aria-label="تشغيل العرض التلقائي">
+          <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.5-6.500a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5Z"/></svg>
+          <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>
+        </button>
+        <button class="gx-lb-btn" type="button" data-act="share" aria-label="مشاركة الصورة">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+        </button>
+        <a class="gx-lb-btn" id="gx-lb-dl" aria-label="تحميل الصورة" download href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 20h16"/></svg>
+        </a>
+      </div>
+      <button class="gx-lb-nav gx-lb-prev" type="button" data-act="prev" aria-label="الصورة السابقة">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+      <button class="gx-lb-nav gx-lb-next" type="button" data-act="next" aria-label="الصورة التالية">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+      </button>
+      <div class="gx-lb-bar" id="gx-lb-bar" aria-hidden="true"></div>
+      <figure class="gx-lb-stage" id="gx-lb-stage">
+        <div class="gx-lb-media" id="gx-lb-media"></div>
+        <figcaption class="gx-lb-cap" id="gx-lb-cap"></figcaption>
+      </figure>
+      <div class="gx-lb-thumbs" id="gx-lb-thumbs" aria-label="شريط الصور المصغّرة"></div>
     </dialog>
+
   </main>
   <div id="site-footer"></div>
 </body>

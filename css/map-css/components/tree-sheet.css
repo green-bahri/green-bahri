@@ -1,0 +1,102 @@
+/* css/map-css/components/tree-sheet.css
+ * محتوى شيت تفاصيل الشجرة فقط.
+ * الحاوية والمقبض والـ overlay انتقلت إلى bottom-sheet.css (.bs / .bs__*)
+ */
+
+.tree-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+.tree-logo {
+  width: 50px;
+  height: 50px;
+  background: #e8f5e9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--c-accent);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.tree-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--c-text);
+}
+.tree-faculty {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.tree-notes {
+  color: #4b5563;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+
+/* Action buttons */
+.tree-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0 15px;
+}
+.action-btn {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 40px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+.action-btn.share {
+  background: var(--c-accent, #3498db);
+  color: white;
+  width: auto;
+  margin-top: 0;
+}
+.action-btn:active { transform: scale(0.96); }
+
+/* عداد المشاهدات */
+.tree-view-counter {
+  background: #f0f2f5;
+  border-radius: 30px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  color: #2c3e50;
+  display: inline-block;
+  margin: 5px 0 10px;
+  direction: ltr;
+  text-align: center;
+  width: fit-content;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .tree-actions { gap: 8px; }
+  .action-btn { padding: 6px 10px; font-size: 0.75rem; }
+  .tree-name { font-size: 1.1rem; }
+}
+@media (max-height: 700px) {
+  .tree-name { font-size: 1.1rem; }
+}
