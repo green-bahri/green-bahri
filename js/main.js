@@ -93,6 +93,15 @@ function buildHeader() {
         ${brandHTML()}
         <ul class="nav-links">${links.map((l) => `<li>${l}</li>`).join("")}</ul>
         <div class="nav-actions">
+          <button class="sound-btn" id="sound-toggle" type="button" aria-pressed="false" aria-label="تشغيل أصوات الطبيعة" title="أصوات الطبيعة">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path class="sb-leaf" d="M2.5 19.5C2.5 11 7 5 14.5 4.5 15.5 12 11 18.5 2.5 19.5Z"/>
+              <path class="sb-vein" d="M2.5 19.5 10.5 11.5"/>
+              <path class="sb-wave sb-w1" d="M17.3 8.8a4.5 4.5 0 0 1 0 6.4"/>
+              <path class="sb-wave sb-w2" d="M20.3 6.2a8 8 0 0 1 0 11.6"/>
+              <path class="sb-slash" d="M4 4 20 20"/>
+            </svg>
+          </button>
           <button class="lamp-switch" id="theme-toggle" type="button" role="switch"
                   aria-checked="${document.documentElement.dataset.theme === "dark"}" aria-label="تبديل الوضع الليلي" title="اسحب الحبل لتبديل الوضع الليلي">
             <svg viewBox="0 0 44 52" aria-hidden="true">
@@ -123,6 +132,74 @@ function buildHeader() {
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
   initLampSwing();
+  initAmbientSound(document.getElementById("sound-toggle"));
+}
+
+/* ---------- أصوات الطبيعة (زر في الشريط) ----------
+   - مطفي افتراضياً (المتصفحات تمنع الصوت التلقائي أصلاً) ولا يتحمّل الملف إلا بعد الضغط
+   - اختيار الزائر يُحفظ، ويكمل الصوت بين الصفحات من نفس النقطة تقريباً
+   - fade-in / fade-out، ويوقف لو التاب اتخبّى
+   لتغيير الصوت: بدّل الملف assets/audio/ambient.mp3 فقط. */
+function initAmbientSound(btn) {
+  if (!btn) return;
+  const SRC = "assets/audio/ambient.mp3", VOL = 0.25;
+  const get = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const set = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  let audio = null, fadeId = 0, wanted = get("gb-sound") === "on";
+
+  const ui = (on) => {
+    btn.classList.toggle("is-on", on);
+    btn.setAttribute("aria-pressed", String(on));
+    btn.setAttribute("aria-label", on ? "إيقاف أصوات الطبيعة" : "تشغيل أصوات الطبيعة");
+    btn.title = on ? "إيقاف أصوات الطبيعة" : "تشغيل أصوات الطبيعة";
+  };
+  const fade = (to, done) => {
+    cancelAnimationFrame(fadeId);
+    const from = audio.volume, t0 = performance.now(), dur = 900;
+    const step = (t) => {
+      const p = Math.min((t - t0) / dur, 1);
+      audio.volume = Math.max(0, Math.min(1, from + (to - from) * p));
+      if (p < 1) fadeId = requestAnimationFrame(step); else if (done) done();
+    };
+    fadeId = requestAnimationFrame(step);
+  };
+  const ensure = () => {
+    if (audio) return audio;
+    audio = new Audio(SRC);
+    audio.loop = true; audio.preload = "auto"; audio.volume = 0;
+    audio.addEventListener("error", () => { audio = null; wanted = false; set("gb-sound", "off"); ui(false); btn.hidden = true; });
+    const t = parseFloat(sessionStorage.getItem("gb-sound-t") || "0");
+    if (t > 0) audio.addEventListener("loadedmetadata", () => { if (t < audio.duration) audio.currentTime = t; }, { once: true });
+    return audio;
+  };
+  const start = () => {
+    const a = ensure();
+    const p = a.play();
+    if (p && p.then) return p.then(() => { fade(VOL); ui(true); return true; }).catch(() => false);
+    fade(VOL); ui(true); return Promise.resolve(true);
+  };
+  const stop = () => { if (!audio) return; fade(0, () => audio && audio.pause()); };
+
+  btn.addEventListener("click", () => {
+    if (btn.classList.contains("is-on")) { wanted = false; set("gb-sound", "off"); ui(false); stop(); }
+    else { wanted = true; set("gb-sound", "on"); start(); }
+  });
+
+  /* الزائر كان مشغّله في صفحة سابقة: نحاول نكمل، ولو المتصفح منع ننتظر أول لمسة */
+  if (wanted) {
+    ui(true);
+    start().then((ok) => {
+      if (ok) return;
+      const resume = () => { if (wanted && !btn.contains(document.activeElement)) start(); };
+      ["pointerdown", "keydown", "touchend"].forEach((ev) => document.addEventListener(ev, resume, { once: true, passive: true }));
+    });
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (!audio) return;
+    if (document.hidden) { audio.pause(); }
+    else if (wanted) { audio.play().then(() => fade(VOL)).catch(() => {}); }
+  });
+  window.addEventListener("pagehide", () => { if (audio && !audio.paused) { try { sessionStorage.setItem("gb-sound-t", String(audio.currentTime)); } catch (e) {} } });
 }
 
 /* ---------- تأرجح الأباجورة مع السكرول ----------
