@@ -1,42 +1,17 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>مساهمة الكليات | جرين بحري</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/colleges.css">
-  <script src="js/main.js" defer></script>
-  <script src="js/data.js" defer></script>
-  <script src="js/colleges.js" defer></script>
-</head>
-<body>
-  <div id="site-header"></div>
-  <main>
-    <header class="page-head">
-      <div class="container">
-        <span class="eyebrow">مساهمة الكليات</span>
-        <h1>الكليات تزرع الأثر</h1>
-        <p>من يزرع أكثر؟ تنافسوا على الصدارة، وكل شجرة تُحسب.</p>
-      </div>
-    </header>
-    <section class="section">
-      <div class="container">
-        <div class="sum-row">
-          <div class="sum"><strong id="sum-colleges">0</strong><span>كليات مشاركة</span></div>
-          <div class="sum"><strong id="sum-trees">0</strong><span>شجرة في المجموع</span></div>
-          <div class="sum"><strong id="sum-doc">0</strong><span>شجرة موثّقة</span></div>
-        </div>
-        <div id="podium" class="podium" aria-label="المراكز الثلاثة الأولى"></div>
-        <h2 class="board-title">الترتيب الكامل</h2>
-        <ol id="board" class="board"></ol>
-      </div>
-    </section>
-  </main>
-  <div id="site-footer"></div>
-</body>
-</html>
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>بطولة Green Bahri</title><link rel="stylesheet" href="css/style.css"></head><body>
+<header><a class="brand"><b>🌱 Green Bahri</b><small>جامعة أكثر خضرة</small></a><span class="demo">● وضع تجريبي</span></header>
+<main>
+<section class="hero"><div><h1>بطولة <span>Green Bahri</span> 🌿</h1><p>منافسة كليات جامعة بحري لصناعة أثر أخضر. اجمعوا النقاط، أنجزوا المهام، ونافسوا على كأس البطولة.</p><a href="#tasks">اكتشف المهام والنقاط ←</a></div><div class="hero-tree">🌳 🌲</div></section>
+<section class="stats"><article><span class="stat-icon">🏛️</span><div><small>الكليات المتنافسة</small><strong id="colleges">4</strong></div></article><article><span class="stat-icon">⭐</span><div><small>أعلى نقاط لمهمة واحدة</small><strong>50 <em>نقطة</em></strong></div></article><article><span class="stat-icon">👩‍🎓</span><div><small>الطلاب المشاركون</small><strong id="students">32</strong></div></article></section>
+<section><div class="heading"><div><label>المنافسة بين الكليات</label><h2>من يتصدر البطولة؟</h2></div><span class="tag">ترتيب تجريبي</span></div><div id="podium" class="podium"></div><div class="panel"><div class="panelhead"><b>ترتيب الكليات</b><small>حسب مجموع النقاط</small></div><div id="ranking"></div></div></section>
+<section id="tasks"><div class="heading"><div><label>اجمعوا النقاط</label><h2>مهام البطولة</h2></div><small>النقاط المعروضة تجريبية</small></div><div class="tasks">
+<article><span>🌱</span><div><small>مهمة ميدانية</small><b>ازرع ووثّق</b><p>زراعة 10 شتلات داخل الجامعة وتوثيقها بالصور وتاريخ الزراعة.</p></div><strong>30 <small>نقطة</small></strong></article>
+<article><span>💧</span><div><small>خدمة بيئية</small><b>إحياء مجرى المياه</b><p>تنظيف أو إصلاح مجرى مياه قديم وتوثيق العمل قبل وبعد.</p></div><strong>20 <small>نقطة</small></strong></article>
+<article><span>📸</span><div><small>مسابقة إبداعية</small><b>عدسة Green Bahri</b><p>صورة حديثة من داخل الجامعة تبرز الطبيعة أو أثر المبادرة.</p></div><strong>5 <small>نقاط</small></strong></article>
+<article class="featured"><em>المهمة الأعلى نقاطاً</em><span>🎬</span><div><small>المسابقة الكبرى</small><b>فيديو يصنع الوعي</b><p>فيديو توعوي إبداعي مرتبط بالتشجير والمحافظة على البيئة.</p></div><strong>50 <small>نقطة</small></strong></article></div><p class="note">اعتماد النقاط النهائي يكون بعد مراجعة الإدارة للمهمة.</p></section>
+<section><div class="heading"><div><label>أثر كل طالب مهم</label><h2>أوسمة صُنّاع الأثر</h2></div><small>إنجازات فردية</small></div><div class="awards"><article><span>🌿</span><div><b>وسام صانع أثر</b><p>للطالب الذي يوثّق زراعة 10 شتلات معتمدة أو أكثر.</p></div></article><article><span>👑</span><div><b>وسام بطل الموسم</b><p>للطالب صاحب أكبر عدد من الأشجار المزروعة والمعتمدة خلال الموسم.</p></div></article></div><div class="panel"><div class="panelhead"><b>أبرز صُنّاع الأثر</b><small>بيانات طلاب تجريبية</small></div><div id="student-list" class="students"></div></div></section>
+<section class="impact"><span>🌳</span><div><label>أثرنا الجماعي</label><b>كل شجرة بتقرّبنا من جامعة أكثر خضرة</b><small>المنافسة بين الكليات، والأثر نصنعه كلنا.</small></div><strong><span id="trees">37</span><small>شجرة تجريبية</small></strong></section>
+<p class="disclaimer">هذه نسخة عرض ببيانات تجريبية فقط. لا تمثل مساهمات حقيقية ولا تُرسل بيانات إلى قاعدة البيانات.</p>
+</main><footer><b>Green Bahri</b><span>نزرع اليوم لأجل غدٍ أخضر 🌱</span></footer><script src="js/colleges.js"></script></body></html>
