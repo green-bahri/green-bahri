@@ -1,0 +1,176 @@
+/* css/map-css/components/bottom-sheet.css
+ * الأنماط الموحّدة لكل النوافذ السفلية (BottomSheet)
+ * طبقات z-index:
+ *   map controls (1000) < overlay (1050) < nav (1100) < sheet (1200)
+ */
+
+:root {
+  --z-sheet-overlay: 1050;
+  --z-bottom-sheet: 1200;
+  --bs-transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ─── Overlay واحد لكل الشيتات ─────────────────────────────── */
+.bs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-sheet-overlay);
+  background: rgba(15, 23, 42, 0.35);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.bs-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ─── الحاوية ─────────────────────────────────────────────── */
+.bs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 640px;
+  z-index: var(--z-bottom-sheet);
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+  max-height: 85dvh;
+  direction: rtl;
+
+  transform: translateY(100%);
+  visibility: hidden;
+  transition: var(--bs-transition), visibility 0s linear 0.3s;
+  will-change: transform;
+}
+.bs--visible {
+  visibility: visible;
+  transition: var(--bs-transition), visibility 0s;
+}
+.bs--dragging {
+  transition: none !important;
+}
+
+/* شيت بارتفاع ثابت (تفاصيل الشجرة، القائمة) */
+.bs--tall {
+  height: 75dvh;
+}
+
+/* ─── المقبض وزر الإغلاق ──────────────────────────────────── */
+.bs__handle {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 8px;
+  flex-shrink: 0;
+  cursor: grab;
+  touch-action: none;
+}
+.bs__handle:active {
+  cursor: grabbing;
+}
+.bs__bar {
+  width: 45px;
+  height: 5px;
+  background: #cbd5e1;
+  border-radius: 4px;
+  opacity: 0.8;
+}
+.bs__close {
+  position: absolute;
+  top: 8px;
+  inset-inline-end: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+.bs__close:active { transform: scale(0.92); }
+
+/* ─── المحتوى ─────────────────────────────────────────────── */
+.bs__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 20px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px) + var(--bs-hidden, 0px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bs__title {
+  margin: 4px 0 2px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+  color: #1f2937;
+}
+.bs__subtitle {
+  margin: 0 0 14px;
+  font-size: 0.82rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* ─── النماذج داخل الشيتات ────────────────────────────────── */
+.sheet-form { display: grid; gap: 10px; padding-bottom: 8px; }
+.sheet-form label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+}
+.sheet-form input,
+.sheet-form select,
+.sheet-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-size: 15px;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  outline: none;
+}
+.sheet-form input:focus,
+.sheet-form select:focus,
+.sheet-form textarea:focus {
+  border-color: #2ecc71;
+}
+.sheet-form textarea { min-height: 90px; resize: vertical; }
+.sheet-form .form-submit {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  border: none;
+  border-radius: 10px;
+  background: #2ecc71;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.sheet-form .form-submit:disabled { opacity: 0.6; cursor: default; }
+
+/* تخصيص لون زر الإرسال حسب نوع الشيت */
+.bs--adopt .form-submit { background: #2ecc71; }
+.bs--report .form-submit { background: #f1c40f; color: #222; }

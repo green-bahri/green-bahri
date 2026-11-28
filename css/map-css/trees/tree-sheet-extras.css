@@ -1,0 +1,30 @@
+/* =========================================================
+   tree-sheet-extras.css - تفاصيل إضافية داخل شيت الشجرة
+   يستند إلى sudmap (https://sudamap.pages.dev)
+   ========================================================= */
+
+.tree-cover {
+  width: calc(100% + 40px); margin: 0 -20px 16px;
+  height: 180px; object-fit: cover; background: #eef2f5; display: block;
+}
+
+.tree-meta-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; direction: rtl; }
+
+.tree-meta-pill {
+  background: #f0f2f5; border-radius: 30px; padding: 5px 12px;
+  font-size: 0.78rem; color: #2c3e50; display: inline-flex; align-items: center; gap: 4px;
+}
+
+.tree-adopted-banner {
+  display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+  background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724;
+  border-radius: 12px; font-size: 0.85rem; font-weight: 600; margin-bottom: 14px;
+}
+
+.action-btn.report {
+  display: flex; background: #fff3cd; color: #856404; width: 100%;
+  justify-content: center; padding: 11px; font-size: 0.9rem;
+  border-radius: 30px; margin-bottom: 12px; flex-shrink: 0; border: none; cursor: pointer; font-family: inherit;
+}
+
+@media (max-height: 700px) { .tree-cover { height: 120px; } }

@@ -1,7 +1,147 @@
 /* =========================================================
    Green Bahri — colleges.css
-   تنسيقات صفحة مساهمات الكليات فقط — أضف هنا قواعد الصفحة.
-
-   ملاحظة: القواعد الحالية لم تُنقل من style.css حتى لا يتغير شكل الموقع.
-   ننقل القواعد الخاصة بهذه الصفحة تدريجياً بعد اختبار كل خطوة.
+   صفحة مساهمة الكليات (تصميم «البطولة»). كل الأسماء بادئتها lg- حتى ما تتعارض مع باقي الموقع.
+   الألوان من متغيرات الموقع فتشتغل في الوضع الداكن.
    ========================================================= */
+.lg { --lg-card: var(--surface, #fff); --lg-line: var(--line, #e5e9e1); --lg-ink: var(--text, #26352d); --lg-mute: var(--text-soft, #718078);
+      --lg-g: var(--color-primary, #245c45); --lg-d: #173f30; --lg-l: rgba(164,195,162,.2); }
+[data-theme="dark"] .lg { --lg-g: #a4c3a2; --lg-d: #e4efe2; }
+.lg-wrap { width: 92%; max-width: 1100px; margin: 0 auto; padding: 6.5rem 0 3rem; color: var(--lg-ink); }
+.lg-wrap label, .lg-label { font-size: .72rem; color: #8fb08a; font-weight: 800; display: block; }
+
+/* الهيرو */
+.lg-hero { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  min-height: 215px; padding: 1.5rem 1.2rem; border-radius: 1.15rem; color: #fff;
+  background: linear-gradient(110deg, #173f30, #32694b); }
+.lg-hero-txt { max-width: 38rem; position: relative; z-index: 1; }
+.lg-hero h1 { margin: .4rem 0; font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 900; line-height: 1.25; }
+.lg-hero h1 span { color: #d9e8bf; }
+.lg-hero p { margin: 0 0 .9rem; font-size: .92rem; color: #e0eae1; max-width: 33rem; }
+.lg-hero p strong { color: #9dffb4; }
+.lg-cta { display: inline-block; background: #f8f6f0; color: #173f30; text-decoration: none; padding: .5rem .95rem; border-radius: .6rem; font-size: .78rem; font-weight: 800; }
+.lg-hero-tree { font-size: 3.4rem; opacity: .7; position: absolute; left: .6rem; bottom: .9rem; }
+@media (min-width: 651px) { .lg-hero { padding: 2.2rem; } .lg-hero-tree { position: static; font-size: 5.2rem; } }
+
+/* معلومات المرحلة (من مسؤول المحتوى) */
+.lg-facts { list-style: none; margin: .8rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: .5rem; }
+.lg-facts li { background: var(--lg-card); border: 1px solid var(--lg-line); border-radius: .8rem; padding: .55rem .8rem; font-size: .8rem; color: var(--lg-mute); }
+.lg-facts b { display: block; color: var(--lg-d); font-size: .82rem; }
+
+/* الأرقام */
+.lg-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin: .9rem 0 1.8rem; }
+.lg-stats article { display: flex; align-items: center; gap: .55rem; min-height: 4.2rem; padding: .6rem .7rem; background: var(--lg-card); border: 1px solid var(--lg-line); border-radius: .9rem; }
+.lg-stat-ico { width: 1.9rem; height: 1.9rem; border-radius: .6rem; background: var(--lg-l); display: grid; place-items: center; font-size: .95rem; flex: none; }
+.lg-stats small { display: block; font-size: .62rem; color: var(--lg-mute); line-height: 1.4; }
+.lg-stats strong { display: block; font-size: 1.15rem; color: var(--lg-d); line-height: 1.3; }
+
+/* عناوين الأقسام */
+.lg-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: .6rem; margin: 1.8rem 0 .8rem; }
+.lg-heading h2 { margin: 0; font-size: 1.3rem; color: var(--lg-d); }
+.lg-heading > small { font-size: .65rem; color: var(--lg-mute); max-width: 14rem; text-align: left; }
+.lg-tag { background: var(--lg-l); color: var(--lg-g); border-radius: 2rem; padding: .3rem .7rem; font-size: .65rem; font-weight: 800; white-space: nowrap; }
+
+/* منصة التتويج */
+.lg-podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: .55rem; align-items: end; padding: .75rem .75rem 0;
+  background: linear-gradient(180deg, var(--lg-l), transparent); border: 1px solid var(--lg-line); border-radius: 1.1rem 1.1rem 0 0; overflow: hidden; }
+.lg-place { position: relative; text-align: center; padding: .75rem .4rem 0; border: 1px solid var(--lg-line); border-radius: .8rem .8rem 0 0; background: var(--lg-card); overflow: hidden; box-shadow: 0 6px 16px rgba(27,69,44,.05); }
+.lg-place-1 { min-height: 11.5rem; border-color: #dfc27c; background: linear-gradient(180deg, rgba(255,248,231,.9), var(--lg-card)); }
+.lg-place-2 { min-height: 9.4rem; }
+.lg-place-3 { min-height: 8.1rem; }
+[data-theme="dark"] .lg-place-1 { background: linear-gradient(180deg, rgba(223,194,124,.16), var(--lg-card)); }
+.lg-medal { font-size: 1.5rem; line-height: 1.25; }
+.lg-place-label { font-size: .58rem; color: var(--lg-mute); font-weight: 800; }
+.lg-place h3 { margin: .25rem 0; font-size: .72rem; line-height: 1.5; color: var(--lg-d); }
+.lg-place p { margin: 0; font-size: .58rem; color: var(--lg-mute); }
+.lg-place strong { display: block; margin: .3rem 0 .5rem; font-size: 1.05rem; color: var(--lg-g); }
+.lg-place small { font-size: .58rem; }
+.lg-step { position: absolute; bottom: 0; left: 0; right: 0; height: 1.45rem; display: grid; place-items: center; font-size: .65rem; font-weight: 900; background: var(--lg-l); color: var(--lg-g); }
+.lg-place-1 .lg-step { height: 1.75rem; background: #ead59c; color: #7c5a16; }
+
+/* اللوحات */
+.lg-panel { background: var(--lg-card); border: 1px solid var(--lg-line); border-radius: 1rem; padding: .9rem; margin-top: .8rem; }
+.lg-ranking-panel { border-top: 0; border-radius: 0 0 1rem 1rem; margin-top: 0; }
+.lg-panelhead { display: flex; justify-content: space-between; margin-bottom: .55rem; }
+.lg-panelhead b { font-size: .85rem; color: var(--lg-d); }
+.lg-panelhead b em { font-style: normal; color: var(--lg-g); }
+.lg-panelhead small { font-size: .6rem; color: var(--lg-mute); }
+.lg-rank { display: grid; grid-template-columns: 1.8rem 1fr 3.6rem; gap: .55rem; align-items: center; padding: .65rem 0; border-top: 1px solid var(--lg-line); }
+.lg-rank:first-child { border-top: 0; }
+.lg-rankno { background: var(--lg-l); color: var(--lg-g); border-radius: .5rem; text-align: center; font-size: .72rem; font-weight: 900; padding: .25rem; }
+.lg-rank b { font-size: .75rem; color: var(--lg-d); }
+.lg-rank small { display: block; color: var(--lg-mute); font-size: .58rem; }
+.lg-bar { height: 5px; background: var(--lg-l); border-radius: 10px; margin-top: .3rem; overflow: hidden; }
+.lg-bar i { display: block; height: 100%; background: var(--lg-g); border-radius: 10px; width: 0; transition: width .9s ease; }
+.lg-score { text-align: left; color: var(--lg-g); font-weight: 900; direction: ltr; font-size: .8rem; }
+.lg-score small { font-size: .55rem; margin-inline-start: .15rem; }
+.lg-empty { margin: 0; font-size: .75rem; color: var(--lg-mute); }
+
+/* المهام والأوسمة */
+.lg-tasks, .lg-awards { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.lg-tasks article { position: relative; display: block; min-height: 8.4rem; padding: .7rem; background: var(--lg-card); border: 1px solid var(--lg-line); border-radius: .95rem; }
+.lg-tasks article > span { display: inline-block; font-size: 1.1rem; background: var(--lg-l); border-radius: .6rem; padding: .25rem; margin-bottom: .3rem; }
+.lg-tasks article small { display: block; color: var(--lg-mute); font-size: .58rem; }
+.lg-tasks b { font-size: .75rem; color: var(--lg-d); }
+.lg-tasks p, .lg-awards p { margin: .2rem 0; font-size: .6rem; line-height: 1.6; color: var(--lg-mute); }
+.lg-tasks article > strong { position: absolute; bottom: .5rem; left: .65rem; font-size: .85rem; color: var(--lg-g); text-align: left; }
+.lg-tasks article > strong i { font-style: normal; font-size: 1rem; }
+.lg-tasks article > strong small { display: inline; font-size: .55rem; }
+.lg-featured { background: linear-gradient(180deg, rgba(255,250,240,.9), var(--lg-card)); border-color: #e4d4ad; }
+[data-theme="dark"] .lg-featured { background: linear-gradient(180deg, rgba(223,194,124,.12), var(--lg-card)); }
+.lg-featured em { position: absolute; top: .35rem; left: .5rem; color: #98701e; background: #f8edcf; border-radius: .8rem; padding: .1rem .4rem; font-size: .5rem; font-style: normal; }
+.lg-note { text-align: center; font-size: .62rem; color: var(--lg-mute); margin: .7rem 0 0; }
+.lg-awards article { display: flex; gap: .55rem; align-items: flex-start; background: var(--lg-card); border: 1px solid var(--lg-line); border-radius: .9rem; padding: .6rem; min-height: 4.2rem; }
+.lg-awards article > span { font-size: 1.1rem; background: var(--lg-l); border-radius: 50%; padding: .35rem; }
+.lg-awards b { font-size: .72rem; color: var(--lg-d); }
+.lg-students { display: flex; gap: .5rem; flex-wrap: wrap; }
+.lg-students > div { flex: 1; min-width: 7.5rem; background: var(--lg-l); border-radius: .6rem; padding: .45rem .55rem; font-size: .65rem; color: var(--lg-ink); }
+.lg-students small { display: block; color: var(--lg-mute); font-size: .58rem; }
+
+/* الأثر الجماعي */
+.lg-impact { display: flex; align-items: center; gap: .85rem; margin-top: 1.8rem; padding: 1rem; background: var(--lg-l); border: 1px solid var(--lg-line); border-radius: 1.05rem; }
+.lg-impact > span { font-size: 2rem; }
+.lg-impact > div { display: grid; flex: 1; }
+.lg-impact b { font-size: .85rem; color: var(--lg-d); }
+.lg-impact small { font-size: .6rem; color: var(--lg-mute); }
+.lg-impact > strong { font-size: 1.5rem; color: var(--lg-g); text-align: center; }
+.lg-impact > strong small { display: block; font-size: .52rem; font-weight: 500; }
+
+@media (min-width: 651px) {
+  .lg-stats strong { font-size: 1.3rem; } .lg-stats small { font-size: .68rem; }
+  .lg-place h3 { font-size: .85rem; } .lg-place p, .lg-place-label, .lg-place small { font-size: .68rem; }
+  .lg-place strong { font-size: 1.3rem; } .lg-medal { font-size: 1.9rem; }
+  .lg-rank b { font-size: .88rem; } .lg-rank small { font-size: .68rem; }
+  .lg-tasks article { min-height: 7rem; } .lg-tasks b, .lg-awards b { font-size: .88rem; }
+  .lg-tasks p, .lg-awards p { font-size: .72rem; } .lg-tasks article small { font-size: .66rem; }
+}
+@media (max-width: 360px) {
+  .lg-stats { grid-template-columns: 1fr 1fr; } .lg-stats article:last-child { grid-column: span 2; }
+  .lg-tasks, .lg-awards { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .lg-bar i { transition: none; } }
+
+/* ===== نافذة «وثّق زراعتك» ===== */
+.lg-cta-go { border: 0; cursor: pointer; font-family: inherit; background: #9dffb4; margin-inline-start: .4rem; }
+.lg-plant-cta { text-align: center; margin: .9rem 0 0; }
+.lg-btn { border: 0; cursor: pointer; font-family: inherit; background: var(--lg-g); color: #fff; border-radius: 2rem; padding: .6rem 1.3rem; font-size: .85rem; font-weight: 800; }
+[data-theme="dark"] .lg-btn { color: #173f30; }
+.lg-btn[disabled] { opacity: .6; cursor: wait; }
+.lg-dlg { width: min(30rem, 94vw); max-height: 92vh; padding: 0; border: 1px solid var(--lg-line); border-radius: 1.1rem; background: var(--lg-card); color: var(--lg-ink); font-family: inherit; }
+.lg-dlg::backdrop { background: rgba(15, 30, 22, .55); backdrop-filter: blur(3px); }
+.lg-dlg form { padding: 1rem 1.1rem 1.2rem; }
+.lg-dlg header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
+.lg-dlg h3 { margin: 0; font-size: 1.1rem; color: var(--lg-d); }
+.lg-x { border: 0; background: var(--lg-l); color: var(--lg-ink); width: 2rem; height: 2rem; border-radius: 50%; cursor: pointer; font-size: .9rem; }
+.lg-hint { margin: 0 0 .7rem; font-size: .72rem; color: var(--lg-mute); line-height: 1.7; }
+.lg-dlg .pf-f { display: block; margin-bottom: .6rem; font-size: .72rem; font-weight: 800; color: var(--lg-d); }
+.pf-f input, .pf-f select { display: block; width: 100%; margin-top: .25rem; padding: .55rem .6rem; font: inherit; font-size: .85rem; font-weight: 500; color: var(--lg-ink); background: var(--lg-card); border: 1px solid var(--lg-line); border-radius: .6rem; box-sizing: border-box; }
+.pf-row { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.lg-dlg .pf-chk { display: flex; gap: .45rem; align-items: flex-start; margin: .35rem 0; font-size: .72rem; line-height: 1.6; color: var(--lg-ink); }
+.pf-chk input { margin-top: .2rem; flex: none; }
+#pf-preview { display: block; max-width: 100%; max-height: 9rem; margin: 0 auto .5rem; border-radius: .6rem; object-fit: cover; }
+.pf-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.pf-msg { margin: .5rem 0; padding: .5rem .7rem; border-radius: .6rem; font-size: .75rem; background: #fde8e6; color: #9a2a20; }
+#pf-send { width: 100%; margin-top: .5rem; }
+#pf-done { text-align: center; padding: 1.2rem 0 .4rem; }
+#pf-done b { display: block; font-size: 1rem; color: var(--lg-d); }
+.pf-ok { font-size: 2.4rem; }
+@media (max-width: 420px) { .pf-row { grid-template-columns: 1fr; } }

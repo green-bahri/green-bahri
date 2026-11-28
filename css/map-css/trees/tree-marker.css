@@ -1,0 +1,44 @@
+/* ===== css/trees/tree-markers.css ===== */
+
+.tree-dot {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.tree-marker {
+  background: none;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  /* The 0.15s transform transition is set on the inner svg below, not on this element:
+     Leaflet positions .tree-marker itself with transform, so a transition here would make
+     markers lag while panning and zooming. */
+}
+
+.tree-marker svg {
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+  transition: transform 0.15s ease;
+  transform-origin: 50% 100%;
+}
+
+.tree-marker:hover svg {
+  transform: scale(1.15) translateY(-2px);
+}
+
+.tree-code-label {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  font-family: system-ui, sans-serif;
+}
+
+
