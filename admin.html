@@ -9,9 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="css/admin.css?v=1">
+  <link rel="stylesheet" href="css/admin.css?v=2">
   <script src="js/data.js" defer></script>
-  <script src="js/admin.js?v=1" defer></script>
+  <script src="js/admin.js?v=2" defer></script>
+  <script src="js/admin-more.js?v=1" defer></script>
 </head>
 <body>
   <!-- الدخول -->
@@ -35,22 +36,6 @@
     </header>
     <nav class="ad-tabs" id="ad-tabs" role="tablist"></nav>
 
-    <section id="tab-plantings" class="ad-pane" hidden>
-      <div class="ad-bar">
-        <select id="pl-filter" aria-label="الحالة"><option value="pending">قيد المراجعة</option><option value="approved">المعتمدة</option><option value="rejected">المرفوضة</option></select>
-        <button class="ad-btn ad-ghost" id="pl-reload" type="button">تحديث</button>
-      </div>
-      <div id="pl-list" class="ad-grid"></div>
-    </section>
-
-    <section id="tab-photos" class="ad-pane" hidden>
-      <div class="ad-bar">
-        <select id="ph-filter" aria-label="الحالة"><option value="pending">قيد المراجعة</option><option value="approved">المعتمدة</option><option value="rejected">المرفوضة</option></select>
-        <button class="ad-btn ad-ghost" id="ph-reload" type="button">تحديث</button>
-      </div>
-      <p class="ad-mute ad-note">صور توثيق الزراعة لا تظهر هنا، فهي تُراجَع مع التوثيق نفسه.</p>
-      <div id="ph-list" class="ad-grid"></div>
-    </section>
   </div>
 </body>
 </html>
