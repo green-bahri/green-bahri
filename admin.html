@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>لوحة الإدارة | جرين بحري</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="css/admin.css?v=1">
+  <script src="js/data.js" defer></script>
+  <script src="js/admin.js?v=1" defer></script>
+</head>
+<body>
+  <!-- الدخول -->
+  <main id="ad-login" class="ad-center">
+    <form id="ad-login-form" class="ad-card" novalidate>
+      <h1>🌿 لوحة إدارة جرين بحري</h1>
+      <p class="ad-mute">للمشرفين فقط.</p>
+      <label>البريد الإلكتروني<input type="email" name="email" autocomplete="username" required></label>
+      <label>كلمة المرور<input type="password" name="password" autocomplete="current-password" required></label>
+      <p class="ad-err" id="ad-login-err" role="alert" hidden></p>
+      <button class="ad-btn" type="submit" id="ad-login-btn">دخول</button>
+    </form>
+  </main>
+
+  <!-- اللوحة -->
+  <div id="ad-app" hidden>
+    <header class="ad-top">
+      <b>🌿 لوحة الإدارة</b>
+      <span id="ad-who" class="ad-mute"></span>
+      <button class="ad-btn ad-ghost" id="ad-logout" type="button">خروج</button>
+    </header>
+    <nav class="ad-tabs" id="ad-tabs" role="tablist"></nav>
+
+    <section id="tab-plantings" class="ad-pane" hidden>
+      <div class="ad-bar">
+        <select id="pl-filter" aria-label="الحالة"><option value="pending">قيد المراجعة</option><option value="approved">المعتمدة</option><option value="rejected">المرفوضة</option></select>
+        <button class="ad-btn ad-ghost" id="pl-reload" type="button">تحديث</button>
+      </div>
+      <div id="pl-list" class="ad-grid"></div>
+    </section>
+
+    <section id="tab-photos" class="ad-pane" hidden>
+      <div class="ad-bar">
+        <select id="ph-filter" aria-label="الحالة"><option value="pending">قيد المراجعة</option><option value="approved">المعتمدة</option><option value="rejected">المرفوضة</option></select>
+        <button class="ad-btn ad-ghost" id="ph-reload" type="button">تحديث</button>
+      </div>
+      <p class="ad-mute ad-note">صور توثيق الزراعة لا تظهر هنا، فهي تُراجَع مع التوثيق نفسه.</p>
+      <div id="ph-list" class="ad-grid"></div>
+    </section>
+  </div>
+</body>
+</html>
