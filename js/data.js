@@ -1,5 +1,12 @@
 /* بيانات الموقع — عدّل هنا فقط. القيم الحالية أمثلة تجريبية. */
 window.GB = {
+  /* قاعدة بيانات دوري الكليات (مشروع Supabase منفصل عن مشروع الخريطة).
+     المفتاح العام (publishable) مصمم يظهر في الكود، والحماية من سياسات RLS في القاعدة. */
+  supabase: {
+    url: "https://upxaghqmrdpxbfdsdpri.supabase.co",
+    key: "sb_publishable_s2VnDDA68dKbQCsPNXFosA__bNssB2Z",
+  },
+
   /* رقم واتساب المبادرة بالصيغة الدولية بدون + أو أصفار (0115937058 ← 249115937058) */
   whatsapp: "249115937058",
   whatsappLabel: "0115937058",

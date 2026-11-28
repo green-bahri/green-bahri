@@ -9,10 +9,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="stylesheet" href="css/style.css?v=12">
-  <link rel="stylesheet" href="css/colleges.css?v=2">
+  <link rel="stylesheet" href="css/colleges.css?v=3">
   <script src="js/main.js?v=3" defer></script>
   <script src="js/data.js" defer></script>
-  <script src="js/colleges.js?v=2" defer></script>
+  <script src="js/colleges.js?v=3" defer></script>
+  <script src="js/plant-form.js?v=1" defer></script>
 </head>
 <body>
   <div id="site-header"></div>
@@ -26,6 +27,7 @@
           <h1>من سيترك <span>بصمته الخضراء</span>؟</h1>
           <p>تعرّفوا على إنجازات الكليات، واكتشفوا من الأكثر غرساً وعناية بأشجارهم؛ <strong>فكل مساهمة تستحق أن تُرعى</strong>، وكل جهد يضيف جمالاً لجامعتنا.</p>
           <a class="lg-cta" href="#tasks">اكتشف المهام والنقاط ←</a>
+          <button type="button" class="lg-cta lg-cta-go" data-open-plant>🌱 وثّق زراعتك</button>
         </div>
         <div class="lg-hero-tree" aria-hidden="true">🌳 🌲</div>
       </section>
@@ -60,6 +62,7 @@
           <article><span>💧</span><div><small>خدمة بيئية</small><b>إحياء مجرى المياه</b><p>تنظيف أو إصلاح مجرى مياه قديم وتوثيق العمل قبل وبعد.</p></div><strong><small>نقاطها تحددها الإدارة</small></strong></article>
           <article class="lg-featured"><em>المسابقة الكبرى</em><span>🎬</span><div><small>مسابقة إبداعية</small><b>فيديو يصنع الوعي</b><p>فيديو توعوي إبداعي مرتبط بالتشجير والمحافظة على البيئة.</p></div><strong><i id="lg-pt-win2">50</i> <small>نقطة للفائز</small></strong></article>
         </div>
+        <div class="lg-plant-cta"><button type="button" class="lg-btn" data-open-plant>🌱 وثّق زراعتك الآن</button></div>
         <p class="lg-note">النقاط المعروضة مقترحة، واعتمادها النهائي يكون بعد مراجعة الإدارة للمهمة.</p>
       </section>
 
@@ -80,6 +83,36 @@
         <div><label>أثرنا الجماعي</label><b>كل شجرة بتقرّبنا من جامعة أكثر خضرة</b><small>المنافسة بين الكليات، والأثر نصنعه كلنا.</small></div>
         <strong><span id="lg-trees">0</span><small>شجرة مسجّلة</small></strong>
       </section>
+
+    <!-- نافذة «ازرع ووثّق»: الطالب يرسل توثيقاً بحالة «قيد المراجعة»، والنقاط تُضاف بعد موافقة الإدارة -->
+    <dialog id="plant-dlg" class="lg-dlg" aria-labelledby="pf-title">
+      <form id="plant-form" novalidate>
+        <header><h3 id="pf-title">🌱 وثّق زراعتك</h3><button type="button" class="lg-x" data-close aria-label="إغلاق">✕</button></header>
+        <div id="pf-body">
+          <p class="lg-hint">كل توثيق = شجرة واحدة. بعد مراجعة الإدارة تُضاف نقاط الشجرة لكليتك ولك.</p>
+          <label class="pf-f">الاسم الكامل<input name="name" required minlength="2" maxlength="80" autocomplete="name"></label>
+          <label class="pf-f">الكلية<select name="college" required><option value="">اختر الكلية…</option></select></label>
+          <div class="pf-row">
+            <label class="pf-f">نوع الشجرة<select name="species" required><option value="">اختر النوع…</option></select></label>
+            <label class="pf-f">المنطقة<select name="area"><option value="">غير محددة</option></select></label>
+          </div>
+          <label class="pf-f">تاريخ الزراعة<input type="date" name="date" required></label>
+          <label class="pf-f">صورة الزراعة<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required></label>
+          <img id="pf-preview" alt="معاينة الصورة" hidden>
+          <label class="pf-chk"><input type="checkbox" name="consent" required> أؤكد أن الصورة لي، وأن من يظهر فيها وافق على نشرها.</label>
+          <label class="pf-chk"><input type="checkbox" name="publicname"> أوافق على ظهور اسمي في «أبرز صُنّاع الأثر».</label>
+          <input type="text" name="website" class="pf-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p id="pf-msg" class="pf-msg" role="alert" hidden></p>
+          <button type="submit" class="lg-btn" id="pf-send">إرسال التوثيق</button>
+        </div>
+        <div id="pf-done" hidden>
+          <div class="pf-ok">✅</div>
+          <b>وصل توثيقك!</b>
+          <p class="lg-hint">قيد مراجعة الإدارة، وبعد الموافقة تُحسب النقاط لكليتك.</p>
+          <button type="button" class="lg-btn" id="pf-again">توثيق شجرة أخرى</button>
+        </div>
+      </form>
+    </dialog>
 
     </div>
   </main>
