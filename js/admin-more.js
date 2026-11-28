@@ -59,14 +59,14 @@
     init(pane) {
       const ledger = h("div", { class: "ad-list" }), rules = h("div", { class: "ad-list" }), awarded = h("div", { class: "ad-list" });
       const college = h("select", { required: true }), pts = h("input", { type: "number", step: "1", placeholder: "مثال: 25 أو -25" }), note = h("input", { type: "text", maxlength: "120", placeholder: "السبب (مطلوب)" });
-      const who = h("select");
+      const who = h("select"), bwho = h("select"), lf = h("select", { onchange: () => loadLedger() });
       const bonus = h("form", { class: "ad-formrow", onsubmit: async (e) => {
         e.preventDefault();
         const v = parseInt(pts.value, 10);
         if (!college.value || !v || !note.value.trim()) return toast("اختر الكلية واكتب عدد النقاط (غير صفر) والسبب.", true);
         if (v < 0 && !confirm("هذا خصم " + num(-v) + " نقطة. متأكد؟")) return;
-        if (await act(bonus, () => post("points_ledger", { college_id: college.value, action_type: "bonus", points: v, note: note.value.trim() }), "تمت إضافة النقاط")) { pts.value = ""; note.value = ""; loadLedger(); }
-      } }, field("الكلية", college), field("النقاط", pts), field("السبب", note), h("button", { type: "submit", class: "ad-btn", text: "إضافة" }));
+        if (await act(bonus, () => post("points_ledger", { college_id: college.value, ...(bwho.value ? { participant_id: bwho.value } : {}), action_type: "bonus", points: v, note: note.value.trim() }), "تمت إضافة النقاط")) { pts.value = ""; note.value = ""; loadLedger(); }
+      } }, field("الكلية", college), field("الطالب (اختياري)", bwho), field("النقاط", pts), field("السبب", note), h("button", { type: "submit", class: "ad-btn", text: "إضافة" }));
       const hero = h("form", { class: "ad-formrow", onsubmit: async (e) => {
         e.preventDefault(); if (!who.value) return toast("اختر الطالب.", true);
         const s = await api("seasons?select=id&is_active=eq.true");
@@ -74,17 +74,24 @@
         if (await act(hero, () => post("participant_badges", { participant_id: who.value, badge_id: "season-hero", season_id: s[0].id }), "تم منح الوسام")) loadAwarded();
       } }, field("الطالب (الأكثر أشجاراً أولاً)", who), h("button", { type: "submit", class: "ad-btn", text: "👑 منح وسام بطل الموسم" }));
       pane.append(
-        sec("إضافة نقاط يدوية لكلية", h("p", { class: "ad-mute ad-note", text: "السجل للإضافة فقط. للتصحيح أضف قيمة سالبة مع السبب." }), bonus),
-        sec("آخر الحركات", ledger),
+        sec("إضافة نقاط يدوية لكلية", h("p", { class: "ad-mute ad-note", text: "لو أضفت نقاطاً بالغلط احذف الحركة من «آخر الحركات» (تُحفظ نسخة منها في سجل المحذوفات)." }), bonus),
+        sec("آخر الحركات", field("تصفية بالكلية", lf), ledger),
         sec("منح وسام بطل الموسم", hero, awarded),
         sec("قواعد النقاط", rules));
 
       async function loadLedger() {
         ledger.textContent = "";
         try {
-          const rows = await api("points_ledger?select=id,created_at,action_type,points,quantity,note,colleges(name),participants(full_name)&order=created_at.desc&limit=15");
-          rows.forEach((r) => ledger.appendChild(h("div", { class: "ad-row" }, h("b", { text: (r.points > 0 ? "+" : "") + num(r.points) }), h("span", { text: (r.colleges ? r.colleges.name : "") + (r.participants ? " · " + r.participants.full_name : "") }), h("small", { class: "ad-mute", text: (RULE_NAMES[r.action_type] || r.action_type) + (r.note ? " — " + r.note : "") + " · " + fmt(r.created_at) }))));
-          if (!rows.length) empty(ledger, "لا توجد حركات بعد.");
+          const rows = await api("points_ledger?select=id,created_at,action_type,points,quantity,note,college_id,colleges(name),participants(full_name)" + (lf.value ? "&college_id=eq." + lf.value : "") + "&order=created_at.desc&limit=50");
+          rows.forEach((r) => {
+            const row = h("div", { class: "ad-row" }, h("b", { text: (r.points > 0 ? "+" : "") + num(r.points) }), h("span", { text: (r.colleges ? r.colleges.name : "") + (r.participants ? " · " + r.participants.full_name : "") }), h("small", { class: "ad-mute", text: (RULE_NAMES[r.action_type] || r.action_type) + (r.note ? " — " + r.note : "") + " · " + fmt(r.created_at) }));
+            row.appendChild(h("button", { type: "button", class: "ad-btn ad-danger", text: "حذف", onclick: async () => {
+              const auto = r.action_type !== "bonus" ? "\n\nتنبيه: هذه نقاط تلقائية (" + (RULE_NAMES[r.action_type] || r.action_type) + "). حذفها يشيل النقاط فقط، ولا يلغي التوثيق أو الفوز نفسه." : "";
+              if (confirm("حذف هذه الحركة (" + num(r.points) + " نقطة)؟ تُحفظ نسخة منها في سجل المحذوفات." + auto) && await act(row, () => rpc("admin_delete_ledger", { p_id: String(r.id) }), "تم حذف الحركة")) loadLedger();
+            } }));
+            ledger.appendChild(row);
+          });
+          if (!rows.length) empty(ledger, "لا توجد حركات.");
         } catch (e) { empty(ledger, "تعذّر التحميل."); }
       }
       async function loadAwarded() {
@@ -115,7 +122,9 @@
         try {
           const [cs, ps] = await Promise.all([api("colleges?select=id,name&is_active=eq.true&order=sort_order"), api("admin_participant_stats?select=participant_id,full_name,college_name,trees&limit=60")]);
           college.textContent = ""; college.appendChild(opt("", "اختر الكلية…")); cs.forEach((c) => college.appendChild(opt(c.id, c.name)));
+          lf.textContent = ""; lf.appendChild(opt("", "كل الكليات")); cs.forEach((c) => lf.appendChild(opt(c.id, c.name)));
           who.textContent = ""; who.appendChild(opt("", "اختر الطالب…")); ps.forEach((p) => who.appendChild(opt(p.participant_id, p.full_name + " — " + (p.college_name || "") + " (" + num(p.trees) + " شجرة)")));
+          bwho.textContent = ""; bwho.appendChild(opt("", "للكلية فقط")); ps.forEach((p) => bwho.appendChild(opt(p.participant_id, p.full_name + " — " + (p.college_name || ""))));
         } catch (e) { toast("تعذّر تحميل القوائم.", true); }
       };
     } });
