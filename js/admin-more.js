@@ -192,8 +192,9 @@
   register({ id: "staff", label: "المشرفون", roles: ["admin"], order: 7,
     init(pane) {
       const list = h("div", { class: "ad-list" });
+      let owners = [], iAmOwner = false;
       const email = h("input", { type: "email", placeholder: "بريد الحساب", autocomplete: "off" }), name = h("input", { type: "text", maxlength: "60", placeholder: "الاسم" });
-      const rl = h("select", {}, opt("planting", "مشرف التوثيقات"), opt("photo", "مشرف الصور"), opt("admin", "مدير"));
+      const rl = h("select", {}, opt("planting", "مشرف التوثيقات"), opt("photo", "مشرف الصور"));
       const addF = h("form", { class: "ad-formrow", onsubmit: async (e) => {
         e.preventDefault(); if (!email.value.trim()) return toast("اكتب بريد الحساب.", true);
         if (await act(addF, () => rpc("admin_add_staff", { p_email: email.value.trim(), p_role: rl.value, p_name: name.value.trim() }), "تمت الإضافة")) { email.value = ""; name.value = ""; this.load(); }
@@ -202,15 +203,21 @@
       this.load = async () => {
         list.textContent = "";
         try {
+          // قبل تشغيل supabase_admin_owner.sql هذه الدوال غير موجودة: نتجاهل الخطأ ونكمل بدون حماية المالك في الواجهة
+          try { owners = (await rpc("admin_owner_ids")) || []; iAmOwner = !!(await rpc("is_owner")); } catch (e) { owners = []; iAmOwner = false; }
+          if (iAmOwner && !rl.querySelector('[value="admin"]')) rl.appendChild(opt("admin", "مدير"));
           (await rpc("admin_list_staff")).forEach((s) => {
-            const me = s.uid === A.me();
-            const n = h("input", { type: "text", value: s.staff_name || "", maxlength: "60", disabled: me });
-            const r = h("select", { disabled: me }, opt("planting", "مشرف التوثيقات", s.staff_role === "planting"), opt("photo", "مشرف الصور", s.staff_role === "photo"), opt("admin", "مدير", s.staff_role === "admin"));
+            const me = s.uid === A.me(), isOwner = owners.includes(s.uid);
+            const locked = me || isOwner || (s.staff_role === "admin" && !iAmOwner);
+            const n = h("input", { type: "text", value: s.staff_name || "", maxlength: "60", disabled: locked });
+            const r = h("select", { disabled: locked }, opt("planting", "مشرف التوثيقات", s.staff_role === "planting"), opt("photo", "مشرف الصور", s.staff_role === "photo"), opt("admin", "مدير", s.staff_role === "admin"));
             const row = h("div", { class: "ad-row" }, h("code", { text: s.email || s.uid }), n, r);
-            if (me) row.appendChild(h("small", { class: "ad-mute", text: "حسابك" }));
-            else row.append(
+            if (isOwner) row.appendChild(h("small", { class: "ad-mute", text: me ? "المالك · حسابك" : "المالك" }));
+            else if (me) row.appendChild(h("small", { class: "ad-mute", text: "حسابك" }));
+            else if (!locked) row.append(
               h("button", { type: "button", class: "ad-btn", text: "حفظ", onclick: () => act(row, () => rpc("admin_update_staff", { p_user: s.uid, p_role: r.value, p_name: n.value.trim() }), "تم الحفظ") }),
               h("button", { type: "button", class: "ad-btn ad-danger", text: "حذف", onclick: async () => { if (confirm("إزالة صلاحيات هذا المشرف؟") && await act(row, () => rpc("admin_remove_staff", { p_user: s.uid }), "تمت الإزالة")) this.load(); } }));
+            else row.appendChild(h("small", { class: "ad-mute", text: "للمالك فقط" }));
             list.appendChild(row);
           });
         } catch (e) { empty(list, "تعذّر التحميل. تأكد من تشغيل supabase_admin_extras.sql."); }
