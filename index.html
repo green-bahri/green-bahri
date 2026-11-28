@@ -9,59 +9,118 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/home.css">
-  <script src="js/main.js" defer></script>
+  <link rel="preload" as="image" href="assets/hero-poster.webp" media="(max-width: 899px)" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/hero-desktop.webp" media="(min-width: 900px)" fetchpriority="high">
+  <link rel="stylesheet" href="css/style.css?v=12">
+  <link rel="stylesheet" href="css/home.css?v=18">
+  <script src="js/main.js?v=3" defer></script>
   <script src="js/data.js" defer></script>
-  <script src="js/home.js" defer></script>
+  <script src="js/home.js?v=6" defer></script>
 </head>
 <body class="has-hero">
   <div id="site-header"></div>
   <main>
     <section id="home" class="hero">
+      <video class="hero-video" data-src="assets/hero.mp4" poster="assets/hero-poster.webp" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
       <div class="hero-content">
         <div class="hero-card">
-          <span class="eyebrow" dir="ltr">Green Bahri</span>
-          <h1>من حملة تشجير إلى مشروع بيئي  ومستدام</h1>
-          <p>منصّة رقمية تدعم مبادرة زراعة الأشجار في جامعة بحري: نوثّق كل شجرة، نتابع حالتها، وننسّق الرعاية بمشاركة الطلاب والكليات.</p>
-          <div id="today-pill" class="today-pill" hidden></div>
-          <div class="hero-seed"><strong>150</strong> شتلة متاحة للزراعة <small>(ليست أشجاراً مزروعة بعد)</small></div>
+          <h1>لا شجرة تُنسى في <em class="hl">جامعة بحري</em></h1>
+          <p>كل غرسة مُسجَّلة، وكل رعاية مُنسَّقة، وكل مشاركة محسوبة. ابدأ رحلتك مع <strong class="key">خضرة الجامعة</strong>.</p>
+          <div class="hero-actions">
+            <a class="btn btn-white liquid-glass" data-liquid href="trees.html">ازرع أثر</a>
+            <a class="btn btn-ghost liquid-glass" data-liquid href="#vision">رؤيتنا</a>
+          </div>
         </div>
       </div>
       <div class="hero-giant" dir="ltr" lang="en" aria-hidden="true"><span>GREEN BAHRI</span></div>
+    </section>
+
+    <!-- المرحلة 1: شريط أرقام الأثر (الأرقام تُقرأ من js/data.js) -->
+    <section class="stats" aria-label="أرقام المبادرة">
+      <div class="container">
+        <div class="stats-grid reveal">
+          <div class="stat"><i class="stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6"/><path d="M12 16a5 5 0 0 0 5-5c0-2-1.2-3.4-2.6-4.4A3.5 3.5 0 0 0 12 2a3.5 3.5 0 0 0-2.4 4.6C8.2 7.6 7 9 7 11a5 5 0 0 0 5 5Z"/></svg></i><b data-stat="trees">0</b><span data-stat-label="trees">شجرة موثّقة</span></div>
+          <div class="stat"><i class="stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6M9 11h.01M15 11h.01"/></svg></i><b data-stat="colleges">0</b><span data-stat-label="colleges">كليات مشاركة</span></div>
+          <div class="stat"><i class="stat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9"/><path d="M12 13c0-4 2.5-6.5 7-6.5 0 4-2.5 6.5-7 6.5Z"/><path d="M12 15c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg></i><b data-stat="seedlings">0</b><span data-stat-label="seedlings">شتلة جاهزة للزراعة</span></div>
+          <div id="today-pill" class="today-pill" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="field-note section" aria-label="من أرض الجامعة">
+      <div class="container">
+        <div class="field-note-copy">
+          <span class="eyebrow">من أرض الجامعة</span>
+          <h2>غرسة اليوم، <em class="mark">ظلّ الغد</em></h2>
+          <p>نحن لا نزرع لأجل اللحظة، بل نصنع <strong class="key">خيراً يمتد للمستقبل</strong>.</p>
+        </div>
+        <div class="cf" id="cf" role="region" aria-roledescription="carousel" aria-label="صور من أرض الجامعة" tabindex="0">
+          <div class="cf-ambient" id="cf-ambient" aria-hidden="true"></div>
+          <div class="cf-stage" id="cf-stage"></div>
+          <button class="cf-nav cf-prev" id="cf-prev" type="button" aria-label="الصورة السابقة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          <button class="cf-nav cf-next" id="cf-next" type="button" aria-label="الصورة التالية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+        </div>
+        <div class="cf-meta">
+          <div class="cf-dots" id="cf-dots" role="tablist" aria-label="اختيار الصورة"></div>
+          <a class="cf-more" href="gallery.html">شاهد كل الصور في المعرض</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="explore" class="section vision">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">اكتشف المبادرة</span>
+          <h2>من أين تريد أن <em class="mark">تبدأ</em>؟</h2>
+        </div>
+        <div class="tiles">
+          <a class="tile reveal" href="colleges.html"><img class="tile-img" src="assets/about.jpg" alt="" loading="lazy" style="object-position:center 45%"><span class="tile-arrow liquid-glass" data-liquid aria-hidden="true"><img src="assets/leaf.png" alt="" width="20" height="20"></span><div class="tile-body"><span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></span><h3>مساهمة الكليات</h3><p>ترتيب الكليات وعدد أشجار كل كلية.</p></div></a>
+          <a class="tile reveal" href="map.html"><img class="tile-img" src="assets/g3.jpg" alt="" loading="lazy" style="object-position:center 55%"><span class="tile-arrow liquid-glass" data-liquid aria-hidden="true"><img src="assets/leaf.png" alt="" width="20" height="20"></span><div class="tile-body"><span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><h3>خريطة الجامعة</h3><p>مواقع الأشجار المزروعة داخل الجامعة.</p></div></a>
+          <a class="tile reveal" href="trees.html"><img class="tile-img" src="assets/g1.jpg" alt="" loading="lazy" style="object-position:center 40%"><span class="tile-arrow liquid-glass" data-liquid aria-hidden="true"><img src="assets/leaf.png" alt="" width="20" height="20"></span><div class="tile-body"><span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9"/><path d="M12 13c0-4 2.5-6.5 7-6.5 0 4-2.5 6.5-7 6.5Z"/><path d="M12 15c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg></span><h3>ازرع أثر</h3><p>اختر شتلتك وابدأ رحلتك مع المبادرة.</p></div></a>
+          <a class="tile reveal" href="gallery.html"><img class="tile-img" src="assets/g2.jpg" alt="" loading="lazy" style="object-position:center 35%"><span class="tile-arrow liquid-glass" data-liquid aria-hidden="true"><img src="assets/leaf.png" alt="" width="20" height="20"></span><div class="tile-body"><span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg></span><h3>معرض المبادرة</h3><p>لحظات مصوّرة من الزراعة والسقاية.</p></div></a>
+        </div>
+      </div>
     </section>
 
     <section id="vision" class="section vision">
       <div class="container">
         <div class="section-head reveal">
           <span class="eyebrow">رؤيتنا</span>
-          <h2>نحو جامعة خضراء مستدامة</h2>
+          <h2>جامعة <em class="mark">تنبض بالحياة</em> دائماً</h2>
         </div>
-        <div class="cards cards-3">
-          <div class="card reveal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div><h3>الرؤية</h3><p>جامعة نظيفة وخضراء ومستدامة، يقودها طلاب واعون ومسؤولون.</p></div>
-          <div class="card reveal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><h3>الرسالة</h3><p>زراعة الأشجار والعناية بها عبر عمل تطوعي منظم وتوعية بيئية مستمرة.</p></div>
-          <div class="card reveal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12Z"/></svg></div><h3>الهدف</h3><p>رفع الغطاء الشجري في الجامعة وتحسين مناخها وجودة الحياة فيها.</p></div>
+        <div class="cards cards-2">
+          <div class="card reveal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8Z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2Z"/></svg></div><h3>الرسالة</h3><p>توثيق جهود التشجير ومتابعة أثرها وتحويل كل مساهمة إلى إنجاز ملموس.</p></div>
+          <div class="card reveal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><h3>الهدف</h3><p>تعزيز مشاركة الكليات وخلق تنافس إيجابي نحو جامعة أكثر اخضراراً.</p></div>
         </div>
       </div>
     </section>
 
-    <section id="explore" class="section">
+    <!-- المرحلة 3: كيف تشارك (3 خطوات) -->
+    <section id="steps" class="section how">
       <div class="container">
-        <div class="cards cards-4">
-          <a class="card card-link reveal" href="colleges.html"><span class="card-icon" data-icon="college"></span><h3>مساهمة الكليات</h3><p>تعرّف على ترتيب الكليات المشاركة وعدد أشجار كل كلية.</p></a>
-          <a class="card card-link reveal" href="map.html"><span class="card-icon" data-icon="tree"></span><h3>خريطة الجامعة</h3><p>شاهد مواقع الأشجار المزروعة داخل الجامعة.</p></a>
-          <a class="card card-link reveal" href="trees.html"><span class="card-icon" data-icon="leaf"></span><h3>ازرع أثر</h3><p>اختر شجرتك وابدأ رحلتك مع المبادرة.</p></a>
-          <a class="card card-link reveal" href="gallery.html"><span class="card-icon" data-icon="camera"></span><h3>معرض المبادرة</h3><p>لحظات مصوّرة من فعاليات الزراعة والسقاية.</p></a>
+        <div class="section-head reveal">
+          <span class="eyebrow">كيف تشارك؟</span>
+          <h2>ثلاث خطوات لتترك <em class="mark">أثراً</em></h2>
         </div>
+        <ol class="how-list">
+          <li class="how-step reveal"><span class="how-num">1</span><div><h3>اختر شتلتك</h3><p>تصفّح دليل الأشجار والنباتات واختر ما يناسبك.</p></div></li>
+          <li class="how-step reveal"><span class="how-num">2</span><div><h3>تواصل مع المبادرة</h3><p>عبر واتساب، أو سلّمها مباشرةً لمشتل كلية الزراعة.</p></div></li>
+          <li class="how-step reveal"><span class="how-num">3</span><div><h3>تُسجَّل باسمك</h3><p>تُزرع في الجامعة ويظهر أثرها على الخريطة.</p></div></li>
+        </ol>
       </div>
     </section>
 
     <section id="join" class="section">
       <div class="container">
-        <div class="cta cta-leaves reveal">
-          <h2>تبنَّ شجرة</h2>
-          <p>أحضرها للمشتل وتُسجَّل باسمك في الموقع، وكل شجرة تصنع فرقاً.</p>
-          <button type="button" class="btn btn-lime" data-join="care">تبنَّ شجرة</button>
+        <div class="cta cta-forest reveal">
+          <div class="cta-media" aria-hidden="true">
+            <video class="cta-video" src="assets/watering.mp4" poster="assets/watering-poster.webp" autoplay muted loop playsinline preload="metadata"></video>
+          </div>
+          <div class="cta-copy">
+            <h2>تبرع <em class="mark">بشجرة</em></h2>
+            <p>أحضرها للمشتل وتُسجَّل باسمك في الموقع، وكل شجرة تصنع فرقاً.</p>
+            <a class="btn btn-lime" href="trees.html">تبرع بشجرة</a>
+          </div>
         </div>
       </div>
     </section>
@@ -86,7 +145,9 @@
       </div>
     </form>
   </dialog>
+  <!-- المرحلة 2: زر ثابت أسفل الشاشة (موبايل فقط، يظهر بعد الهيرو) -->
+  <div id="sticky-cta" class="sticky-cta" aria-hidden="true"><a href="trees.html" tabindex="-1">ازرع أثر الآن</a></div>
   <div id="toast" class="toast" role="status" hidden></div>
   <div id="site-footer"></div>
 </body>
-</html>
+  </html>

@@ -1,17 +1,59 @@
-// بيانات تجريبية فقط - لا يوجد اتصال بقاعدة البيانات في هذه النسخة.
-const colleges=[
-{name:'كلية علوم الحاسوب',points:150,trees:12,students:9},
-{name:'كلية الهندسة',points:120,trees:10,students:8},
-{name:'كلية الزراعة',points:90,trees:9,students:7},
-{name:'كلية العلوم',points:60,trees:6,students:8}];
-const students=[['سارة أحمد','علوم الحاسوب',12,'👑'],['محمد علي','الهندسة',10,'🌱'],['آية عمر','الزراعة',10,'🌱']];
-const fmt=n=>Number(n).toLocaleString('en-US');
-const sorted=[...colleges].sort((a,b)=>b.points-a.points);
-document.getElementById('colleges').textContent=fmt(colleges.length);
-document.getElementById('students').textContent=fmt(colleges.reduce((a,c)=>a+c.students,0));
-document.getElementById('trees').textContent=fmt(colleges.reduce((a,c)=>a+c.trees,0));
-const podium=document.getElementById('podium');
-[sorted[1],sorted[0],sorted[2]].forEach((c,i)=>{const rank=i===0?2:i===1?1:3;const el=document.createElement('article');el.className=`podium-place place-${rank}`;if(rank===1)el.classList.add('first');el.innerHTML=`<div class="podium-medal">${rank===1?'🏆':rank===2?'🥈':'🥉'}</div><small class="place-label">المركز ${rank===1?'الأول':rank===2?'الثاني':'الثالث'}</small><h3>${c.name}</h3><p>${c.trees} أشجار · ${c.students} طلاب</p><strong>${fmt(c.points)} <small>نقطة</small></strong><div class="podium-step">${rank}</div>`;podium.appendChild(el)});
-const ranking=document.getElementById('ranking'),max=sorted[0].points;
-sorted.forEach((c,i)=>{const el=document.createElement('div');el.className='rank';el.innerHTML=`<span class="rankno">${i+1}</span><div><b>${c.name}</b><small>${fmt(c.points)} نقطة · ${c.trees} أشجار · ${c.students} طلاب · ${i===0?'في الصدارة':`الفارق عن الأولى ${max-c.points} نقطة`}</small><div class="bar"><i style="width:${c.points/max*100}%"></i></div></div><span class="score">${fmt(c.points)}<small>نقطة</small></span>`;ranking.appendChild(el)});
-const list=document.getElementById('student-list');students.forEach(s=>{const el=document.createElement('div');el.innerHTML=`${s[3]} ${s[0]}<small>${s[1]} · ${s[2]} شتلات موثقة</small>`;list.appendChild(el)});
+/* صفحة مساهمة الكليات (تصميم «البطولة»).
+   الترتيب يُحسب من js/data.js: نقاط الكلية = عدد أشجارها × نقاط الشجرة.
+   قواعد النقاط تطابق جدول point_rules في Supabase (راجع supabase_green_bahri_league.sql)،
+   وعند ربط الصفحة بالقاعدة تُقرأ من هناك بدل هذه الأرقام. */
+(function () {
+  const RULES = { treePlanted: 100, competitionWin: 50 };
+  const GB = window.GB || { colleges: [], trees: [] };
+  const n = (v) => Number(v).toLocaleString("ar-EG");
+  const $ = (id) => document.getElementById(id);
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const rows = GB.colleges.map((c) => {
+    const mine = GB.trees.filter((t) => t.college === c.id);
+    return { id: c.id, name: c.name, trees: mine.length, points: mine.length * RULES.treePlanted };
+  }).sort((a, b) => b.points - a.points || a.name.localeCompare(b.name, "ar"));
+  const totalTrees = GB.trees.length;
+
+  $("lg-colleges").textContent = n(rows.length);
+  $("lg-per-tree").textContent = n(RULES.treePlanted);
+  $("lg-trees-stat").textContent = n(totalTrees);
+  $("lg-trees").textContent = n(totalTrees);
+  $("lg-pt-tree").textContent = n(RULES.treePlanted);
+  $("lg-pt-win1").textContent = n(RULES.competitionWin);
+  $("lg-pt-win2").textContent = n(RULES.competitionWin);
+
+  /* وسم "ترتيب تجريبي" يفضل ظاهر لأن أشجار data.js حالياً أمثلة. شيله من colleges.html لما تدخل البيانات الحقيقية. */
+
+  const MEDAL = { 1: "🏆", 2: "🥈", 3: "🥉" };
+  const LABEL = { 1: "المركز الأول", 2: "المركز الثاني", 3: "المركز الثالث" };
+  const top = rows.slice(0, 3);
+  const podium = $("podium");
+  [top[1], top[0], top[2]].forEach((c) => {
+    if (!c) return;
+    const place = Math.min(1 + rows.filter((x) => x.points > c.points).length, 3); // التعادل = نفس المركز
+    const el = document.createElement("article");
+    el.className = "lg-place lg-place-" + place;
+    el.innerHTML = '<div class="lg-medal">' + MEDAL[place] + '</div><small class="lg-place-label">' + LABEL[place] + '</small><h3></h3><p>' + n(c.trees) + ' شجرة</p><strong>' + n(c.points) + ' <small>نقطة</small></strong><div class="lg-step">' + n(place) + '</div>';
+    el.querySelector("h3").textContent = c.name;
+    podium.appendChild(el);
+  });
+
+  const ranking = $("ranking");
+  const max = Math.max(...rows.map((r) => r.points), 1);
+  rows.forEach((c, i) => {
+    const gap = rows[0].points - c.points;
+    const rank = 1 + rows.filter((x) => x.points > c.points).length;
+    const el = document.createElement("div");
+    el.className = "lg-rank";
+    el.innerHTML = '<span class="lg-rankno">' + n(rank) + '</span><div><b></b><small></small><div class="lg-bar"><i data-w="' + Math.round((c.points / max) * 100) + '"></i></div></div><span class="lg-score">' + n(c.points) + '<small>نقطة</small></span>';
+    el.querySelector("b").textContent = c.name;
+    el.querySelector("small").textContent = n(c.points) + " نقطة · " + n(c.trees) + " شجرة · " + (rank === 1 ? "في الصدارة" : "الفارق عن الأولى " + n(gap) + " نقطة");
+    ranking.appendChild(el);
+  });
+
+  /* حركة: تعبئة الأشرطة لما تظهر اللوحة */
+  const fill = () => ranking.querySelectorAll(".lg-bar i").forEach((b) => (b.style.width = b.dataset.w + "%"));
+  if (reduce || !("IntersectionObserver" in window)) fill();
+  else new IntersectionObserver((es, io) => es.forEach((e) => { if (e.isIntersecting) { fill(); io.disconnect(); } }), { threshold: 0.2 }).observe(ranking);
+})();

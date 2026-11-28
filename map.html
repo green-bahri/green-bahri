@@ -2,55 +2,68 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>خريطة الجامعة | جرين بحري</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>خريطة الأشجار | جرين بحري</title>
+  <meta name="description" content="خريطة تفاعلية لأشجار جامعة بحري: مواقعها، حالتها، وإمكانية تبنّيها.">
+  <meta name="theme-color" content="#245c45">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
+
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/map.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+
+  <!-- أنماط تطبيق الخريطة -->
+  <link rel="stylesheet" href="css/map-css/base.css">
+  <link rel="stylesheet" href="css/map-css/skeleton_loader.css">
+  <link rel="stylesheet" href="css/map-css/components/buttons.css">
+  <link rel="stylesheet" href="css/map-css/components/gps-arrow.css">
+  <link rel="stylesheet" href="css/map-css/components/search.css">
+  <link rel="stylesheet" href="css/map-css/components/share-button.css">
+  <link rel="stylesheet" href="css/map-css/components/temp-marker.css">
+  <link rel="stylesheet" href="css/map-css/components/bottom-sheet.css">
+  <link rel="stylesheet" href="css/map-css/components/zoom-buttons.css">
+  
+  <!-- أنماط الأشجار والنماذج -->
+  <link rel="stylesheet" href="css/map-css/trees/tree-markers.css">
+  <link rel="stylesheet" href="css/map-css/trees/status-badges.css">
+  <link rel="stylesheet" href="css/map-css/trees/tree-sheet-extras.css">
+  <link rel="stylesheet" href="css/map-css/forms/sheet-forms.css">
+  <link rel="stylesheet" href="css/map-css/components/tree-sheet.css">
+
+  <!-- أنماط الدمج (يجب أن تكون الأخيرة) -->
+  <link rel="stylesheet" href="css/map-css/integration.css">
+
   <script src="js/main.js" defer></script>
-  <script src="js/data.js" defer></script>
-  <script src="js/map.js" defer></script>
 </head>
-<body>
+<body class="map-page on-map-page">
   <div id="site-header"></div>
+
   <main>
-    <header class="page-head">
-      <div class="container">
-        <span class="eyebrow">خريطة الجامعة</span>
-        <h1>خريطة تشجير الجامعة</h1>
-        <p>مواقع الأشجار في أركان جامعة بحري على صورة جوية حقيقية. اختر منطقة لترى أشجارها.</p>
-      </div>
-    </header>
-    <section class="section">
-      <div class="container map-layout">
-        <div>
-          <div id="area-chips" class="area-chips" role="tablist" aria-label="مناطق الجامعة"></div>
-          <div class="map-box">
-            <div id="campus-map" class="leaflet-map" role="region" aria-label="خريطة جامعة بحري"></div>
-            <button id="fit-all" class="btn btn-outline map-fit" type="button">عرض كل الجامعة</button>
-          </div>
-          <p class="map-note">
-            يمكنك التبديل بين الصورة الجوية والخريطة العادية من أعلى الخريطة. على الموبايل حرّك الخريطة بإصبعين.
-          </p>
-          <div id="edit-box" class="edit-box card" hidden>
-            <h3>وضع ضبط المواقع</h3>
-            <p>اسحب كل دبوس إلى مكانه على الصورة الجوية، ثم انسخ النص بالأسفل والصقه في <b>data.js</b> مكان قائمة <b>areas</b>.</p>
-            <textarea id="edit-out" rows="8" dir="ltr" readonly></textarea>
-            <button id="edit-copy" class="btn btn-primary" type="button">نسخ الإحداثيات</button>
-          </div>
+    <section id="map-page" class="page">
+      <div id="map" role="application" aria-label="خريطة أشجار جامعة بحري"></div>
+
+      <!-- شاشة التحميل الهيكلية -->
+      <div id="skeleton-loader" class="skeleton-loader" role="status" aria-live="polite" aria-label="جارٍ التحميل">
+        <div class="loader-content">
+          <p class="loader-text">خريطة <em style="font-style:normal;color:#17a243">تشجير</em> الجامعة</p>
+          <p style="margin:.4rem 0 0;font-size:.95rem;opacity:.85">لكل غرسة مكان، و<strong>خريطتنا دليلك</strong> للوصول إليها.</p>
+          <p style="margin:.6rem 0 0;font-size:.85rem;opacity:.75"><b>مكان أول نفرة:</b> من المكتبة إلى القاعة الوطنية، ومن القاعة الوطنية إلى آخر الجامعة شرقاً</p>
+          <div class="loader-ring"></div>
         </div>
-        <aside class="map-panel card">
-          <h2 id="panel-title">اختر منطقة</h2>
-          <p id="panel-sub" class="panel-sub"></p>
-          <ul id="panel-list" class="panel-list"></ul>
-        </aside>
       </div>
     </section>
-    <noscript><p class="container map-note">الخريطة تحتاج تفعيل JavaScript.</p></noscript>
   </main>
-  <div id="site-footer"></div>
+
+  <noscript>
+    <div style="position:fixed;inset:0;background:#fff;z-index:99999;display:grid;place-items:center;padding:2rem;text-align:center;font-family:system-ui">
+      <p>الخريطة التفاعلية تحتاج تفعيل JavaScript.</p>
+    </div>
+  </noscript>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script type="module" src="js/map-js/main.js"></script>
 </body>
 </html>

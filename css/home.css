@@ -1,7 +1,582 @@
 /* =========================================================
-   Green Bahri — home.css
-   تنسيقات الصفحة الرئيسية فقط — أضف هنا قواعد الصفحة الرئيسية الجديدة.
-
-   ملاحظة: القواعد الحالية لم تُنقل من style.css حتى لا يتغير شكل الموقع.
-   ننقل القواعد الخاصة بهذه الصفحة تدريجياً بعد اختبار كل خطوة.
+   Green Bahri — home.css (الصفحة الرئيسية فقط)
+   1) قواعد الهيرو العامة (من main)
+   2) تحسينات الموبايل (الشاشات أقل من 900px) — تأتي بعدها لتتغلب عليها في الموبايل
    ========================================================= */
+
+/* ---------- 1) الهيرو: أقصر، والكلمة الكبيرة أعلى ---------- */
+.hero { min-height: min(100svh, 42rem); }
+.hero-content { padding-bottom: calc(12vw + 1.5rem); } /* مساحة بقدر ارتفاع كلمة GREEN BAHRI */
+@media (min-width: 900px) {
+  /* مساحة تكفي الكلمة كاملة فوق بطاقة الأرقام (ارتفاعها يحسبه home.js في --giant-h) */
+  .hero-content { padding-top: 5.6rem; padding-bottom: calc(var(--giant-h, 12vw) + 2.8rem + 1.4rem); }
+  .hero-giant { bottom: 2.8rem; }
+}
+.hero-giant { bottom: 0.15em; }
+/* أبيض زجاجي يخفت لتحت (بدل الأخضر الذي يتشابه مع كلمة «ومستدام») */
+.hero-giant { background-image: linear-gradient(to bottom, rgba(255,255,255,.36), rgba(255,255,255,.08) 95%); }
+.hero-card .hero-actions { margin-bottom: 1.4rem; }
+
+/* ---------- 2) تحسين الموبايل ---------- */
+
+@media (max-width: 899px) {
+  body { overflow-x: hidden; }
+
+  /* النافبار: المقاسات في style.css (موحّدة لكل الصفحات)، هنا ألوان الهيرو فقط */
+  .nav {
+    border-color: rgba(255,255,255,.26);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 10px 28px rgba(0,0,0,.22);
+  }
+  .nav::before { background: rgba(13, 42, 29, .38); backdrop-filter: blur(14px) saturate(1.7); -webkit-backdrop-filter: blur(14px) saturate(1.7); }
+  .nav-wrap.is-scrolled .nav { border-color: rgba(36,92,69,.12); }
+  .nav-wrap.is-scrolled .nav::before { background: rgba(248, 250, 246, .68); }
+  [data-theme="dark"] .nav-wrap.is-scrolled .nav { border-color: rgba(164,195,162,.16); }
+  [data-theme="dark"] .nav-wrap.is-scrolled .nav::before { background: rgba(13, 29, 21, .66); }
+  .nav .brand-mark { background: var(--green-700); }
+  .nav-links { border-top: 1px solid rgba(255,255,255,.17); }
+  .nav-wrap.is-scrolled .nav-links { border-top-color: var(--line); }
+  .nav-links a { color: rgba(255,255,255,.9); }
+  .nav-wrap.is-scrolled .nav-links a { color: var(--nav-link); }
+  .nav-links a[aria-current="page"] {
+    background: rgba(164,195,162,.2);
+    color: #fff;
+  }
+  .nav-wrap.is-scrolled .nav-links a[aria-current="page"] {
+    background: #e4eee4;
+    color: #245c45;
+  }
+  [data-theme="dark"] .nav-wrap.is-scrolled .nav-links a[aria-current="page"] {
+    background: rgba(164,195,162,.16);
+    color: #d8ead8;
+  }
+
+  /* الهيرو: صورة الحرم هي البطل، والنص واضح ومختصر */
+  .hero {
+    min-height:  min(780px, 88svh);
+    min-height: min(780px, 88svh);
+    background-position: 52% center;
+    background-size: cover;
+    align-items: end;
+    padding-top: 6.8rem;
+  }
+  .hero::after {
+    background:
+      linear-gradient(180deg, rgba(5,24,15,.34) 0%, rgba(5,24,15,.12) 28%, rgba(5,24,15,.82) 100%),
+      linear-gradient(90deg, rgba(5,24,15,.12), rgba(5,24,15,.2));
+  }
+  .hero-content {
+    padding: 4rem 1.15rem 5.6rem;
+    max-width: 34rem;
+    text-align: right;
+  }
+  .hero-card { text-shadow: 0 2px 16px rgba(0,0,0,.28); }
+  .hero-card .eyebrow {
+    padding: .34rem .8rem;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    background: rgba(226,239,221,.16);
+    border-color: rgba(255,255,255,.32);
+  }
+  .hero-card h1 {
+    font-size: clamp(2.05rem, 8.6vw, 3.1rem);
+    line-height: 1.22;
+    margin: 1.1rem 0 .85rem;
+    text-wrap: balance;
+  }
+  .hero-card h1 span { display: block; color: #c8e6b8; text-wrap: balance; }
+  .hero-card h1 { max-width: 21rem; }
+  .hero-actions { flex-direction: row; gap: .6rem; margin: 0 0 1.1rem; }
+  .hero-actions .btn { flex: 1 1 0; padding: .72rem .5rem; font-size: .92rem; min-height: 2.9rem; }
+  .hero-actions .btn-primary { background: #2f6b4c; border: 1px solid rgba(255,255,255,.22); }
+  .hero-card p {
+    max-width: 28rem;
+    margin: 0 0 1.15rem;
+    color: rgba(255,255,255,.88);
+    font-size: .98rem;
+    line-height: 1.8;
+  }
+  .hero-giant {
+    bottom: 2rem;
+    opacity: .55;
+    line-height: .85;
+  }
+
+  /* الأقسام: إيقاع أسرع ومساحات مناسبة للهاتف */
+  .section { padding: 3.6rem 0; }
+  .container { padding-inline: 1.05rem; }
+  .section-head { margin: 0 auto 1.65rem; text-align: right; }
+  .section-head .eyebrow { font-size: .75rem; letter-spacing: .08em; }
+  .section-head h2 { font-size: 1.8rem; line-height: 1.3; margin: .45rem 0 .55rem; }
+  .section-head p { font-size: .98rem; line-height: 1.7; }
+
+  /* الرؤية: خلفية داكنة وبطاقات فاتحة بحدود هادئة */
+  .vision {
+    padding-block: 3.7rem;
+    background-position: center;
+  }
+  .vision .section-head { text-align: center; }
+  .vision .section-head h2 { color: #fff; }
+  .vision .cards { gap: .75rem; }
+  .vision .card {
+    display: grid;
+    grid-template-columns: 2.8rem 1fr;
+    column-gap: .8rem;
+    align-items: center;
+    padding: .95rem 1rem;
+    border-radius: 1.1rem;
+    background: rgba(248,250,244,.11);
+    border-color: rgba(255,255,255,.19);
+    text-align: right;
+  }
+  .vision .card-icon {
+    grid-row: span 2;
+    width: 2.65rem;
+    height: 2.65rem;
+    margin: 0;
+    border-radius: .85rem;
+    background: rgba(196,225,183,.2);
+    color: #d7efc8;
+  }
+  .vision .card-icon svg { width: 1.35rem; height: 1.35rem; }
+  .vision .card h3 { font-size: 1.02rem; margin: 0 0 .12rem; color: #fff; }
+  .vision .card p { font-size: .83rem; line-height: 1.55; color: rgba(255,255,255,.78); }
+
+  /* ورقة الزينة كانت تلمس النص في بطاقات الموبايل */
+  .vision .card::before, #explore .card::before { display: none; }
+
+  /* فقرة مصورة من أرض الجامعة */
+  .field-note {
+    position: relative;
+    overflow: hidden;
+    background: #edf3e9;
+  }
+  [data-theme="dark"] .field-note { background: #102219; }
+  .field-note .container { display: grid; gap: 1.35rem; }
+  .field-note-copy .eyebrow { font-size: .75rem; letter-spacing: .08em; }
+  .field-note-copy h2 {
+    margin: .45rem 0 .65rem;
+    color: #1c4d38;
+    font-size: 1.85rem;
+    line-height: 1.28;
+  }
+  [data-theme="dark"] .field-note-copy h2 { color: #d8ead8; }
+  .field-note-copy p { max-width: 27rem; color: var(--text-soft); font-size: .94rem; line-height: 1.75; }
+  .field-note-photos {
+    display: grid;
+    grid-template-columns: 1.25fr .85fr;
+    grid-template-rows: 7rem 7rem;
+    gap: .55rem;
+  }
+  .field-note-photos img {
+    width: 100%; height: 100%; object-fit: cover;
+    border-radius: 1rem;
+    box-shadow: 0 8px 22px rgba(23,63,48,.12);
+  }
+  .field-note-photos img:first-child { grid-row: 1 / 3; }
+  .field-note-photos img:nth-child(2) { object-position: center; }
+  .field-note-photos img:nth-child(3) { object-position: center 55%; }
+
+  /* روابط الأقسام: صور واضحة وبطاقات مرتبة في عمودين */
+  #explore { padding-top: 3.2rem; }
+  #explore .cards-4 { grid-template-columns: repeat(2, minmax(0,1fr)); gap: .8rem; }
+  #explore .card {
+    position: relative;
+    overflow: hidden;
+    padding: 0 0 .95rem;
+    border-radius: 1.05rem;
+    border-color: var(--line);
+    background: var(--surface);
+    box-shadow: 0 7px 22px rgba(28,58,40,.07);
+  }
+  #explore .explore-image {
+    width: 100%;
+    height: 7.1rem;
+    object-fit: cover;
+    display: block;
+  }
+  #explore .card-icon {
+    width: 2.5rem; height: 2.5rem;
+    margin: -.95rem .8rem .55rem auto;
+    position: relative;
+    border: 3px solid var(--surface);
+    border-radius: .85rem;
+    background: #2f6b4c;
+    box-shadow: 0 4px 12px rgba(20,65,40,.18);
+  }
+  #explore .card-icon svg { width: 1.2rem; height: 1.2rem; }
+  #explore .card h3 { padding: 0 .8rem; font-size: .98rem; margin: 0 0 .35rem; }
+  #explore .card p {
+    padding: 0 .8rem;
+    font-size: .82rem;
+    line-height: 1.6;
+    color: var(--text-soft);
+  }
+
+  /* دعوة المشاركة */
+  #join { padding-top: 1.5rem; }
+  .cta {
+    padding: 2.2rem 1.15rem;
+    border-radius: 1.35rem;
+    background:
+      linear-gradient(135deg, rgba(20,70,47,.92), rgba(36,92,69,.96)),
+      url("../assets/leaves-dark.webp") center / cover;
+    box-shadow: 0 15px 32px rgba(20,65,40,.16);
+  }
+  .cta h2 { font-size: 1.75rem; margin-bottom: .55rem; }
+  .cta p { font-size: .92rem; line-height: 1.7; margin-bottom: 1.2rem; color: #e0eee0; }
+  .cta .btn { min-height: 2.9rem; padding: .7rem 1.35rem; font-size: .95rem; }
+
+  /* dialog مريح للموبايل */
+  #join-dialog { width: calc(100% - 1.5rem); max-width: 28rem; padding: 1.2rem; border-radius: 1.2rem; }
+  .join-form { gap: .9rem; }
+  .join-form h3 { font-size: 1.25rem; }
+}
+
+@media (max-width: 380px) {
+  .hero-card h1 { font-size: 2.05rem; }
+  #explore .explore-image { height: 6.2rem; }
+  #explore .card p { font-size: .78rem; }
+}
+
+/* العناصر المصورة الجديدة مخصصة لتجربة الموبايل */
+.explore-image { display: none; }
+
+@media (min-width: 900px) {
+  .hero-card h1 br { display: none; }
+  .hero-card h1 { text-wrap: balance; }
+}
+@media (max-width: 899px) {
+  .field-note { display: block; }
+  #explore .explore-image { display: block; }
+}
+
+
+/* =========================================================
+   المرحلة 1: شريط أرقام الأثر (كل الشاشات)
+   ========================================================= */
+.stats { position: relative; z-index: 5; padding: 0 0 1.2rem; margin-top: -1.6rem; }
+.stats-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 1.25rem;
+  box-shadow: 0 14px 34px rgba(20,65,40,.14); padding: 1.05rem .3rem;
+}
+.stat { text-align: center; padding: .15rem .35rem; }
+.stat + .stat { border-inline-start: 1px solid var(--line); }
+.stat b { display: block; font-size: 2rem; font-weight: 900; line-height: 1.15; color: var(--color-primary); }
+[data-theme="dark"] .stat b { color: var(--color-natural); }
+.stat span { display: block; margin-top: .2rem; font-size: .8rem; line-height: 1.4; color: var(--text-soft); font-weight: 700; }
+/* الشارة في منتصف المسافة بين بطاقة الأرقام وقسم «كيف تشارك» (نفس الفراغ فوقها وتحتها) */
+.stats { padding-bottom: 0; }
+.stats .today-pill {
+  display: flex; width: fit-content; max-width: 100%; margin: 2.4rem auto 0;
+  background: var(--color-bg-green); color: var(--color-primary); border-color: var(--line);
+  backdrop-filter: none; -webkit-backdrop-filter: none; font-size: .86rem;
+}
+[data-theme="dark"] .stats .today-pill { background: rgba(164,195,162,.12); color: var(--color-natural); }
+@media (min-width: 900px) {
+  .stats { margin-top: -2.6rem; }
+  .stats-grid { max-width: 46rem; margin-inline: auto; padding: 1.5rem 1rem; }
+  .stats .today-pill { margin-top: 3rem; }
+  .stat b { font-size: 2.8rem; }
+  .stat span { font-size: .95rem; }
+}
+
+/* زر ثانوي زجاجي بدل البني (يقرأ أفضل فوق الصورة) */
+.hero-actions .btn-ghost { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.hero-actions .btn-ghost:hover { background: rgba(255,255,255,.24); }
+.hero-actions .btn-primary, .hero-actions .btn-white { border: 1px solid rgba(255,255,255,.22); }
+
+/* =========================================================
+   المرحلة 3: كيف تشارك (3 خطوات)
+   ========================================================= */
+.how-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; counter-reset: s; }
+.how-step {
+  display: flex; align-items: flex-start; gap: .9rem; padding: 1.05rem 1.1rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 1.1rem;
+}
+.how-num {
+  flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center;
+  background: var(--color-primary); color: #fff; font-weight: 900; font-size: 1.1rem;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-natural) 35%, transparent);
+}
+.how-step h3 { margin: 0 0 .2rem; font-size: 1.05rem; }
+.how-step p { margin: 0; color: var(--text-soft); font-size: .9rem; line-height: 1.65; }
+@media (min-width: 900px) {
+  .how-list { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .how-step { flex-direction: column; align-items: center; text-align: center; padding: 2rem 1.5rem; }
+  .how-step p { font-size: 1rem; }
+}
+
+/* =========================================================
+   المرحلة 2: زر ثابت أسفل الشاشة (موبايل فقط)
+   ========================================================= */
+.sticky-cta { display: none; }
+@media (max-width: 899px) {
+  .sticky-cta {
+    display: block; position: fixed; inset-inline: 0; bottom: 0; z-index: 60;
+    padding: .8rem 1rem calc(.8rem + env(safe-area-inset-bottom));
+    pointer-events: none; transform: translateY(130%); transition: transform .4s var(--ease);
+  }
+  .sticky-cta.show { transform: none; }
+  .sticky-cta a {
+    pointer-events: auto; display: flex; align-items: center; justify-content: center;
+    min-height: 3.1rem; border-radius: 999px; background: var(--color-primary); color: #fff;
+    font-weight: 800; font-size: 1rem; border: 1px solid rgba(255,255,255,.25);
+    box-shadow: 0 10px 28px rgba(8,40,25,.35);
+  }
+  .sticky-cta a:active { transform: scale(.98); }
+  body { padding-bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
+
+
+/* =========================================================
+   ثلاث أفكار من فيديو المعرض: كلمة مميّزة، أيقونات الأرقام، كاروسيل Coverflow
+   ========================================================= */
+
+/* كلمة مميّزة في عنوان الهيرو مع خط منحني تحتها */
+.hero-card h1 .hl { position: relative; display: inline-block; font-style: normal; color: #39e75f; white-space: nowrap; text-shadow: 0 0 18px rgba(57,231,95,.35); }
+.hero-card h1 .hl::after {
+  content: ""; position: absolute; inset-inline: -.04em; bottom: -.2em; height: .32em; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 10 C 45 2, 100 2, 197 7' fill='none' stroke='%2339e75f' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  opacity: .9;
+}
+
+/* أيقونات دائرية فوق أرقام الأثر */
+.stat-ico {
+  display: grid; place-items: center; width: 2.2rem; height: 2.2rem; margin: 0 auto .45rem; border-radius: 50%;
+  background: var(--color-bg-green); color: var(--color-primary);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 0 0 4px color-mix(in srgb, var(--color-natural) 22%, transparent);
+}
+.stat-ico svg { width: 1.15rem; height: 1.15rem; }
+[data-theme="dark"] .stat-ico { background: rgba(164,195,162,.14); color: var(--color-natural); box-shadow: inset 0 1px 0 rgba(255,255,255,.12); }
+@media (min-width: 900px) { .stat-ico { width: 2.8rem; height: 2.8rem; } .stat-ico svg { width: 1.4rem; height: 1.4rem; } }
+
+/* قسم «من أرض الجامعة»: يظهر في كل الشاشات الآن، والصور في كاروسيل */
+.field-note { display: block; position: relative; overflow: hidden; background: #edf3e9; padding-bottom: 2.6rem; }
+[data-theme="dark"] .field-note { background: #102219; }
+.field-note .container { display: block; }
+.field-note-copy { max-width: 36rem; margin: 0 auto 1.4rem; text-align: center; }
+.field-note-copy p { margin-inline: auto; }
+.field-note-copy h2 { font-size: clamp(1.7rem, 6.5vw, 2.4rem); }
+
+.cf { position: relative; outline: none; }
+.cf:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 6px; border-radius: 1.5rem; }
+.cf-ambient {
+  position: absolute; inset: 8% 6%; z-index: 0; border-radius: 2rem; pointer-events: none;
+  background: center / cover no-repeat; filter: blur(50px) saturate(1.4); opacity: .4;
+  transition: background-image .6s ease;
+}
+[data-theme="dark"] .cf-ambient { opacity: .28; }
+.cf-stage {
+  position: relative; z-index: 1; height: clamp(22rem, 112vw, 31rem);
+  perspective: 1300px; perspective-origin: 50% 45%;
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab;
+}
+.cf-stage:active { cursor: grabbing; }
+.cf-card {
+  --x: 0%; --z: 0px; --r: 0deg; --s: 1;
+  position: absolute; top: 50%; left: 50%;
+  width: min(66vw, 21rem); aspect-ratio: 4 / 5; padding: 0; border: 0; border-radius: 1.3rem;
+  background: var(--surface, #fff); overflow: hidden; cursor: pointer;
+  transform: translate(-50%, -50%) translateX(var(--x)) translateZ(var(--z)) rotateY(var(--r)) scale(var(--s));
+  transition: transform .75s cubic-bezier(.22, 1, .36, 1), opacity .45s ease, filter .45s ease;
+  box-shadow: 0 22px 44px -18px rgba(8, 40, 25, .55), 0 0 0 1px rgba(255,255,255,.22);
+  -webkit-tap-highlight-color: transparent; will-change: transform;
+}
+.cf-card img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.cf-card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(160deg, rgba(255,255,255,.22), rgba(255,255,255,0) 38%); }
+.cf-card.is-active { box-shadow: 0 30px 60px -20px rgba(8,40,25,.7), 0 0 0 1px rgba(255,255,255,.4), 0 0 38px rgba(164,195,162,.35); }
+.cf-card:focus-visible { outline: 3px solid var(--color-natural); outline-offset: 3px; }
+
+.cf-nav {
+  position: absolute; z-index: 20; top: 50%; translate: 0 -50%;
+  width: 2.9rem; height: 2.9rem; border-radius: 50%; display: grid; place-items: center; padding: 0; cursor: pointer;
+  color: #fff; background: rgba(13,42,29,.42); border: 1px solid rgba(255,255,255,.35);
+  backdrop-filter: blur(12px) saturate(1.6); -webkit-backdrop-filter: blur(12px) saturate(1.6);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 24px -10px rgba(0,0,0,.5);
+  transition: transform .25s, background-color .25s;
+}
+.cf-nav svg { width: 1.3rem; height: 1.3rem; }
+.cf-nav:hover { background: rgba(36,92,69,.75); transform: scale(1.08); }
+.cf-nav:active { transform: scale(.94); }
+.cf-prev { inset-inline-start: .2rem; }
+.cf-next { inset-inline-end: .2rem; }
+
+.cf-meta { display: flex; flex-direction: column; align-items: center; gap: .9rem; margin-top: 1.2rem; }
+.cf-dots { display: flex; gap: .45rem; padding: .45rem .7rem; border-radius: 999px; background: rgba(255,255,255,.65); border: 1px solid var(--line); }
+[data-theme="dark"] .cf-dots { background: rgba(255,255,255,.06); }
+.cf-dot { width: .55rem; height: .55rem; padding: 0; border: 0; border-radius: 999px; background: var(--color-natural); cursor: pointer; transition: width .35s, background-color .35s; position: relative; }
+.cf-dot::before { content: ""; position: absolute; inset: -.5rem -.25rem; }
+.cf-dot.on { width: 1.5rem; background: var(--color-primary); }
+[data-theme="dark"] .cf-dot { background: rgba(164,195,162,.35); }
+[data-theme="dark"] .cf-dot.on { background: var(--color-natural); }
+.cf-more { font-weight: 800; font-size: .95rem; color: var(--color-primary); padding: .5rem .2rem; border-bottom: 2px solid color-mix(in srgb, var(--color-primary) 35%, transparent); }
+[data-theme="dark"] .cf-more { color: var(--color-natural); }
+.cf-more:hover { border-bottom-color: currentColor; }
+
+@media (min-width: 900px) {
+  .cf-stage { height: 33rem; }
+  .cf-card { width: 23rem; }
+  .cf-nav { width: 3.3rem; height: 3.3rem; }
+  .cf-prev { inset-inline-start: 8%; }
+  .cf-next { inset-inline-end: 8%; }
+}
+@media (prefers-reduced-motion: reduce) { .cf-card, .cf-ambient { transition: none; } }
+
+
+/* =========================================================
+   بطاقات الأقسام (قبل الرؤية): بطاقات صور موحّدة
+   ========================================================= */
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
+.tile {
+  position: relative; display: block; aspect-ratio: 3 / 4; border-radius: 1.3rem; overflow: hidden; isolation: isolate;
+  color: #fff; background: #1b3f30;
+  box-shadow: 0 16px 32px -18px rgba(8,40,25,.65), 0 0 0 1px rgba(255,255,255,.06);
+  transition: transform .45s var(--ease), box-shadow .45s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.tile-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform .9s var(--ease); }
+.tile::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to top, rgba(8,32,22,.94) 0%, rgba(8,32,22,.62) 38%, rgba(8,32,22,.08) 72%, rgba(8,32,22,0) 100%);
+}
+.tile-body { position: absolute; inset-inline: 0; bottom: 0; padding: 1rem 1rem 1.05rem; }
+.tile-ico {
+  display: grid; place-items: center; width: 2.4rem; height: 2.4rem; margin-bottom: .65rem; border-radius: .85rem;
+  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.32);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+}
+.tile-ico svg { width: 1.2rem; height: 1.2rem; }
+.tile h3 { margin: 0 0 .25rem; font-size: 1.12rem; color: #fff; line-height: 1.3; }
+.tile p { margin: 0; font-size: .8rem; line-height: 1.6; color: rgba(255,255,255,.84); }
+.tile-arrow {
+  position: absolute; top: .75rem; inset-inline-end: .75rem; display: grid; place-items: center;
+  width: 2.7rem; height: 2.7rem; border-radius: 50%; color: #fff;
+  background: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.7);
+  backdrop-filter: blur(10px) saturate(1.4); -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 4px 10px -4px rgba(0,0,0,.35);
+  transition: background-color .3s, transform .35s var(--ease);
+}
+.tile-arrow img { position: absolute; inset: 0; margin: auto; width: 1.7rem; height: 1.7rem; object-fit: contain; transition: transform .45s var(--ease); }
+.tile:hover { transform: translateY(-4px); box-shadow: 0 26px 44px -20px rgba(8,40,25,.75), 0 0 0 1px rgba(255,255,255,.1); }
+.tile:hover .tile-img { transform: scale(1.07); }
+.tile:hover .tile-arrow { background: rgba(255,255,255,.2); transform: translate(-3px, -3px); }
+.tile:hover .tile-arrow img { transform: rotate(-12deg) scale(1.1); }
+.tile:active { transform: scale(.985); }
+.tile:focus-visible { outline: 3px solid var(--color-natural); outline-offset: 3px; }
+#explore .section-head { text-align: center; }
+@media (min-width: 900px) {
+  .tiles { grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
+  .tile { aspect-ratio: 4 / 5; }
+  .tile-body { padding: 1.3rem; }
+  .tile h3 { font-size: 1.25rem; }
+  .tile p { font-size: .9rem; }
+}
+@media (prefers-reduced-motion: reduce) { .tile, .tile-img, .tile-arrow { transition: none; } }
+
+/* =========================================================
+   بطاقة «تبنَّ شجرة»: خلفية الغابة + فيديو الرسوم
+   ========================================================= */
+.cta.cta-forest {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: flex; flex-direction: column; align-items: center; gap: 1.2rem;
+  padding: 2.4rem 1.3rem 2.5rem; border-radius: 1.5rem; text-align: center;
+  background:
+    linear-gradient(180deg, rgba(9,40,27,.66) 0%, rgba(9,40,27,.9) 100%),
+    url("../assets/forest-mist.webp") center 38% / cover;
+  box-shadow: 0 22px 44px -20px rgba(8,40,25,.7), inset 0 1px 0 rgba(255,255,255,.14);
+}
+.cta-media {
+  flex: none; width: min(46vw, 10.5rem); aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: #fff;
+  box-shadow: 0 0 0 7px rgba(255,255,255,.14), 0 20px 44px rgba(0,0,0,.45);
+}
+.cta-video { display: block; width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); }
+.cta-copy h2 { margin: 0 0 .5rem; }
+.cta-copy p { margin: 0 auto 1.3rem; }
+@media (min-width: 900px) {
+  .cta.cta-forest { flex-direction: row-reverse; justify-content: center; gap: 4rem; padding: 3.2rem 3rem; text-align: right; }
+  .cta-media { width: 14rem; }
+  .cta-copy { max-width: 30rem; }
+  .cta-copy p { margin-inline: 0; }
+}
+
+/* ليكويد جلاس: زرّا الهيرو + الدائرة الصغيرة في بطاقات الاستكشاف */
+.hero-actions .btn.liquid-glass { color: #fff; border: 1px solid rgba(255,255,255,.36); text-shadow: 0 1px 8px rgba(0,0,0,.4); }
+.hero-actions .btn-white.liquid-glass { background: rgba(70,160,110,.2); }
+.hero-actions .btn-white.liquid-glass:hover { background: rgba(70,160,110,.46); }
+.hero-actions .btn-ghost.liquid-glass { background: rgba(255,255,255,.04); }
+.hero-actions .btn-ghost.liquid-glass:hover { background: rgba(255,255,255,.2); }
+.tile-arrow.liquid-glass { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.6); }
+
+/* ---------- اللابتوب: كلمة GREEN BAHRI بنفس شكل التلفون (نفس اللون والشفافية)، بس بحجم أصغر ----------
+   حجم الخط يحسبه home.js (سقف ارتفاعها 14% من ارتفاع الشاشة). */
+@media (min-width: 900px) {
+  .hero-giant { opacity: .55; line-height: .85; }
+  /* بطاقة الأرقام أصغر في اللابتوب */
+  .stats-grid { max-width: 36rem; padding: 1rem .8rem; }
+  .stat b { font-size: 2.1rem; }
+  .stat span { font-size: .82rem; }
+  .stat-ico { width: 2.2rem; height: 2.2rem; }
+  .stat-ico svg { width: 1.15rem; height: 1.15rem; }
+}
+
+/* ---------- «آخر زراعة» داخل بطاقة الأرقام ---------- */
+/* البطاقة تتداخل مع آخر الهيرو (--ov مقدار التداخل). الجزء اللي فوق حافة الهيرو شفاف (يظهر الهيرو)،
+   وتحت الحافة طوالي أخضر «من أرض الجامعة» الفاتح، فمافي أخضر غامق ولا أبيض بينهم. */
+.stats {
+  --ov: 1.6rem; --band: #edf3e9;
+  margin-top: calc(var(--ov) * -1); margin-bottom: 0; padding: 0;
+  background: linear-gradient(to bottom, transparent var(--ov), var(--band) var(--ov));
+}
+[data-theme="dark"] .stats { --band: #102219; }
+@media (min-width: 900px) { .stats { --ov: 2.6rem; } }
+.stats .today-pill[hidden] { display: none; }
+.stats .stats-grid .today-pill {
+  grid-column: 1 / -1; justify-self: stretch; width: auto; max-width: none;
+  justify-content: center; margin: .8rem .9rem 0; padding: .65rem 0 .1rem;
+  border: 0; border-top: 1px solid var(--line); border-radius: 0;
+  background: none; color: var(--text-soft); font-size: .82rem; font-weight: 700;
+}
+[data-theme="dark"] .stats .stats-grid .today-pill { background: none; color: var(--text-soft); }
+.field-note.section { padding-top: 3rem; }
+@media (min-width: 900px) { .field-note.section { padding-top: 4.5rem; } }
+
+/* ---------- خلفية الهيرو في اللابتوب: صورة عريضة بدل الفيديو العمودي ---------- */
+@media (min-width: 900px) {
+  .hero { background: url("../assets/hero-desktop.webp") center 62% / cover no-repeat, linear-gradient(160deg, var(--green-950), #14532d 55%, var(--green-800)); }
+  .hero-video { display: none; }
+}
+
+/* قسم الرؤية: بطاقتان (الرسالة والهدف) في عمودين متوازنين */
+@media (min-width: 900px) { .vision .cards-2 { grid-template-columns: repeat(2, 1fr); max-width: 52rem; margin-inline: auto; } }
+
+/* =========================================================
+   بطاقتا الرسالة والهدف: رمز أخضر + عنوان أخضر مميز (بدون زينة على الحافة)
+   ========================================================= */
+.vision .cards-2 .card {
+  --accent: #39e75f;
+  background-color: rgba(255,255,255,.08);
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 100% 4px; background-repeat: no-repeat; background-position: top;
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow: 0 10px 26px rgba(0,0,0,.22);
+  transition: transform .3s var(--ease), border-color .3s;
+}
+.vision .cards-2 .card:hover { transform: translateY(-3px); border-color: rgba(139,255,166,.55); }
+.vision .cards-2 .card::before { display: none; }
+.vision .cards-2 .card-icon {
+  width: 3.4rem; height: 3.4rem; border-radius: 50%; color: #fff;
+  background: linear-gradient(145deg, #3fdc68, #17a243);
+  box-shadow: 0 0 0 5px rgba(57,231,95,.14), 0 6px 14px rgba(20,150,60,.35);
+}
+.vision .cards-2 .card-icon svg { width: 1.6rem; height: 1.6rem; stroke-width: 2.2; }
+.vision .cards-2 .card h3 { color: #8bffa6; font-weight: 900; font-size: 1.35rem; }
+@media (max-width: 899px) {
+  .vision .cards-2 .card { grid-template-columns: 3.2rem 1fr; column-gap: .9rem; padding: 1.05rem 1.1rem; }
+  .vision .cards-2 .card-icon { width: 3rem; height: 3rem; box-shadow: 0 0 0 4px rgba(57,231,95,.14), 0 5px 12px rgba(20,150,60,.3); }
+  .vision .cards-2 .card-icon svg { width: 1.45rem; height: 1.45rem; }
+  .vision .cards-2 .card h3 { font-size: 1.1rem; }
+}
+@media (prefers-reduced-motion: reduce) { .vision .cards-2 .card { transition: none; } .vision .cards-2 .card:hover { transform: none; } }
